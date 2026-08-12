@@ -1,0 +1,26 @@
+<?php
+require_once "../models/users.php" ;
+function hashPassword($password) {
+    $password = trim($password);
+    $hashedpassword = password_hash($password,PASSWORD_DEFAULT);
+    return $hashedpassword;
+}
+
+function isLoggedIn(){
+    if(isset($_SESSION['user'], $_SESSION['userid']) && ($_SESSION['session_id'] == session_id())) {
+        return true;
+    }  else {
+        return false;
+    }
+}
+
+function isMaster (){
+    $user = $_SESSION['user'];
+    $role = getRole($user);
+
+    if($role['role'] === $_SESSION['user']) {
+        return true;
+    }  else {
+        return false;
+    }
+}
