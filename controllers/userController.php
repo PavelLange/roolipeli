@@ -1,6 +1,6 @@
 <?php
 require_once "../models/users.php";
-require_once 'libraries/cleaners.php';
+require_once '../libraries/cleaners.php';
 
 function registerController(){
     if(isset($_POST['username'], $_POST['email'], $_POST['password'])){
@@ -40,4 +40,13 @@ function loginController(){
     } else {
         require "views/login.php";
     }
+}
+
+function logoutController(){
+    session_unset(); //poistaa kaikki muuttujat
+    session_destroy();
+    setcookie(session_name(),'',0,'/'); //poistaa evästeen selaimesta
+    session_regenerate_id(true);
+    header("Location: /"); // forward eli uudelleenohjaus
+    die();
 }
