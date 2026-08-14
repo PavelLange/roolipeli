@@ -42,3 +42,21 @@ function updateCampaign($name, $notes, $id){
     $stm = $pdo->prepare($sql);
     return $stm->execute($data);
 }
+
+function getAllOwnedCampaigns($name) {
+    $pdo = connectDB();
+    $sql = "SELECT * FROM Kampanjat WHERE Pelinjohtaja=?";
+    $stm = $pdo->prepare($sql);
+    $stm->execute([$id]);
+    $user = $stm->fetch(PDO::FETCH_ASSOC);
+    return $user;
+}
+
+function addUserToCampaign($uname, $id){
+    $pdo = connectDB();
+    $data = [$uname, $id];
+    $sql = "UPDATE Kampanjat SET Pelaajat = ? + Pelaajat WHERE ID = ?";
+    $stm = $pdo->prepare($sql);
+    return $stm->execute($data);
+}
+

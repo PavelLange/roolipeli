@@ -1,5 +1,3 @@
-<?php require "../partials/header.php"; ?>
-
 <h2>Register</h2>
 
 <form action="/register" method="post">
@@ -12,4 +10,4 @@
     <input id="sendbutton" type="submit" value="Lähetä">
 </form>
 
-<?php require "../partials/footer.php"; ?>
+<?php require_once "../partials/footer.php"; ?>

@@ -1,5 +1,3 @@
-<?php require "../partials/header.php"; ?>
-
 <h2>Login</h2>
 
 <form action="/login" method="post">
@@ -10,4 +8,4 @@
     <input id="sendbutton" type="submit" value="Lähetä">
 </form>
 
-<?php require "../partials/footer.php"; ?>
+<?php require_once "../partials/footer.php"; ?>

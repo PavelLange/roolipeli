@@ -35,9 +35,9 @@ function loginController(){
             $_SESSION['session_id'] = session_id();
             header("Location: /"); 
         } else {
-            require "views/login.view.php";
+            require "views/login.php";
         }
     } else {
-        require "views/login.view.php";
+        require "views/login.php";
     }
 }
