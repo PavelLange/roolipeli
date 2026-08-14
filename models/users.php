@@ -1,7 +1,7 @@
 <?php
 require_once "../models/db.php";
 require_once "../libraries/auth.php";
-function getAllInfo ($id) {
+function getAllInfo($id) {
     $pdo = connectDB();
     $sql = "SELECT * FROM Kayttajat WHERE ID=?";
     $stm = $pdo->prepare($sql);
@@ -45,7 +45,7 @@ function AddUser($username, $password, $email) {
     $pdo = connectDB();
     $hashedpassword = hashPassword($password);
     $data = [$username, $hashedpassword, $email];
-    $sql = "INSERT INTO Kayttajat (Kayttajanimi, Salasana, Sähöposti, ) VALUES (?,?,?)";
+    $sql = "INSERT INTO Kayttajat (Kayttajanimi, Salasana, Sahkoposti, ) VALUES (?,?,?)";
     $stm = $pdo->prepare($sql);
     $stm=$pdo->prepare($sql);
     return $stm->execute($data);
@@ -65,7 +65,7 @@ function dupeUser($username){
 }
 function dupeMail($email){
     $pdo = connectDB();
-    $sql = "SELECT Sähköposti FROM Kayttajat WHERE Sähköposti=?";
+    $sql = "SELECT Sahkoposti FROM Kayttajat WHERE Sahkoposti=?";
     $stm= $pdo->prepare($sql);
     $stm->execute([$email]);
     $mail = $stm->fetch(PDO::FETCH_ASSOC);
