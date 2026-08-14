@@ -9,14 +9,14 @@ function registerController(){
         $password = cleanUpInput($_POST['password']);
 
         if(empty($username) || empty($email) || empty($password)){
-            $error = "Täytä kaikki kentät";
+            $error = "Please fill in all fields.";
         }
 
         try {
             addUser($username, $email, $password);
             header("Location: /"); 
         } catch (PDOException $e){
-            echo "Virhe tietokantaan tallennettaessa: " . $e->getMessage();
+            echo "Error while saving to database: " . $e->getMessage();
         }
     } else {
         require "views/register.view.php";
