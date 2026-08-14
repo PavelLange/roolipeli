@@ -1,7 +1,7 @@
 <?php
 require_once "../models/db.php";
 
-function getAllCharacters ($id) {
+function getAllCharacterInfo ($id) {
     $pdo = connectDB();
     $sql = "SELECT * FROM Hahmo WHERE ID=?";
     $stm = $pdo->prepare($sql);
@@ -23,7 +23,7 @@ function listAllRaces () {
     $pdo = connectDB();
     $sql = "SELECT * FROM Rodut";
     $stm = $pdo->prepare($sql);
-    $stm->execute([$id]);
+    $stm->execute();
     $user = $stm->fetch(PDO::FETCH_ASSOC);
     return $user;
 }
@@ -74,4 +74,22 @@ function deleteItem($id){
     $sql = "DELETE FROM Esineet WHERE ID=?";
     $stm=$pdo->prepare($sql);
     return $stm->execute([$id]);
+}
+
+function getCharacterByIdEdit($id){
+    $pdo = connectDB();
+    $sql = "SELECT * FROM Hahmo WHERE ID=?";
+    $stm= $pdo->prepare($sql);
+    $stm->execute([$id]);
+    $all = $stm->fetch(PDO::FETCH_ASSOC);
+    return $all;
+}
+
+function listAllCharactersItems ($charname) {
+    $pdo = connectDB();
+    $sql = "SELECT * FROM Esineet WHERE Hahmo = ?";
+    $stm = $pdo->prepare($sql);
+    $stm->execute([$charname]);
+    $user = $stm->fetch(PDO::FETCH_ASSOC);
+    return $user;
 }
