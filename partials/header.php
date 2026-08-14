@@ -54,9 +54,14 @@
             </a>
 
             <?php else: ?>
+            <a href="/logout" class="login-link">
+                Logout
+            </a>
             <a href="/profile" class="nav-button">
                 Profile
             </a>
+            
+
             <?php endif ?>
         </div>
             

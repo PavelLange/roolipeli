@@ -2,6 +2,7 @@
 session_start();
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 require_once "../libraries/auth.php";
+require_once "../controllers/userController.php";
 switch ($uri) {
 
     case '/':
@@ -51,7 +52,15 @@ switch ($uri) {
         require_once __DIR__ . '/../partials/footer.php';
         break;
         
+    
 
+    case '/logout':
+    if(isLoggedIn()) {
+    logoutController();
+    }
+    else {
+        header('Location: /');
+    }
     default:
         http_response_code(404);
 
