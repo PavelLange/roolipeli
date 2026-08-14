@@ -28,19 +28,19 @@ function listAllRaces () {
     return $user;
 }
 
-function AddCharacter($name, $race,$class, $notes, $level, $hp, $mp, $str, $dex, $int, $chr, $creator) {
+function AddCharacter($name, $race,$class, $notes, $level, $hp, $mp, $str, $con, $dex, $int, $chr, $creator) {
     $pdo = connectDB();
-    $data = [$name, $master, $notes];
-    $sql = "INSERT INTO Hahmot (Nimi, Rotu, Hahmoluokka ,Muistiinpanot, Taso, Elämäpisteet, Magiapisteet, Voima, Ketteryys, Älykkyys, Karisma, Tekija ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+    $data = [$name, $race, $class, $notes, $level, $hp, $mp, $str, $con, $dex, $int, $chr, $creator];
+    $sql = "INSERT INTO Hahmot (Nimi, Rotu, Hahmoluokka ,Muistiinpanot, Taso, Elämäpisteet, Magiapisteet, Voima, Kestävyys ,Ketteryys, Älykkyys, Karisma, Tekija ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
     $stm = $pdo->prepare($sql);
     $stm=$pdo->prepare($sql);
     return $stm->execute($data);
 }
 
-function updateCharacter($name, $race,$class, $notes, $level, $hp, $mp, $str, $dex, $int, $chr, $id){
+function updateCharacter($notes, $level, $hp, $mp, $str, $con ,$dex, $int, $chr, $id){
     $pdo = connectDB();
-    $data = [$name, $race,$class, $notes, $level, $hp, $mp, $str, $dex, $int, $chr, $id];
-    $sql = "UPDATE Hahmo SET Nimi = ? , Rotu = ?, Hahmoluokka = ?, Muistiinpanot = ?, Taso = ?, Elämäpisteet = ?, Magiapisteet = ?, Voima = ?, Ketteryys = ?, Älykkyys = ?, Karisma = ?  WHERE ID = ?";
+    $data = [$notes, $level, $hp, $mp, $str, $con,$dex, $int, $chr, $id];
+    $sql = "UPDATE Hahmo SET  Muistiinpanot = ?, Taso = ?, Elämäpisteet = ?, Magiapisteet = ?, Voima = ?,Kestävyys = ?, Ketteryys = ?, Älykkyys = ?, Karisma = ?  WHERE ID = ?";
     $stm = $pdo->prepare($sql);
     return $stm->execute($data);
 }

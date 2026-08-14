@@ -2,7 +2,7 @@
 require_once "../models/character.php";
 require_once "../libraries/cleaners.php";
 function addCharacterController(){
-    if(isset($_POST['name'],$_POST['race'], $_POST['class'], $_POST['notes'], $_POST['level'], $_POST['hp'], $_POST['mp'], $_POST['str'], $_POST['dex'], $_POST['int'], $_POST['chr'])){
+    if(isset($_POST['name'],$_POST['race'], $_POST['class'], $_POST['notes'], $_POST['level'], $_POST['hp'], $_POST['mp'], $_POST['str'], $_POST['con'], $_POST['dex'], $_POST['int'], $_POST['chr'])){
         $name = cleanUpInput($_POST['name']);
         $race = cleanUpInput($_POST['race']);
         $class = cleanUpInput($_POST['class']);
@@ -11,6 +11,7 @@ function addCharacterController(){
         $hp = cleanUpInput($_POST['hp']);    
         $mp = cleanUpInput($_POST['mp']);   
         $str = cleanUpInput($_POST['str']);
+        $con = cleanUpInput($_POST['con']);
         $dex = cleanUpInput($_POST['dex']);
         $int = cleanUpInput($_POST['int']);
         $chr = cleanUpInput($_POST['chr']);            
@@ -30,22 +31,20 @@ function addCharacterController(){
 
 
 function updateCharacterController(){
-    if(isset($_POST['name'],$_POST['race'], $_POST['class'], $_POST['notes'], $_POST['level'], $_POST['hp'], $_POST['mp'], $_POST['str'], $_POST['dex'], $_POST['int'], $_POST['chr'])){
-        $name = cleanUpInput($_POST['name']);
-        $race = cleanUpInput($_POST['race']);
-        $class = cleanUpInput($_POST['class']);
+    if(isset($_POST['name'],$_POST['race'], $_POST['class'], $_POST['notes'], $_POST['level'], $_POST['hp'], $_POST['mp'], $_POST['str'], $_POST['con'], $_POST['dex'], $_POST['int'], $_POST['chr'])){
         $notes = cleanUpInput($_POST['notes']);   
         $level = cleanUpInput($_POST['level']);  
         $hp = cleanUpInput($_POST['hp']);    
         $mp = cleanUpInput($_POST['mp']);   
         $str = cleanUpInput($_POST['str']);
+        $con = cleanUpInput($_POST['con']);
         $dex = cleanUpInput($_POST['dex']);
         $int = cleanUpInput($_POST['int']);
         $chr = cleanUpInput($_POST['chr']);   
         $id = cleanUpInput($_POST['id']);
 
         try{
-            updateCharacter($name, $race, $class, $notes, $level, $hp, $mp, $str, $dex, $int, $chr, $id);
+            updateCharacter($notes, $level, $hp, $mp, $str,$con,  $dex, $int, $chr, $id);
             header("Location: /front");    
         } catch (PDOException $e){
                 echo "Virhe hahmoa päivitettäessä: " . $e->getMessage();
@@ -95,6 +94,7 @@ function editCharacterController(){
         $hp = $character["Elämäpisteet"];
         $mp = $character["Magiapisteet"];
         $str = $character["Voima"];
+        $con = $character["Kestävyys"];
         $dex = $character["Ketteryys"];
         $int = $character["Älykkyys"];
         $chr = $character["Karisma"];
