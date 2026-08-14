@@ -37,6 +37,9 @@
     <label for="strength">Strength:</label>
     <input id="strength" type="number" name="strength" value="10" min="0" required>
 
+    <label for="contitution">Constitution:</label>
+    <input id="constitution" type="number" name="constitution" value="10" min="0" required>
+
     <label for="agility">Agility:</label>
     <input id="agility" type="number" name="agility" value="10" min="0" required>
 

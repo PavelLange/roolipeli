@@ -8,13 +8,13 @@ function addCharacterController(){
         $class = cleanUpInput($_POST['class']);
         $notes = cleanUpInput($_POST['notes']);   
         $level = cleanUpInput($_POST['level']);  
-        $hp = cleanUpInput($_POST['hp']);    
-        $mp = cleanUpInput($_POST['mp']);   
-        $str = cleanUpInput($_POST['str']);
-        $con = cleanUpInput($_POST['con']);
-        $dex = cleanUpInput($_POST['dex']);
-        $int = cleanUpInput($_POST['int']);
-        $chr = cleanUpInput($_POST['chr']);            
+        $hp = cleanUpInput($_POST['health']);    
+        $mp = cleanUpInput($_POST['mana']);   
+        $str = cleanUpInput($_POST['strength']);
+        $con = cleanUpInput($_POST['constitution']);
+        $dex = cleanUpInput($_POST['dexterity']);
+        $int = cleanUpInput($_POST['intelligence']);
+        $chr = cleanUpInput($_POST['charisma']);            
         $creator = $_SESSION["user"];
         if(strlen($name) > 1 || strlen($race) > 1 || strlen($class) > 1 || strlen($notes) > 1 || strlen($level) >= 1 || strlen($hp) >= 1 || strlen($mp) >= 1 || strlen($str) >= 1 || strlen($dex) >= 1 || strlen($int) >= 1 || strlen($chr) >= 1)  {
         addCharacter($name, $race, $class, $notes, $level, $hp, $mp, $str, $dex, $int, $chr, $creator); 
@@ -34,13 +34,13 @@ function updateCharacterController(){
     if(isset($_POST['name'],$_POST['race'], $_POST['class'], $_POST['notes'], $_POST['level'], $_POST['hp'], $_POST['mp'], $_POST['str'], $_POST['con'], $_POST['dex'], $_POST['int'], $_POST['chr'])){
         $notes = cleanUpInput($_POST['notes']);   
         $level = cleanUpInput($_POST['level']);  
-        $hp = cleanUpInput($_POST['hp']);    
-        $mp = cleanUpInput($_POST['mp']);   
-        $str = cleanUpInput($_POST['str']);
-        $con = cleanUpInput($_POST['con']);
-        $dex = cleanUpInput($_POST['dex']);
-        $int = cleanUpInput($_POST['int']);
-        $chr = cleanUpInput($_POST['chr']);   
+        $hp = cleanUpInput($_POST['health']);    
+        $mp = cleanUpInput($_POST['mana']);   
+        $str = cleanUpInput($_POST['strength']);
+        $con = cleanUpInput($_POST['constitution']);
+        $dex = cleanUpInput($_POST['dexterity']);
+        $int = cleanUpInput($_POST['intelligence']);
+        $chr = cleanUpInput($_POST['charisma']);   
         $id = cleanUpInput($_POST['id']);
 
         try{
