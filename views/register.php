@@ -1,4 +1,4 @@
-<?php require "partials/header.php"; ?>
+<?php require_once "../partials/header.php"; ?>
 
 <h2>Rekisteröidy</h2>
 
@@ -12,4 +12,4 @@
     <input id="sendbutton" type="submit" value="Lähetä">
 </form>
 
-<?php require "../partials/footer.php"; ?>
+<?php require_once "../partials/footer.php"; ?>

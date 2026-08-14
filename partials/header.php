@@ -1,3 +1,4 @@
+<?php require_once "../libraries/auth.php"?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -43,6 +44,7 @@
         <!-- User actions -->
         <div class="header-actions">
 
+            <?php if(!isLoggedIn()): ?>
             <a href="/login" class="login-link">
                 Log in
             </a>
@@ -51,8 +53,13 @@
                 Get Started
             </a>
 
+            <?php else: ?>
+            <a href="/profile" class="nav-button">
+                Profile
+            </a>
+            <?php endif ?>
         </div>
-
+            
     </div>
 
 </header>
