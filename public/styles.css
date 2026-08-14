@@ -957,3 +957,145 @@ a {
         text-align: center;
     }
 }
+
+/*CAMPAIGNS*/
+
+.campaign-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 70px 40px 100px;
+}
+
+.campaign-page h1 {
+    margin: 0 0 10px;
+    text-align: center;
+
+    font-size: 48px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.campaign-page > p {
+    margin: 0 auto 50px;
+    max-width: 650px;
+
+    text-align: center;
+    font-size: 18px;
+    line-height: 1.6;
+}
+
+
+/*CARD GRID*/
+
+.campaign-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 35px;
+}
+
+
+/*CAMPAIGN CARD*/
+
+.campaign-card {
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+
+    text-decoration: none;
+    color: inherit;
+
+    background: #11151c;
+
+    border: 1px solid #3c4654;
+    border-radius: 14px;
+
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+
+    transition:
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+
+/* CARD IMAGE*/
+
+.campaign-card img {
+    display: block;
+
+    width: 100%;
+    height: 280px;
+
+    object-fit: cover;
+
+    transition: transform 0.4s ease;
+}
+
+
+/*CARD CONTENT*/
+
+.campaign-card-content {
+    padding: 28px 30px 32px;
+
+    text-align: center;
+}
+
+.campaign-card-content h2 {
+    margin: 0 0 12px;
+
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.campaign-card-content p {
+    margin: 0;
+
+    font-size: 16px;
+    line-height: 1.6;
+
+    color: #b9bec8;
+}
+
+
+/*HOVER EFFECT*/
+
+.campaign-card:hover {
+    transform: translateY(-8px);
+
+    border-color: #a970ff;
+
+    box-shadow:
+        0 15px 35px rgba(0, 0, 0, 0.5),
+        0 0 20px rgba(169, 112, 255, 0.15);
+}
+
+.campaign-card:hover img {
+    transform: scale(1.04);
+}
+
+.campaign-card:focus-visible {
+    outline: 3px solid #a970ff;
+    outline-offset: 4px;
+}
+
+/* MOBILE*/
+
+@media (max-width: 750px) {
+
+    .campaign-page {
+        padding: 50px 20px 70px;
+    }
+
+    .campaign-page h1 {
+        font-size: 38px;
+    }
+
+    .campaign-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .campaign-card img {
+        height: 230px;
+    }
+}
