@@ -642,6 +642,11 @@ a {
         background-color 0.2s ease;
 }
 
+.form-group input,
+.form-group textarea {
+    box-sizing: border-box;
+}
+
 
 .form-group input::placeholder {
     color: #666b75;
@@ -928,27 +933,23 @@ a {
 
 
 @media (max-width: 450px) {
-
     .footer-inner {
         width: min(
             100% - 32px,
             1100px
         );
     }
-
     .footer-links {
         width: 100%;
         justify-content: space-between;
         gap: 30px;
     }
-
     .footer-bottom {
         width: min(
             100% - 32px,
             1100px
         );
     }
-
     .footer-bottom-content {
         min-height: 75px;
         flex-direction: column;
@@ -984,7 +985,6 @@ a {
     line-height: 1.6;
 }
 
-
 /*CARD GRID*/
 
 .campaign-grid {
@@ -993,78 +993,59 @@ a {
     gap: 35px;
 }
 
-
 /*CAMPAIGN CARD*/
 
 .campaign-card {
     display: flex;
     flex-direction: column;
-
     overflow: hidden;
-
     text-decoration: none;
     color: inherit;
-
     background: #11151c;
-
     border: 1px solid #3c4654;
     border-radius: 14px;
-
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
-
     transition:
         transform 0.25s ease,
         border-color 0.25s ease,
         box-shadow 0.25s ease;
 }
 
-
 /* CARD IMAGE*/
 
 .campaign-card img {
     display: block;
-
     width: 100%;
     height: 280px;
-
     object-fit: cover;
-
     transition: transform 0.4s ease;
 }
-
 
 /*CARD CONTENT*/
 
 .campaign-card-content {
     padding: 28px 30px 32px;
-
     text-align: center;
 }
 
 .campaign-card-content h2 {
     margin: 0 0 12px;
-
     font-size: 28px;
     font-weight: 700;
 }
 
 .campaign-card-content p {
     margin: 0;
-
     font-size: 16px;
     line-height: 1.6;
-
     color: #b9bec8;
 }
-
 
 /*HOVER EFFECT*/
 
 .campaign-card:hover {
     transform: translateY(-8px);
-
     border-color: #a970ff;
-
     box-shadow:
         0 15px 35px rgba(0, 0, 0, 0.5),
         0 0 20px rgba(169, 112, 255, 0.15);
@@ -1082,20 +1063,360 @@ a {
 /* MOBILE*/
 
 @media (max-width: 750px) {
-
     .campaign-page {
         padding: 50px 20px 70px;
     }
-
     .campaign-page h1 {
         font-size: 38px;
     }
-
     .campaign-grid {
         grid-template-columns: 1fr;
     }
-
     .campaign-card img {
         height: 230px;
     }
 }
+
+
+/*CREATE CAMPAIGN*/
+
+.campaign-form-page {
+    min-height: calc(100vh - 82px);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 80px 20px;
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(169, 54, 54, 0.08),
+            transparent 45%
+        );
+}
+
+/* FORM CARD */
+
+.campaign-form-card {
+    width: min(650px, 100%);
+    padding: 45px;
+    background:
+        linear-gradient(
+            145deg,
+            #171a22,
+            #101218
+        );
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.35);
+}
+
+/* HEADING */
+
+.campaign-form-heading {
+    margin-bottom: 35px;
+    text-align: center;
+}
+
+.campaign-form-heading h1 {
+    margin: 0 0 12px;
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+    font-size: 40px;
+}
+
+.campaign-form-heading p:last-child {
+    margin: 0;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+/* FORM */
+
+.campaign-form {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+/* TEXTAREA */
+
+.form-group textarea {
+    width: 100%;
+    padding: 14px;
+    color: var(--text);
+    background: #0b0e13;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    outline: none;
+    font-family: inherit;
+    font-size: 15px;
+    line-height: 1.6;
+    resize: vertical;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background-color 0.2s ease;
+}
+
+.form-group textarea::placeholder {
+    color: #666b75;
+}
+
+.form-group textarea:hover {
+    border-color: #505764;
+}
+
+.form-group textarea:focus {
+    border-color: var(--gold);
+    background: #0e1117;
+    box-shadow:
+        0 0 0 2px rgba(199, 162, 91, 0.08);
+}
+
+/* FORM ACTIONS */
+
+.campaign-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 10px;
+    padding-top: 25px;
+    border-top: 1px solid var(--border);
+}
+
+/* MOBILE */
+
+@media (max-width: 520px) {
+    .campaign-form-page {
+        padding: 45px 16px;
+    }
+    .campaign-form-card {
+        padding: 30px 22px;
+    }
+    .campaign-form-heading h1 {
+        font-size: 32px;
+    }
+    .campaign-form-actions {
+        flex-direction: column-reverse;
+    }
+    .campaign-form-actions .button {
+        width: 100%;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+/*MY CAMPAIGNS*/
+
+.my-campaign-page {
+    width: min(1200px, calc(100% - 40px));
+    margin: 0 auto;
+    padding: 70px 0 100px;
+}
+
+/* HEADING */
+
+.my-campaign-heading {
+    max-width: 700px;
+    margin: 0 auto 55px;
+    text-align: center;
+}
+
+.my-campaign-heading h1 {
+    margin: 0 0 15px;
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+    font-size: 48px;
+}
+
+.my-campaign-heading p:last-child {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 17px;
+    line-height: 1.6;
+}
+
+/* CAMPAIGN GRID */
+
+.my-campaigns {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 30px;
+}
+
+/* CAMPAIGN CARD */
+
+.my-campaign-card {
+    overflow: hidden;
+    background:
+        linear-gradient(
+            145deg,
+            #171a22,
+            #101218
+        );
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.3);
+    transition:
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.my-campaign-card:hover {
+    transform: translateY(-5px);
+    border-color:
+        rgba(199, 162, 91, 0.6);
+    box-shadow:
+        0 15px 40px rgba(0, 0, 0, 0.45);
+}
+
+/* IMAGE */
+
+.my-campaign-image {
+    width: 100%;
+    height: 240px;
+    overflow: hidden;
+    background: #0b0e13;
+}
+
+.my-campaign-image img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    transition:
+        transform 0.4s ease;
+}
+
+.my-campaign-card:hover
+.my-campaign-image img {
+    transform: scale(1.04);
+}
+
+/* CONTENT */
+
+.my-campaign-content {
+    padding: 28px;
+}
+
+.campaign-status {
+    margin: 0 0 8px;
+    color: var(--gold);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.my-campaign-content h2 {
+    margin: 0 0 12px;
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+    font-size: 28px;
+}
+
+.my-campaign-content > p:not(.campaign-status) {
+    margin: 0;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+/* ACTIONS */
+
+.my-campaign-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+/* EMPTY STATE */
+
+.campaign-empty {
+    grid-column: 1 / -1;
+    padding: 60px 30px;
+    text-align: center;
+    background:
+        rgba(255, 255, 255, 0.02);
+    border: 1px dashed var(--border);
+    border-radius: 5px;
+}
+
+.campaign-empty-icon {
+    width: 55px;
+    height: 55px;
+    margin: 0 auto 20px;
+    display: grid;
+    place-items: center;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    font-size: 30px;
+}
+
+.campaign-empty h2 {
+    margin: 0 0 10px;
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+    font-size: 28px;
+}
+
+.campaign-empty p {
+    max-width: 500px;
+    margin: 0 auto 25px;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+/* MOBILE */
+
+@media (max-width: 750px) {
+
+    .my-campaign-page {
+        width: min(100% - 32px, 1200px);
+        padding:
+            50px 0 70px;
+    }
+    .my-campaign-heading h1 {
+        font-size: 38px;
+    }
+    .my-campaigns {
+        grid-template-columns: 1fr;
+    }
+    .my-campaign-image {
+        height: 220px;
+    }
+}
+
+
+@media (max-width: 500px) {
+    .my-campaign-actions {
+        flex-direction: column;
+    }
+    .my-campaign-actions .button {
+        width: 100%;
+    }
+    .my-campaign-content {
+        padding: 22px;
+    }
+}
+
