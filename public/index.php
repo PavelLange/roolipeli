@@ -32,6 +32,17 @@ switch ($uri) {
         require __DIR__ . '/../partials/footer.php';
         break;
 
+    case '/my-campaigns':
+        require __DIR__ . '/../partials/header.php';
+        require __DIR__ . '/../views/my_campaign.php';
+        require __DIR__ . '/../partials/footer.php';
+        break;
+
+    case '/new-campaign':
+        require __DIR__ . '/../partials/header.php';
+        require __DIR__ . '/../views/add_campaign.php';
+        require __DIR__ . '/../partials/footer.php';
+        break;
 
     case '/new-character':
         require __DIR__ . '/../partials/header.php';
