@@ -50,6 +50,12 @@ switch ($uri) {
         require __DIR__ . '/../partials/footer.php';
         break;
 
+    case '/edit-campaign':
+        require __DIR__ . '/../partials/header.php';
+        require __DIR__ . '/../views/edit_campaign.php';
+        require __DIR__ . '/../partials/footer.php';
+        break;
+
     
 
     case '/profile':
