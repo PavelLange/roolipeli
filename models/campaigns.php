@@ -45,7 +45,7 @@ function deleteCampaign($id){
 function updateCampaign($name, $notes, $id){
     $pdo = connectDB();
     $data = [$name, $notes, $id];
-    $sql = "UPDATE Hahmo SET Nimi = ? , Muistiinpanot = ?  WHERE ID = ?";
+    $sql = "UPDATE Kampanjat SET Nimi = ? , Muistiinpanot = ?  WHERE ID = ?";
     $stm = $pdo->prepare($sql);
     return $stm->execute($data);
 }
