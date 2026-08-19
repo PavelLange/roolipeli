@@ -39,6 +39,9 @@
     <label for="strength">Strength:</label>
     <input id="strength" type="number" name="strength" value="<?= htmlspecialchars($character["Voima"]) ?>" required>
 
+    <label for="constitution">Constitution:</label>
+    <input id="constitution" type="number" name="constitution" value="<?= htmlspecialchars($character["Kestävyys"]) ?>" required>
+
     <label for="agility">Agility:</label>
     <input id="agility" type="number" name="agility" value="<?= htmlspecialchars($character["Ketteryys"]) ?>" required>
 
