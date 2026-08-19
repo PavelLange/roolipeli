@@ -11,20 +11,27 @@ function getAllCampaigns ($id) {
 }
 
 function AddCampaign($name, $master,$notes) {
+    $master = $_SESSION["username"];
     $pdo = connectDB();
     $data = [$name, $master, $notes];
-    $sql = "INSERT INTO Kampanjat (Nimi, Pelinjohtaja, Muistiinpanot, ) VALUES (?,?,?)";
+    $sql = "INSERT INTO Kampanjat (Nimi, Pelinjohtaja, Muistiinpanot) VALUES (?,?,?)";
     $stm = $pdo->prepare($sql);
     $stm=$pdo->prepare($sql);
     return $stm->execute($data);
 }
 
-function getAllOwnCampaigns ($id) {
+function getAllJoinedCampaigns($username) {
+ 
     $pdo = connectDB();
-    $sql = "SELECT * FROM Kampanjat WHERE Pelaajat=?";
+ 
+    $sql = "SELECT * FROM Kampanjat WHERE Pelaajat LIKE ?";
+ 
     $stm = $pdo->prepare($sql);
-    $stm->execute([$id]);
-    $user = $stm->fetch(PDO::FETCH_ASSOC);
+ 
+    $stm->execute(["%$username%"]);
+ 
+    $user = $stm->fetchAll(PDO::FETCH_ASSOC);
+ 
     return $user;
 }
 
@@ -47,8 +54,8 @@ function getAllOwnedCampaigns($name) {
     $pdo = connectDB();
     $sql = "SELECT * FROM Kampanjat WHERE Pelinjohtaja=?";
     $stm = $pdo->prepare($sql);
-    $stm->execute([$id]);
-    $user = $stm->fetch(PDO::FETCH_ASSOC);
+    $stm->execute([$name]);
+    $user = $stm->fetchAll(PDO::FETCH_ASSOC);
     return $user;
 }
 

@@ -3,6 +3,7 @@ session_start();
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 require_once "../libraries/auth.php";
 require_once "../controllers/userController.php";
+require_once "../controllers/campaignController.php";
 switch ($uri) {
 
     case '/':
@@ -34,13 +35,13 @@ switch ($uri) {
 
     case '/my-campaigns':
         require __DIR__ . '/../partials/header.php';
-        require __DIR__ . '/../views/my_campaign.php';
+        viewCampaignsController();
         require __DIR__ . '/../partials/footer.php';
         break;
 
     case '/new-campaign':
         require __DIR__ . '/../partials/header.php';
-        require __DIR__ . '/../views/add_campaign.php';
+        addCampaignController();
         require __DIR__ . '/../partials/footer.php';
         break;
 
