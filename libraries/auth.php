@@ -7,7 +7,7 @@ function hashPassword($password) {
 }
 
 function isLoggedIn(){
-    if(isset($_SESSION['user'], $_SESSION['userid']) && ($_SESSION['session_id'] == session_id())) {
+    if(isset($_SESSION['username'], $_SESSION['user_id']) && ($_SESSION['session_id'] == session_id())) {
         return true;
     }  else {
         return false;
@@ -15,11 +15,11 @@ function isLoggedIn(){
 }
 
 function isMaster (){
-    $user = $_SESSION['user'];
+    $user = $_SESSION['username'];
     $role = getRole($user);
 
-    if($role['role'] === $_SESSION['user']) {
-        return true;
+    if($role['Pelinjohtaja'] === $_SESSION['username']) {
+        return True;
     }  else {
         return false;
     }

@@ -1,3 +1,5 @@
+<?php require_once "../libraries/auth.php"?>
+
 <main class="my-campaign-page">
 
     <section class="my-campaign-heading">
@@ -12,57 +14,8 @@
 
 
     <section class="my-campaigns">
-
-        <!-- here is an example campaign card, should get other ones fron database -->
-
-        <article class="my-campaign-card">
-
-            <div class="my-campaign-image">
-                <img
-                    src="/images/camp1.jpg"
-                    alt="Campaign"
-                >
-            </div>
-
-            <div class="my-campaign-content">
-
-                <p class="campaign-status">
-                    Game Master
-                </p>
-
-                <h2>The Forgotten Kingdom</h2>
-
-                <p>
-                    an example campaign. this one will later
-                    come from the database we need to connect it
-                </p>
-
-                <div class="my-campaign-actions">
-
-                    <a
-                        href="/campaign"
-                        class="button button-primary"
-                    >
-                        Open Campaign
-                    </a>
-
-                    <a
-                        href="/edit-campaign"
-                        class="button button-secondary"
-                    >
-                        Edit
-                    </a>
-
-                </div>
-
-            </div>
-
-        </article>
-
-
-        <!-- If empty  -->
-
-        <div class="campaign-empty">
+        <?php if(empty($allowned) && empty($alljoined)):?>
+            <div class="campaign-empty">
 
             <div class="campaign-empty-icon">
                 +
@@ -82,8 +35,115 @@
                 Create Campaign
             </a>
 
-        </div>
+        </div> 
+        <?php else:?>
+        <?php foreach ($allowned as $owned): 
+        ?>
+        <article class="my-campaign-card">
+
+            <div class="my-campaign-image">
+                <img
+                    src="/images/camp1.jpg"
+                    alt="Campaign"
+                >
+            </div>
+
+            <div class="my-campaign-content">
+
+                <p class="campaign-status">
+                    <?= $owned["Pelinjohtaja"] ?>
+                </p>
+                <br>
+                <p> 
+                    <?= $owned["Pelaajat"] ?>
+                </p>
+                <br>
+                <h2>
+                    <?= $owned["Nimi"]?>
+                </h2>
+                <br>
+                <p>
+                <?= htmlspecialchars(substr($owned["Muistiinpanot"], 0, 200))  ?>
+                    . . .
+                </p>
+
+                <div class="my-campaign-actions">
+
+                    <a
+                        href="/campaign"
+                        class="button button-primary"
+                    >
+                        Open Campaign
+                    </a>
+                    <?php ?>
+                    <a
+                        href="/edit-campaign"
+                        class="button button-secondary"
+                    >
+                        Edit
+                    </a>
+                    <?php  ?>
+                </div>
+
+            </div>
+
+        </article>
+        <?php endforeach?>
+
+        <?php foreach ($alljoined as $joined): 
+        ?>
+        <article class="my-campaign-card">
+
+            <div class="my-campaign-image">
+                <img
+                    src="/images/camp1.jpg"
+                    alt="Campaign"
+                >
+            </div>
+
+            <div class="my-campaign-content">
+
+                <p class="campaign-status">
+                    <?= $joined["Pelinjohtaja"] ?>
+                </p>
+                <br>
+                <p> 
+                    <?= $joined["Pelaajat"] ?>
+                </p>
+                <br>
+                <h2>
+                    <?=  $joined["Nimi"]?>
+                </h2>
+                <br>
+                <p>
+                    <?= htmlspecialchars(substr($joined["Muistiinpanot"], 0, 200))  ?>
+                    . . .
+                </p>
+
+                <div class="my-campaign-actions">
+
+                    <a
+                        href="/campaign"
+                        class="button button-primary"
+                    >
+                        Open Campaign
+                    </a>
+                    <?php if($joined["Pelinjohtaja"] == $_SESSION["username"]): ?>
+                    <a
+                        href="/edit-campaign"
+                        class="button button-secondary"
+                    >
+                        Edit
+                    </a> 
+                    <?php endif; ?>
+                </div>
+
+            </div>
+        </article>
+        <?php endforeach?>
+
+
 
     </section>
-
+<?php endif ?>
 </main>

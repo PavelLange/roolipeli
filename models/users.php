@@ -41,11 +41,11 @@ function login($username, $password) {
 
 }
 
-function AddUser($username, $password, $email) {
+function AddUser($username,$email,$password) {
     $pdo = connectDB();
     $hashedpassword = hashPassword($password);
-    $data = [$username, $hashedpassword, $email];
-    $sql = "INSERT INTO Kayttajat (Kayttajanimi, Salasana, Sahkoposti, ) VALUES (?,?,?)";
+    $data = [$username,$email,$hashedpassword];
+    $sql = "INSERT INTO Kayttajat (Kayttajanimi,Sahkoposti,Salasana) VALUES (?,?,?)";
     $stm = $pdo->prepare($sql);
     $stm=$pdo->prepare($sql);
     return $stm->execute($data);
@@ -78,10 +78,20 @@ function dupeMail($email){
 
 function getMaster($user){
     $pdo = connectDB();
-    $sql = "SELECT Pelinjohtaja FROM Kampanjat WHERE ID=?";
+    $sql = "SELECT Pelinjohtaja FROM Kampanjat WHERE Pelinjohtaja=?";
     $stm = $pdo->prepare($sql);
     $stm->execute([$user]);
     $role = $stm->fetch(PDO::FETCH_ASSOC);
     return $role;
     
 } 
+
+function getRole($user){
+    $pdo = connectDB();
+    $sql = "SELECT Pelinjohtaja FROM Kampanjat WHERE Pelinjohtaja=?";
+    $stm = $pdo->prepare($sql);
+    $stm->execute([$user]);
+    $role = $stm->fetch(PDO::FETCH_ASSOC);
+    return $role;
+    
+}
