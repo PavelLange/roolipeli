@@ -2,7 +2,7 @@
 require_once "../models/character.php";
 require_once "../libraries/cleaners.php";
 function addCharacterController(){
-    if(isset($_POST['name'],$_POST['race'], $_POST['class'], $_POST['notes'], $_POST['level'], $_POST['hp'], $_POST['mp'], $_POST['str'], $_POST['con'], $_POST['dex'], $_POST['int'], $_POST['chr'])){
+    if(isset($_POST['name'],$_POST['race'], $_POST['class'], $_POST['notes'], $_POST['level'], $_POST['health'], $_POST['mana'], $_POST['strength'], $_POST['constitution'], $_POST['agility'], $_POST['intelligence'], $_POST['charisma'])){
         $name = cleanUpInput($_POST['name']);
         $race = cleanUpInput($_POST['race']);
         $class = cleanUpInput($_POST['class']);
@@ -12,7 +12,7 @@ function addCharacterController(){
         $mp = cleanUpInput($_POST['mana']);   
         $str = cleanUpInput($_POST['strength']);
         $con = cleanUpInput($_POST['constitution']);
-        $dex = cleanUpInput($_POST['dexterity']);
+        $dex = cleanUpInput($_POST['agility']);
         $int = cleanUpInput($_POST['intelligence']);
         $chr = cleanUpInput($_POST['charisma']);            
         $creator = $_SESSION["user"];
@@ -31,14 +31,14 @@ function addCharacterController(){
 
 
 function updateCharacterController(){
-    if(isset($_POST['name'],$_POST['race'], $_POST['class'], $_POST['notes'], $_POST['level'], $_POST['hp'], $_POST['mp'], $_POST['str'], $_POST['con'], $_POST['dex'], $_POST['int'], $_POST['chr'])){
+    if(isset($_POST['name'],$_POST['race'], $_POST['class'], $_POST['notes'], $_POST['level'], $_POST['health'], $_POST['mana'], $_POST['strength'], $_POST['constitution'], $_POST['agility'], $_POST['intelligence'], $_POST['charisma'])){
         $notes = cleanUpInput($_POST['notes']);   
         $level = cleanUpInput($_POST['level']);  
         $hp = cleanUpInput($_POST['health']);    
         $mp = cleanUpInput($_POST['mana']);   
         $str = cleanUpInput($_POST['strength']);
         $con = cleanUpInput($_POST['constitution']);
-        $dex = cleanUpInput($_POST['dexterity']);
+        $dex = cleanUpInput($_POST['agility']);
         $int = cleanUpInput($_POST['intelligence']);
         $chr = cleanUpInput($_POST['charisma']);   
         $id = cleanUpInput($_POST['id']);
@@ -77,7 +77,7 @@ function editCharacterController(){
     try {
         if(isset($_GET["id"])){
             $id = cleanUpInput($_GET["id"]);
-            $character = getRecipeByIdEdit($id);
+            $character = getCharacterByIdEdit($id);
         } else {
             echo "Virhe: id puuttuu ";    
         }
