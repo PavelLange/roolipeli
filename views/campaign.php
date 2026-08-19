@@ -4,8 +4,11 @@
     <p>Manage your campaigns and adventures.</p>
 
     <div class="campaign-grid">
-
+    <?php if(isLoggedIn()):?>
         <a href="/new-campaign" class="campaign-card">
+    <?php else: ?>
+        <a href="/login" class="campaign-card">
+    <?php endif?>
             <img src="/images/createCP.jpg" alt="Create a new campaign">
 
             <div class="campaign-card-content">
@@ -13,8 +16,11 @@
                 <p>Begin a new adventure and create your campaign.</p>
             </div>
         </a>
-
+        <?php if(isLoggedIn()):?>
         <a href="/my-campaigns" class="campaign-card">
+        <?php else: ?>
+        <a href="/login" class="campaign-card">
+        <?php endif?>
             <img src="/images/myCP.jpg" alt="My campaigns">
 
             <div class="campaign-card-content">

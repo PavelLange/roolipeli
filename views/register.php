@@ -1,3 +1,4 @@
+<?php require_once "../controllers/userController.php" ?>
 <main class="auth-page">
 
     <section class="auth-card">
@@ -16,8 +17,13 @@
                     type="text"
                     name="username"
                     maxlength="30"
+                    value="<?=htmlspecialchars($_POST['username'] ?? '') ?>"
                     required
                 >
+
+            <?php if(!empty($error)):?>
+                <p><?= htmlspecialchars($error) ?></p>
+            <?php endif?>
             </div>
 
             <div class="form-group">
@@ -26,8 +32,13 @@
                     id="email"
                     type="email"
                     name="email"
+                    value="<?=htmlspecialchars($_POST['email'] ?? '') ?>"
                     required
                 >
+
+                <?php if(!empty($error2)):?>
+                <p><?= htmlspecialchars($error2) ?></p>
+                <?php endif?>
             </div>
 
             <div class="form-group">
@@ -37,6 +48,7 @@
                     type="password"
                     name="password"
                     maxlength="30"
+                    value="<?=htmlspecialchars($_POST['password'] ?? '') ?>"
                     required
                 >
             </div>
