@@ -1,4 +1,5 @@
 <?php
+require_once "../models/campaigns.php";
 require_once "../models/character.php";
 require_once "../libraries/cleaners.php";
 function addCampaignController(){
@@ -7,15 +8,14 @@ function addCampaignController(){
         $notes = cleanUpInput($_POST['notes']);               
         $gmaster = $_SESSION["user"];
         if(strlen($name) > 1 || strlen($notes) > 1)  {
-        addCharacter($name, $notes, $creator); 
-        header("Location: /front.php"); 
+        addCampaign($name, $creator, $notes); 
+        header("Location: /my-campaigns"); 
     }
     else {
-        echo '<h1 class="centered">Täytä kohtiin enemmän tietoa!</h1>';
-        require "../views/new_character.php";
+        require "../views/add_campaign.php";
     }
     } else {
-        require "../views/new_character.php";
+        require "../views/add_campaign.php";
     }
 }
 
@@ -84,4 +84,13 @@ function editCampaignController(){
         header("Location: /");
         exit;
     }
+}
+
+
+function viewCampaignsController(){
+    $id = $_SESSION["user_id"];
+    $userinfo = getAllInfo($id); 
+    $allowned = getAllOwnedCampaigns($userinfo['Kayttajanimi']);
+    $alljoined = getAllJoinedCampaigns($userinfo['Kayttajanimi']);
+    require "../views/my_campaign.php";
 }

@@ -15,11 +15,11 @@ function isLoggedIn(){
 }
 
 function isMaster (){
-    $user = $_SESSION['user'];
+    $user = $_SESSION['username'];
     $role = getRole($user);
 
-    if($role['role'] === $_SESSION['user']) {
-        return true;
+    if($role['Pelinjohtaja'] === $_SESSION['username']) {
+        return True;
     }  else {
         return false;
     }

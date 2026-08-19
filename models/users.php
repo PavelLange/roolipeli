@@ -78,10 +78,20 @@ function dupeMail($email){
 
 function getMaster($user){
     $pdo = connectDB();
-    $sql = "SELECT Pelinjohtaja FROM Kampanjat WHERE ID=?";
+    $sql = "SELECT Pelinjohtaja FROM Kampanjat WHERE Pelinjohtaja=?";
     $stm = $pdo->prepare($sql);
     $stm->execute([$user]);
     $role = $stm->fetch(PDO::FETCH_ASSOC);
     return $role;
     
 } 
+
+function getRole($user){
+    $pdo = connectDB();
+    $sql = "SELECT Pelinjohtaja FROM Kampanjat WHERE Pelinjohtaja=?";
+    $stm = $pdo->prepare($sql);
+    $stm->execute([$user]);
+    $role = $stm->fetch(PDO::FETCH_ASSOC);
+    return $role;
+    
+}
