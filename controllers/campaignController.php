@@ -59,27 +59,16 @@ function editCampaignController(){
     try {
         if(isset($_GET["id"])){
             $id = cleanUpInput($_GET["id"]);
-            $character = getRecipeByIdEdit($id);
+            $campaign = getAllCampaigns($id);
         } else {
             echo "Virhe: id puuttuu ";    
         }
     } catch (PDOException $e){
         echo "Virhe hahmoa haettaessa: " . $e->getMessage();
     }
-    if($character){
-        $id = $character["ID"];
-        $name = $character["Nimi"];
-        $race = $character["Rotu"];
-        $class = $character["Hahmoluokka"];
-        $notes = $character["Muistiinpanot"];
-        $level = $character["Taso"];
-        $hp = $character["Elämäpisteet"];
-        $mp = $character["Magiapisteet"];
-        $str = $character["Voima"];
-        $dex = $character["Ketteryys"];
-        $int = $character["Älykkyys"];
-        $chr = $character["Karisma"];
-        require "../views/edit_character.php";
+    if($campaign) {
+
+        require "../views/edit_campaign.php";
     } else {
         header("Location: /");
         exit;
