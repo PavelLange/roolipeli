@@ -1,5 +1,6 @@
+<? require "../libaries/auth.php" ?> 
 <main class="home-page">
-
+    <?php if(!isLoggedIn()): ?>
     <section class="hero-section">
 
         <div class="hero-content">
@@ -35,6 +36,7 @@
     </section>
 
 
+    <?php endif ?>
     <section class="features-section">
 
         <div class="section-heading">
@@ -88,7 +90,7 @@
 
     </section>
 
-
+    <?php if(!isLoggedIn()): ?>
     <section class="cta-section">
 
         <div>
@@ -106,5 +108,5 @@
         </a>
 
     </section>
-
+    <?php endif ?>
 </main>

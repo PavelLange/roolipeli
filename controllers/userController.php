@@ -2,43 +2,48 @@
 require_once "../models/users.php";
 require_once '../libraries/cleaners.php';
 
+$error = "";
+$error2 = "";
 function registerController(){
     if(isset($_POST['username'], $_POST['email'], $_POST['password'])){
         $username = cleanUpInput($_POST['username']);
         $email = cleanUpInput($_POST['email']);
         $password = cleanUpInput($_POST['password']);
-
-        if(empty($username) || empty($email) || empty($password)){
-            $error = "Please fill in all fields.";
+        if(dupeUser($username)){
+            $error = "Username already in use!";
+        }elseif(dupeMail($email)) {
+            $error2 = "E-mail already in use!";
         }
-
-        try {
-            addUser($username, $email, $password);
-            header("Location: /"); 
+        else {
+            try {
+            AddUser($username, $email, $password);
+            header("Location: /login"); 
         } catch (PDOException $e){
             echo "Error while saving to database: " . $e->getMessage();
         }
-    } else {
-        require "views/register.view.php";
+        }
+       
     }
+    require "../views/register.php";
+    
 }
 
 function loginController(){
     if(isset($_POST['username'], $_POST['password'],)){
         $username = cleanUpInput($_POST['username']);
         $password = cleanUpInput($_POST['password']);
-  
-        $result = loginUser($username, $password);
+        
+        $result = login($username, $password);
         if($result){
-            $_SESSION['username'] = $result['username'];
-            $_SESSION['user_id'] = $result['user_id'];
+            $_SESSION['username'] = $result['Kayttajanimi'];
+            $_SESSION['user_id'] = $result['ID'];
             $_SESSION['session_id'] = session_id();
             header("Location: /"); 
         } else {
-            require "views/login.php";
+            require "../views/login.php";
         }
     } else {
-        require "views/login.php";
+        require "../views/login.php";
     }
 }
 

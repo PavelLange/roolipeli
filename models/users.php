@@ -41,11 +41,11 @@ function login($username, $password) {
 
 }
 
-function AddUser($username, $password, $email) {
+function AddUser($username,$email,$password) {
     $pdo = connectDB();
     $hashedpassword = hashPassword($password);
-    $data = [$username, $hashedpassword, $email];
-    $sql = "INSERT INTO Kayttajat (Kayttajanimi, Salasana, Sahkoposti, ) VALUES (?,?,?)";
+    $data = [$username,$email,$hashedpassword];
+    $sql = "INSERT INTO Kayttajat (Kayttajanimi,Sahkoposti,Salasana) VALUES (?,?,?)";
     $stm = $pdo->prepare($sql);
     $stm=$pdo->prepare($sql);
     return $stm->execute($data);

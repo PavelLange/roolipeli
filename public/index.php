@@ -14,14 +14,14 @@ switch ($uri) {
 
     case '/login':
         require __DIR__ . '/../partials/header.php';
-        require __DIR__ . '/../views/login.php';
+        loginController();
         require __DIR__ . '/../partials/footer.php';
         break;
 
 
     case '/register':
         require __DIR__ . '/../partials/header.php';
-        require __DIR__ . '/../views/register.php';
+        registerController();
         require __DIR__ . '/../partials/footer.php';
         break;
 
