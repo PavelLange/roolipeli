@@ -33,10 +33,12 @@
             <div class="footer-column">
 
                 <h3>Account</h3>
-
+                <?php if(isLoggedIn()):?>
+                <a href="/profile">Profile</a>
+                <?php else:?>
                 <a href="/login">Log in</a>
                 <a href="/register">Create account</a>
-
+                <?php endif?>
             </div>
 
         </div>

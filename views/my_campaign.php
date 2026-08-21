@@ -75,9 +75,9 @@
                     >
                         Open Campaign
                     </a>
-                    <?php ?>
+                    <?php $id = $owned["ID"] ?>
                     <a
-                        href="/edit-campaign"
+                        href="/edit-campaign?id=<?=$id?>"
                         class="button button-secondary"
                     >
                         Edit
@@ -128,14 +128,7 @@
                     >
                         Open Campaign
                     </a>
-                    <?php if($joined["Pelinjohtaja"] == $_SESSION["username"]): ?>
-                    <a
-                        href="/edit-campaign"
-                        class="button button-secondary"
-                    >
-                        Edit
-                    </a> 
-                    <?php endif; ?>
+
                 </div>
 
             </div>

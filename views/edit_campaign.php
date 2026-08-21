@@ -38,11 +38,12 @@
                 <label for="campaign-notes">Campaign notes</label>
 
                 <textarea
-                    id="campaign-notes"
-                    name="notes"
-                    rows="8"
-                    placeholder="Write a description or notes about your campaign..."
-                    value="<?= htmlspecialchars($campaign["Muistiinpanot"]) ?>"></textarea>
+                id="campaign-notes"
+                name="notes"
+                rows="8"
+                placeholder="Write a description or notes about your campaign..."
+                ><?= htmlspecialchars($campaign["Muistiinpanot"]) ?></textarea>
+                
             </div>
 
 

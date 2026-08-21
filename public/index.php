@@ -1,8 +1,9 @@
 <?php
 session_start();
-$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$uri = explode("?", $_SERVER["REQUEST_URI"])[0];
+$method = strtolower($_SERVER["REQUEST_METHOD"]);
 require_once "../libraries/auth.php";
-require_once "../controllers/userController.php";
+require_once "../controllers/userController.php"; 
 require_once "../controllers/campaignController.php";
 switch ($uri) {
 
@@ -34,28 +35,60 @@ switch ($uri) {
         break;
 
     case '/my-campaigns':
+        if(isLoggedIn()) {
         require __DIR__ . '/../partials/header.php';
         viewCampaignsController();
-        require __DIR__ . '/../partials/footer.php';
+        require __DIR__ . '/../partials/footer.php';   
+        }
+        else {
+        require __DIR__ . '/../partials/header.php';
+        loginController();
+        require __DIR__ . '/../partials/footer.php'; 
+        }
         break;
 
     case '/new-campaign':
+        if(isLoggedIn()) {
         require __DIR__ . '/../partials/header.php';
         addCampaignController();
         require __DIR__ . '/../partials/footer.php';
+        }
+        else {
+        require __DIR__ . '/../partials/header.php';
+        loginController();
+        require __DIR__ . '/../partials/footer.php';
+        }
         break;
 
     case '/new-character':
+        if(isLoggedIn()) {
         require __DIR__ . '/../partials/header.php';
         require __DIR__ . '/../views/new_character.php';
+        require __DIR__ . '/../partials/footer.php';    
+        }
+        else {
+        require __DIR__ . '/../partials/header.php';
+        loginController();
         require __DIR__ . '/../partials/footer.php';
+        }
         break;
 
     case '/edit-campaign':
-        require __DIR__ . '/../partials/header.php';
-        require __DIR__ . '/../views/edit_campaign.php';
-        require __DIR__ . '/../partials/footer.php';
-        break;
+        if(isLoggedIn()){
+            
+            if($method == "get"){
+            require __DIR__ . '/../partials/header.php';
+            editCampaignController();  
+            require __DIR__ . '/../partials/footer.php';
+            } else {
+                updateCampaignController();
+            }
+            } else {
+            require __DIR__ . '/../partials/header.php';
+            loginController();
+            require_once __DIR__ . '/../partials/footer.php';
+        }
+    break;
 
     
 

@@ -27,12 +27,12 @@ function updateCampaignController(){
         $id = cleanUpInput($_POST['id']);
         try{
             updateCampaign($name, $notes, $id);
-            header("Location: /front");    
+            header("Location: /my-campaigns");    
         } catch (PDOException $e){
-                echo "Virhe hahmoa päivitettäessä: " . $e->getMessage();
+                echo "Virhe kampanjaa päivitettäessä: " . $e->getMessage();
         }
     } else {
-        header("Location: /front");
+        header("Location: /my-campaigns");
         exit;
     }
 }
@@ -60,11 +60,12 @@ function editCampaignController(){
         if(isset($_GET["id"])){
             $id = cleanUpInput($_GET["id"]);
             $campaign = getAllCampaigns($id);
-        } else {
-            echo "Virhe: id puuttuu ";    
+        }
+        if ($_SESSION["username"] !== $campaign["Pelinjohtaja"]){
+            header("Location: /");
         }
     } catch (PDOException $e){
-        echo "Virhe hahmoa haettaessa: " . $e->getMessage();
+        echo "Virhe kampanjaa haettaessa: " . $e->getMessage();
     }
     if($campaign) {
 
