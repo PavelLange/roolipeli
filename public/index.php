@@ -3,6 +3,8 @@ session_start();
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 require_once "../libraries/auth.php";
 require_once "../controllers/userController.php";
+require_once "../controllers/characterController.php";
+
 switch ($uri) {
 
     case '/':
@@ -14,14 +16,14 @@ switch ($uri) {
 
     case '/login':
         require __DIR__ . '/../partials/header.php';
-        loginController();
+        require __DIR__ . '/../views/login.php';
         require __DIR__ . '/../partials/footer.php';
         break;
 
 
     case '/register':
         require __DIR__ . '/../partials/header.php';
-        registerController();
+        require __DIR__ . '/../views/register.php';
         require __DIR__ . '/../partials/footer.php';
         break;
 
@@ -38,19 +40,11 @@ switch ($uri) {
         require __DIR__ . '/../partials/footer.php';
         break;
 
-    case '/new-campaign':
-        require __DIR__ . '/../partials/header.php';
-        require __DIR__ . '/../views/add_campaign.php';
-        require __DIR__ . '/../partials/footer.php';
-        break;
-
     case '/new-character':
         require __DIR__ . '/../partials/header.php';
-        require __DIR__ . '/../views/new_character.php';
+        addCharacterController();
         require __DIR__ . '/../partials/footer.php';
         break;
-
-    
 
     case '/profile':
         require __DIR__ . '/../partials/header.php';
