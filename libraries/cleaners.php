@@ -7,12 +7,13 @@ function cleanDump($data){
 }
 
 function cleanUpInput($userinput){
-    $input = trim($userinput);
-    $cleaninput = filter_var($input,FILTER_SANITIZE_STRING);
-    return $cleaninput;
+    return trim(strip_tags($userinput));
 }
 
 function cleanUpOutput($useroutput){
-    $output = trim($useroutput);
-    $cleanoutput = htmlspecialchars($output);
+    return htmlspecialchars(
+        trim($useroutput),
+        ENT_QUOTES,
+        'UTF-8'
+    );
 }
