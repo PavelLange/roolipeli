@@ -1,4 +1,5 @@
 <?php
+require_once "../models/campaigns.php";
 require_once "../models/character.php";
 require_once "../libraries/cleaners.php";
 function addCampaignController(){
@@ -7,15 +8,14 @@ function addCampaignController(){
         $notes = cleanUpInput($_POST['notes']);               
         $gmaster = $_SESSION["user"];
         if(strlen($name) > 1 || strlen($notes) > 1)  {
-        addCharacter($name, $notes, $creator); 
-        header("Location: /front.php"); 
+        addCampaign($name, $creator, $notes); 
+        header("Location: /my-campaigns"); 
     }
     else {
-        echo '<h1 class="centered">Täytä kohtiin enemmän tietoa!</h1>';
-        require "../views/new_character.php";
+        require "../views/add_campaign.php";
     }
     } else {
-        require "../views/new_character.php";
+        require "../views/add_campaign.php";
     }
 }
 
@@ -27,12 +27,12 @@ function updateCampaignController(){
         $id = cleanUpInput($_POST['id']);
         try{
             updateCampaign($name, $notes, $id);
-            header("Location: /front");    
+            header("Location: /my-campaigns");    
         } catch (PDOException $e){
-                echo "Virhe hahmoa päivitettäessä: " . $e->getMessage();
+                echo "Virhe kampanjaa päivitettäessä: " . $e->getMessage();
         }
     } else {
-        header("Location: /front");
+        header("Location: /my-campaigns");
         exit;
     }
 }
@@ -59,27 +59,46 @@ function editCampaignController(){
     try {
         if(isset($_GET["id"])){
             $id = cleanUpInput($_GET["id"]);
-            $character = getRecipeByIdEdit($id);
-        } else {
-            echo "Virhe: id puuttuu ";    
+            $campaign = getAllCampaigns($id);
+        }
+        if ($_SESSION["username"] !== $campaign["Pelinjohtaja"]){
+            header("Location: /");
         }
     } catch (PDOException $e){
-        echo "Virhe hahmoa haettaessa: " . $e->getMessage();
+        echo "Virhe kampanjaa haettaessa: " . $e->getMessage();
     }
-    if($character){
-        $id = $character["ID"];
-        $name = $character["Nimi"];
-        $race = $character["Rotu"];
-        $class = $character["Hahmoluokka"];
-        $notes = $character["Muistiinpanot"];
-        $level = $character["Taso"];
-        $hp = $character["Elämäpisteet"];
-        $mp = $character["Magiapisteet"];
-        $str = $character["Voima"];
-        $dex = $character["Ketteryys"];
-        $int = $character["Älykkyys"];
-        $chr = $character["Karisma"];
-        require "../views/edit_character.php";
+    if($campaign) {
+
+        require "../views/edit_campaign.php";
+    } else {
+        header("Location: /");
+        exit;
+    }
+}
+
+
+function viewCampaignsController(){
+    $id = $_SESSION["user_id"];
+    $userinfo = getAllInfo($id); 
+    $allowned = getAllOwnedCampaigns($userinfo['Kayttajanimi']);
+    $alljoined = getAllJoinedCampaigns($userinfo['Kayttajanimi']);
+    require "../views/my_campaign.php";
+}
+
+function viewCampaignController() {
+    try {
+        if(isset($_GET["id"])){
+            $id = cleanUpInput($_GET["id"]);
+            $campaign = getAllCampaigns($id);
+        }
+        if ($_SESSION["username"] !== $campaign["Pelinjohtaja"] && !str_contains($campaign["Pelaajat"],$_SESSION["username"])){
+            header("Location: /");
+        }
+    } catch (PDOException $e){
+        echo "Virhe kampanjaa haettaessa: " . $e->getMessage();
+    }
+    if($campaign) {
+        require "../views/view_campaign.php";
     } else {
         header("Location: /");
         exit;
