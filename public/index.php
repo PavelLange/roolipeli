@@ -96,6 +96,20 @@ switch ($uri) {
         }
     break;
 
+    case '/view-campaign':
+        if(isLoggedIn()){
+            
+            if($method == "get"){
+            require __DIR__ . '/../partials/header.php';
+            viewCampaignController();  
+            require __DIR__ . '/../partials/footer.php';
+            } else {
+            require __DIR__ . '/../partials/header.php';
+            loginController();
+            require_once __DIR__ . '/../partials/footer.php';
+            }
+        }
+        break;
     case '/edit-character':
         require __DIR__ . '/../partials/header.php';
         require __DIR__ . '/../views/edit_character.php';
