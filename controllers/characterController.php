@@ -121,7 +121,7 @@ function addCharacterController()
             $dex = $character['agility'];
             $int = $character['intelligence'];
             $chr = $character['charisma'];
-
+            $creator = $_SESSION["username"];
 
             if (strlen($name) > 1) {
                 addCharacter($name, $race, $class, $notes, $level, $hp, $mp, $str, $con, $dex, $int, $chr, $creator);
