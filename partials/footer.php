@@ -25,7 +25,7 @@
 
                 <a href="/">Home</a>
                 <a href="/campaigns">Campaigns</a>
-                <a href="/new-character">Characters</a>
+                <a href="/characters">Characters</a>
 
             </div>
 
