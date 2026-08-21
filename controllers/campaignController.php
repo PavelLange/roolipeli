@@ -84,3 +84,23 @@ function viewCampaignsController(){
     $alljoined = getAllJoinedCampaigns($userinfo['Kayttajanimi']);
     require "../views/my_campaign.php";
 }
+
+function viewCampaignController() {
+    try {
+        if(isset($_GET["id"])){
+            $id = cleanUpInput($_GET["id"]);
+            $campaign = getAllCampaigns($id);
+        }
+        if ($_SESSION["username"] !== $campaign["Pelinjohtaja"] && !str_contains($campaign["Pelaajat"],$_SESSION["username"])){
+            header("Location: /");
+        }
+    } catch (PDOException $e){
+        echo "Virhe kampanjaa haettaessa: " . $e->getMessage();
+    }
+    if($campaign) {
+        require "../views/view_campaign.php";
+    } else {
+        header("Location: /");
+        exit;
+    }
+}

@@ -70,7 +70,8 @@
                 <div class="my-campaign-actions">
 
                     <a
-                        href="/campaign"
+                        <?php $id = $owned["ID"] ?>
+                        href="/view-campaign?id=<?=$id?>"
                         class="button button-primary"
                     >
                         Open Campaign
@@ -123,7 +124,8 @@
                 <div class="my-campaign-actions">
 
                     <a
-                        href="/campaign"
+                    <?php $id = $joined["ID"]?>
+                        href="/view-campaign?id=<?=$id?>"
                         class="button button-primary"
                     >
                         Open Campaign

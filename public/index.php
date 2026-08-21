@@ -90,7 +90,20 @@ switch ($uri) {
         }
     break;
 
-    
+    case '/view-campaign':
+        if(isLoggedIn()){
+            
+            if($method == "get"){
+            require __DIR__ . '/../partials/header.php';
+            viewCampaignController();  
+            require __DIR__ . '/../partials/footer.php';
+            } else {
+            require __DIR__ . '/../partials/header.php';
+            loginController();
+            require_once __DIR__ . '/../partials/footer.php';
+            }
+        }
+        break;
 
     case '/profile':
         require __DIR__ . '/../partials/header.php';
