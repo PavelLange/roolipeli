@@ -34,7 +34,7 @@
                 Campaigns
             </a>
 
-            <a href="/new-character" class="nav-link">
+            <a href="/characters" class="nav-link">
                 Characters
             </a>
 

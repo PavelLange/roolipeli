@@ -33,6 +33,12 @@ switch ($uri) {
         require __DIR__ . '/../partials/footer.php';
         break;
 
+    case '/characters':
+        require __DIR__ . '/../partials/header.php';
+        require __DIR__ . '/../views/character.php';
+        require __DIR__ . '/../partials/footer.php';
+        break;
+
     case '/my-campaigns':
         require __DIR__ . '/../partials/header.php';
         viewCampaignsController();
@@ -54,6 +60,12 @@ switch ($uri) {
     case '/edit-campaign':
         require __DIR__ . '/../partials/header.php';
         require __DIR__ . '/../views/edit_campaign.php';
+        require __DIR__ . '/../partials/footer.php';
+        break;
+
+    case '/edit-character':
+        require __DIR__ . '/../partials/header.php';
+        require __DIR__ . '/../views/edit_character.php';
         require __DIR__ . '/../partials/footer.php';
         break;
 
