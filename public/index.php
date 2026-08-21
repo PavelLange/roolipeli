@@ -34,6 +34,12 @@ switch ($uri) {
         require __DIR__ . '/../partials/footer.php';
         break;
 
+    case '/characters':
+        require __DIR__ . '/../partials/header.php';
+        require __DIR__ . '/../views/character.php';
+        require __DIR__ . '/../partials/footer.php';
+        break;
+
     case '/my-campaigns':
         if(isLoggedIn()) {
         require __DIR__ . '/../partials/header.php';
@@ -89,6 +95,12 @@ switch ($uri) {
             require_once __DIR__ . '/../partials/footer.php';
         }
     break;
+
+    case '/edit-character':
+        require __DIR__ . '/../partials/header.php';
+        require __DIR__ . '/../views/edit_character.php';
+        require __DIR__ . '/../partials/footer.php';
+        break;
 
     
 
