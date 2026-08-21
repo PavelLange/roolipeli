@@ -1,10 +1,13 @@
 <?php
+
 session_start();
-$uri = explode("?", $_SERVER["REQUEST_URI"])[0];
-$method = strtolower($_SERVER["REQUEST_METHOD"]);
+
+$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+
 require_once "../libraries/auth.php";
-require_once "../controllers/userController.php"; 
-require_once "../controllers/campaignController.php";
+require_once "../controllers/userController.php";
+require_once "../controllers/characterController.php";
+
 switch ($uri) {
 
     case '/':
@@ -16,14 +19,14 @@ switch ($uri) {
 
     case '/login':
         require __DIR__ . '/../partials/header.php';
-        loginController();
+        require __DIR__ . '/../views/login.php';
         require __DIR__ . '/../partials/footer.php';
         break;
 
 
     case '/register':
         require __DIR__ . '/../partials/header.php';
-        registerController();
+        require __DIR__ . '/../views/register.php';
         require __DIR__ . '/../partials/footer.php';
         break;
 
@@ -34,110 +37,77 @@ switch ($uri) {
         require __DIR__ . '/../partials/footer.php';
         break;
 
+
     case '/characters':
         require __DIR__ . '/../partials/header.php';
         require __DIR__ . '/../views/character.php';
         require __DIR__ . '/../partials/footer.php';
         break;
 
+
     case '/my-campaigns':
-        if(isLoggedIn()) {
-        require __DIR__ . '/../partials/header.php';
-        viewCampaignsController();
-        require __DIR__ . '/../partials/footer.php';   
-        }
-        else {
-        require __DIR__ . '/../partials/header.php';
-        loginController();
-        require __DIR__ . '/../partials/footer.php'; 
+        if (isLoggedIn()) {
+            require __DIR__ . '/../partials/header.php';
+            viewCampaignsController();
+            require __DIR__ . '/../partials/footer.php';
+        } else {
+            require __DIR__ . '/../partials/header.php';
+            loginController();
+            require __DIR__ . '/../partials/footer.php';
         }
         break;
+
 
     case '/new-campaign':
-        if(isLoggedIn()) {
-        require __DIR__ . '/../partials/header.php';
-        addCampaignController();
-        require __DIR__ . '/../partials/footer.php';
-        }
-        else {
-        require __DIR__ . '/../partials/header.php';
-        loginController();
-        require __DIR__ . '/../partials/footer.php';
+        if (isLoggedIn()) {
+            require __DIR__ . '/../partials/header.php';
+            addCampaignController();
+            require __DIR__ . '/../partials/footer.php';
+        } else {
+            require __DIR__ . '/../partials/header.php';
+            loginController();
+            require __DIR__ . '/../partials/footer.php';
         }
         break;
+
 
     case '/new-character':
-        if(isLoggedIn()) {
-        require __DIR__ . '/../partials/header.php';
-        require __DIR__ . '/../views/new_character.php';
-        require __DIR__ . '/../partials/footer.php';    
-        }
-        else {
-        require __DIR__ . '/../partials/header.php';
-        loginController();
-        require __DIR__ . '/../partials/footer.php';
-        }
-        break;
-
-    case '/edit-campaign':
-        if(isLoggedIn()){
-            
-            if($method == "get"){
+        if (isLoggedIn()) {
             require __DIR__ . '/../partials/header.php';
-            editCampaignController();  
+            addCharacterController();
             require __DIR__ . '/../partials/footer.php';
-            } else {
-                updateCampaignController();
-            }
-            } else {
+        } else {
             require __DIR__ . '/../partials/header.php';
             loginController();
-            require_once __DIR__ . '/../partials/footer.php';
-        }
-    break;
-
-    case '/view-campaign':
-        if(isLoggedIn()){
-            
-            if($method == "get"){
-            require __DIR__ . '/../partials/header.php';
-            viewCampaignController();  
             require __DIR__ . '/../partials/footer.php';
-            } else {
-            require __DIR__ . '/../partials/header.php';
-            loginController();
-            require_once __DIR__ . '/../partials/footer.php';
-            }
         }
         break;
-    case '/edit-character':
-        require __DIR__ . '/../partials/header.php';
-        require __DIR__ . '/../views/edit_character.php';
-        require __DIR__ . '/../partials/footer.php';
-        break;
 
-    
 
     case '/profile':
         require __DIR__ . '/../partials/header.php';
-        if(isLoggedIn()) {
-        require __DIR__ . '/../views/profile.php';
+
+        if (isLoggedIn()) {
+            require __DIR__ . '/../views/profile.php';
+        } else {
+            header('Location: /login');
+            exit;
         }
-        else {
-        header('Location: /login');
-        }
-        require_once __DIR__ . '/../partials/footer.php';
+
+        require __DIR__ . '/../partials/footer.php';
         break;
-        
-    
+
 
     case '/logout':
-    if(isLoggedIn()) {
-    logoutController();
-    }
-    else {
-        header('Location: /');
-    }
+        if (isLoggedIn()) {
+            logoutController();
+        } else {
+            header('Location: /');
+            exit;
+        }
+        break;
+
+
     default:
         http_response_code(404);
 

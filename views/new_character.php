@@ -1,68 +1,196 @@
-<?php require "../partials/header.php"; ?>
+<main class="character-form-page">
 
-<main class="container">
-    <h1>Create a Character</h1>
-    <p>This is where character creation will eventually happen.</p>
+    <section class="character-form-card">
+
+        <div class="character-form-heading">
+            <p class="eyebrow">Character creation</p>
+
+            <h1>Create Your Character</h1>
+
+            <p>
+                Choose your character and give them a name.
+            </p>
+        </div>
+
+        <form class="character-form" action="/new-character" method="post">
+
+            <!-- Character name -->
+            <div class="form-group">
+                <label for="character-name">Character name</label>
+
+                <input
+                    id="character-name"
+                    type="text"
+                    name="name"
+                    maxlength="30"
+                    required
+                    placeholder="Enter character name"
+                >
+            </div>
+
+
+            <!-- Character presets -->
+            <div class="character-selection">
+
+                <h2>Choose your character</h2>
+
+                <div class="character-grid">
+
+                    <?php foreach ($characterTypes as $key => $character): ?>
+
+                        <button
+                            type="button"
+                            class="character-card"
+                            data-character="<?= htmlspecialchars($key) ?>"
+                        >
+
+                            <div class="character-card-content">
+
+                                <h3>
+                                    <?= htmlspecialchars($character['name']) ?>
+                                </h3>
+
+                                <p>
+                                    <?= htmlspecialchars($character['race']) ?>
+                                </p>
+
+                                <div class="character-card-stats">
+
+                                    <p>
+                                        <strong>HP:</strong>
+                                        <?= htmlspecialchars($character['health']) ?>
+                                    </p>
+
+                                    <p>
+                                        <strong>Mana:</strong>
+                                        <?= htmlspecialchars($character['mana']) ?>
+                                    </p>
+
+                                    <p>
+                                        <strong>Strength:</strong>
+                                        <?= htmlspecialchars($character['strength']) ?>
+                                    </p>
+
+                                    <p>
+                                        <strong>Constitution:</strong>
+                                        <?= htmlspecialchars($character['constitution']) ?>
+                                    </p>
+
+                                    <p>
+                                        <strong>Agility:</strong>
+                                        <?= htmlspecialchars($character['agility']) ?>
+                                    </p>
+
+                                    <p>
+                                        <strong>Intelligence:</strong>
+                                        <?= htmlspecialchars($character['intelligence']) ?>
+                                    </p>
+
+                                    <p>
+                                        <strong>Charisma:</strong>
+                                        <?= htmlspecialchars($character['charisma']) ?>
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </button>
+
+                    <?php endforeach; ?>
+
+                </div>
+            </div>
+
+            <input type="hidden" name="race" id="selected-race">
+            <input type="hidden" name="class" id="selected-class">
+
+            <input type="hidden" name="level" id="selected-level">
+            <input type="hidden" name="health" id="selected-health">
+            <input type="hidden" name="mana" id="selected-mana">
+
+            <input type="hidden" name="strength" id="selected-strength">
+            <input type="hidden" name="constitution" id="selected-constitution">
+            <input type="hidden" name="agility" id="selected-agility">
+            <input type="hidden" name="intelligence" id="selected-intelligence">
+            <input type="hidden" name="charisma" id="selected-charisma">
+
+
+            <!-- Character notes -->
+            <div class="form-group character-notes">
+
+                <label for="notes">Character notes</label>
+
+                <textarea
+                    id="notes"
+                    name="notes"
+                    rows="6"
+                    placeholder="Write something about your character..."
+                ></textarea>
+
+            </div>
+
+
+            <!-- Buttons -->
+            <div class="character-form-actions">
+
+                <a href="/" class="button button-secondary">
+                    Cancel
+                </a>
+
+                <button
+                    type="submit"
+                    class="button button-primary"
+                    id="create-character-button"
+                    disabled
+                >
+                    Create Character
+                </button>
+
+            </div>
+
+        </form>
+
+    </section>
+
 </main>
 
-<form action="/new_character" method="post">
-    <label for="cname">Character Name:</label>
-    <input id="cname" type="text" name="name" placeholder="Enter character name" required>
 
-    <label for="class">Class:</label>
-    <select id="class" name="class">
-        <option value="Warrior">Warrior</option>
-        <option value="Mage">Mage</option>
-        <option value="Archer">Archer</option>
-        <option value="Rogue">Rogue</option>
-    </select>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
 
-    <label for="race">Race:</label>
-    <select id="race" name="race">
-        <option value="Human">Human</option>
-        <option value="Elf">Elf</option>
-        <option value="Dwarf">Dwarf</option>
-        <option value="Orc">Orc</option>
-    </select>
+        const characterCards = document.querySelectorAll('.character-card');
+        const createButton = document.getElementById('create-character-button');
+        const characterTypes = <?= json_encode($characterTypes) ?>;
 
-    <label for="level">Level:</label>
-    <input id="level" type="number" name="level" value="1" min="1" required>
+        characterCards.forEach(function (card) {
 
-    <label for="health">Health Points:</label>
-    <input id="health" type="number" name="health" value="100" min="0" required>
+            card.addEventListener('click', function () {
 
-    <label for="mana">Magic Points:</label>
-    <input id="mana" type="number" name="mana" value="50" min="0" required>
+                characterCards.forEach(function (card) {
+                    card.classList.remove('selected');
+                });
 
-    <label for="strength">Strength:</label>
-    <input id="strength" type="number" name="strength" value="10" min="0" required>
+                this.classList.add('selected');
 
-    <label for="contitution">Constitution:</label>
-    <input id="constitution" type="number" name="constitution" value="10" min="0" required>
+                const characterKey = this.dataset.character;
+                const character = characterTypes[characterKey];
 
-    <label for="agility">Agility:</label>
-    <input id="agility" type="number" name="agility" value="10" min="0" required>
+                document.getElementById('selected-race').value = character.race;
+                document.getElementById('selected-class').value = characterKey;
 
-    <label for="intelligence">Intelligence:</label>
-    <input id="intelligence" type="number" name="intelligence" value="10" min="0" required>
+                document.getElementById('selected-level').value = 1;
+                document.getElementById('selected-health').value = character.health;
+                document.getElementById('selected-mana').value = character.mana;
 
-    <label for="charisma">Charisma:</label>
-    <input id="charisma" type="number" name="charisma" value="10" min="0" required>
+                document.getElementById('selected-strength').value = character.strength;
+                document.getElementById('selected-constitution').value = character.constitution;
+                document.getElementById('selected-agility').value = character.agility;
+                document.getElementById('selected-intelligence').value = character.intelligence;
+                document.getElementById('selected-charisma').value = character.charisma;
 
-    <label for="creator">Creator:</label>
-    <input id="creator" type="text" name="creator" placeholder="Enter creator name" required>
-
-    <label for="campaign">Campaign:</label>
-    <input id="campaign" type="text" name="campaign" placeholder="Enter campaign name" required>
-
-    <label for="notes">Notes:</label>
-    <textarea
-    id="notes" name="description" rows="5" cols="40"
-    placeholder="Enter character description...">
-    </textarea>
-
-    <input id="sendbutton" type="submit" value="Save Character">
-</form>
-
-
-<?php require "../partials/footer.php"; ?>
+                createButton.disabled = false;
+            });
+        });
+    });
+</script>
