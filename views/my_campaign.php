@@ -83,6 +83,14 @@
                     >
                         Edit
                     </a>
+                    <br>
+                    <a
+                        href="/delete-campaign?id=<?= $id ?>"
+                        class="button button-primary"
+                        onClick="return confirm('Are you sure you want to delete this campaign?');"
+                    >
+                        Delete
+                    </a>
                     <?php  ?>
                 </div>
 

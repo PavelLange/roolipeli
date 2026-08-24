@@ -67,3 +67,11 @@ function addUserToCampaign($uname, $id){
     return $stm->execute($data);
 }
 
+function deleteAllOwnedCampaigns($name) {
+    $pdo = connectDB();
+    $sql = "DELETE FROM Kampanjat WHERE Pelinjohtaja=?";
+    $stm = $pdo->prepare($sql);
+    $stm->execute([$name]);
+    $user = $stm->fetchAll(PDO::FETCH_ASSOC);
+    return $user;
+}
