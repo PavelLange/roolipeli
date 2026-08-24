@@ -48,9 +48,9 @@
             </p>
         </div>
 
-
+        
         <div class="feature-grid">
-
+            <a href="/campaigns" class="feature-card-a">
             <article class="feature-card">
                 <div class="feature-icon">⚔</div>
 
@@ -61,8 +61,8 @@
                     your adventures organized.
                 </p>
             </article>
-
-
+            </a>
+            <a href="/characters" class=feature-card-a>
             <article class="feature-card">
                 <div class="feature-icon">♜</div>
 
@@ -72,9 +72,13 @@
                     Create your character and keep their
                     stats and progression up to date.
                 </p>
-            </article>
-
-
+            </article> 
+            </a>
+            <?php if(isLoggedIn()):?>
+            <a href="/new-campaign" class="feature-card-a">
+            <?php else:?>
+            <a href="/login" class="feature-card-a">
+            <?php endif?>
             <article class="feature-card">
                 <div class="feature-icon">✎</div>
 
@@ -85,7 +89,7 @@
                     ideas available to the game master.
                 </p>
             </article>
-
+            </a>
         </div>
 
     </section>
