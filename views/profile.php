@@ -15,5 +15,14 @@ $userinfo = getAllInfo($id);
     <br>
     <h1 class="profile-info">Member since:</h1> 
     <h2> <?= $userinfo["Tehty"] ?> </h2>
+    <br>
+    <a
+                        href="/delete-account?id=<?= $id ?>"
+                        class="button button-primary"
+                        onClick="return confirm('Are you sure you want to delete this account?');"
+                    >
+                        Delete account
+                    </a>
     </div>
+
 </div>

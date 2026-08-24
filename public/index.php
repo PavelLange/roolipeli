@@ -158,6 +158,22 @@ switch ($uri) {
             break;
 
 
+            case "/delete-campaign":
+                if(isLoggedIn()) {
+                    deleteCampaignController();
+                } else {
+                    loginController();
+                }
+            break;
+
+            case "/delete-account":
+                if(isLoggedIn()) {
+                    deleteUserController();
+                } else {
+                    loginController();
+                }
+            break;
+        
     default:
         http_response_code(404);
 

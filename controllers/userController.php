@@ -1,9 +1,11 @@
 <?php
 require_once "../models/users.php";
 require_once '../libraries/cleaners.php';
+require_once "../models/campaigns.php";
 
 $error = "";
 $error2 = "";
+$error3 = "";
 function registerController(){
     if(isset($_POST['username'], $_POST['email'], $_POST['password'])){
         $username = cleanUpInput($_POST['username']);
@@ -17,7 +19,14 @@ function registerController(){
         else {
             try {
             AddUser($username, $email, $password);
-            header("Location: /login"); 
+
+            $result = login($username, $password);
+            if($result){
+                $_SESSION['username'] = $result['Kayttajanimi'];
+                $_SESSION['user_id'] = $result['ID'];
+                $_SESSION['session_id'] = session_id();
+            }
+            header("Location: /"); 
         } catch (PDOException $e){
             echo "Error while saving to database: " . $e->getMessage();
         }
@@ -39,12 +48,33 @@ function loginController(){
             $_SESSION['user_id'] = $result['ID'];
             $_SESSION['session_id'] = session_id();
             header("Location: /"); 
-        } else {
-            require "../views/login.php";
         }
-    } else {
-        require "../views/login.php";
     }
+    require "../views/login.php";
+}
+
+function deleteUserController() {
+    try {
+        if(isset($_GET["id"])){
+            $id = cleanUpInput($_GET["id"]);
+            $user = getAllInfo($id);
+            if($user["ID"] === $_SESSION["user_id"]) {
+            deleteUser($id);
+            deleteAllOwnedCampaigns($_SESSION["username"]);
+            logoutController();
+            }
+            
+        } else {
+            echo "Virhe: id puuttuu ";    
+        }
+    } catch (PDOException $e){
+        echo "Virhe kayttajaa poistettaessa: " . $e->getMessage();
+    }
+
+
+
+    header("Location: /");
+    exit;
 }
 
 function logoutController(){

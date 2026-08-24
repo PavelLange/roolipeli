@@ -39,9 +39,13 @@ function updateCampaignController(){
 
 function deleteCampaignController(){
     try {
-        if(isset($_GET["ID"])){
-            $id = cleanUpInput($_GET["ID"]);
-            deleteCampaign($id);
+        if(isset($_GET["id"])){
+            $id = cleanUpInput($_GET["id"]);
+            $master = getAllCampaigns($id);
+            if($master["Pelinjohtaja"] === $_SESSION["username"]) {
+            deleteCampaign($id);  
+            }
+            
         } else {
             echo "Virhe: id puuttuu ";    
         }
@@ -51,7 +55,7 @@ function deleteCampaignController(){
 
 
 
-    header("Location: /front");
+    header("Location: /my-campaigns");
     exit;
 }
 

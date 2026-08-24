@@ -32,6 +32,9 @@ function login($username, $password) {
     $stm = $pdo->prepare($sql);
     $stm->execute([$username]);
     $user = $stm->fetch(PDO::FETCH_ASSOC);
+    if (!$user) {
+        return false;
+    }
     $hashedpassword = $user["Salasana"];
     if($hashedpassword && password_verify($password, $hashedpassword)) {
         return $user;
