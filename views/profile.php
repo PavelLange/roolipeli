@@ -1,8 +1,19 @@
-<?php require_once "../models/users.php";
-
+<?php require_once "../models/users.php";?>
+<?php
 $id = $_SESSION["user_id"];
 $userinfo = getAllInfo($id); 
-echo "<h3>Username: " . $userinfo["Kayttajanimi"] . "</h3>";
-echo "<h3>e-mail: " . $userinfo["Sahkoposti"] . "</h3>";
 ?>
+<div class="profile-div">
+<img src="/images/profile_pic.jpg" class="profile-pic">
+
+    <div class="profile-text">
+    <h1 class="profile-info">Username:</h1>
+    <h2> <?= $userinfo["Kayttajanimi"] ?> </h2>
+    <br>
+    <h1 class="profile-info">E-mail:</h1>
+    <h2> <?= $userinfo["Sahkoposti"] ?> </h2>
+    <br>
+    <h1 class="profile-info">Member since:</h1> 
+    <h2> <?= $userinfo["Tehty"] ?> </h2>
+    </div>
 </div>
