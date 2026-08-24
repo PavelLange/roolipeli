@@ -44,8 +44,9 @@ function login($username, $password) {
 function AddUser($username,$email,$password) {
     $pdo = connectDB();
     $hashedpassword = hashPassword($password);
-    $data = [$username,$email,$hashedpassword];
-    $sql = "INSERT INTO Kayttajat (Kayttajanimi,Sahkoposti,Salasana) VALUES (?,?,?)";
+    $joined = date("F Y");
+    $data = [$username,$email,$hashedpassword,$joined];
+    $sql = "INSERT INTO Kayttajat (Kayttajanimi,Sahkoposti,Salasana,Tehty) VALUES (?,?,?,?)";
     $stm = $pdo->prepare($sql);
     $stm=$pdo->prepare($sql);
     return $stm->execute($data);
@@ -94,4 +95,11 @@ function getRole($user){
     $role = $stm->fetch(PDO::FETCH_ASSOC);
     return $role;
     
+}
+
+function deleteUser($id) {
+    $pdo = connectDB();
+    $sql = "DELETE FROM Kayttajat WHERE ID=?";
+    $stm=$pdo->prepare($sql);
+    return $stm->execute([$id]);
 }
