@@ -68,7 +68,6 @@ function editCampaignController(){
         echo "Virhe kampanjaa haettaessa: " . $e->getMessage();
     }
     if($campaign) {
-
         require "../views/edit_campaign.php";
     } else {
         header("Location: /");
