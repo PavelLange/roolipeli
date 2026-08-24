@@ -139,6 +139,9 @@ function addCharacterController()
 
 function updateCharacterController(){
     if(isset($_POST['name'],$_POST['race'], $_POST['class'], $_POST['notes'], $_POST['level'], $_POST['health'], $_POST['mana'], $_POST['strength'], $_POST['constitution'], $_POST['agility'], $_POST['intelligence'], $_POST['charisma'])){
+        $name = cleanUpInput($_POST['name']);
+        $race = cleanUpInput($_POST['race']);
+        $class = cleanUpInput($_POST['class']);
         $notes = cleanUpInput($_POST['notes']);   
         $level = cleanUpInput($_POST['level']);  
         $hp = cleanUpInput($_POST['health']);    
@@ -151,7 +154,7 @@ function updateCharacterController(){
         $id = cleanUpInput($_POST['id']);
 
         try{
-            updateCharacter($notes, $level, $hp, $mp, $str, $con, $dex, $int, $chr, $id);
+            updateCharacter($name,$race,$class,$notes, $level, $hp, $mp, $str, $con, $dex, $int, $chr, $id);
             header("Location: /front");    
         } catch (PDOException $e){
                 echo "Virhe hahmoa päivitettäessä: " . $e->getMessage();
@@ -182,12 +185,8 @@ function deleteCharacterController(){
 
 function editCharacterController(){
     try {
-        if(isset($_GET["id"])){
-            $id = cleanUpInput($_GET["id"]);
-            $character = getCharacterByIdEdit($id);
-        } else {
-            echo "Virhe: id puuttuu ";    
-        }
+        $creator = cleanUpInput($_SESSION["username"]);
+        $character = getCharacterByCreator($creator);
     } catch (PDOException $e){
         echo "Virhe hahmoa haettaessa: " . $e->getMessage();
     }
@@ -198,12 +197,12 @@ function editCharacterController(){
         $class = $character["Hahmoluokka"];
         $notes = $character["Muistiinpanot"];
         $level = $character["Taso"];
-        $hp = $character["Elämäpisteet"];
+        $hp = $character["Elamapisteet"];
         $mp = $character["Magiapisteet"];
         $str = $character["Voima"];
-        $con = $character["Kestävyys"];
+        $con = $character["Kestavyys"];
         $dex = $character["Ketteryys"];
-        $int = $character["Älykkyys"];
+        $int = $character["Alykkyys"];
         $chr = $character["Karisma"];
         require "../views/edit_character.php";
     } else {

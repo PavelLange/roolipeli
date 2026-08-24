@@ -30,16 +30,16 @@ function AddCharacter($name, $race, $class, $notes, $level, $hp, $mp, $str, $con
 
     $pdo = connectDB();
     $data = [$name, $race, $class, $notes, $level, $hp, $mp, $str, $con, $dex, $int, $chr, $creator];
-    $sql = "INSERT INTO Hahmo (Nimi, Rotu, Hahmoluokka, Muistiinpanot, Taso, Elämäpisteet, Magiapisteet, Voima, Kestävyys, Ketteryys, Älykkyys, Karisma, Tekija) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO Hahmo (Nimi, Rotu, Hahmoluokka, Muistiinpanot, Taso, Elamapisteet, Magiapisteet, Voima, Kestavyys, Ketteryys, Alykkyys, Karisma, Tekija) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stm = $pdo->prepare($sql);
     return $stm->execute($data);
 }
 
 
-function updateCharacter($notes, $level, $hp, $mp, $str, $con ,$dex, $int, $chr, $id){
+function updateCharacter($name, $race, $class, $notes, $level, $hp, $mp, $str, $con, $dex, $int, $chr, $id){ 
     $pdo = connectDB();
-    $data = [$notes, $level, $hp, $mp, $str, $con,$dex, $int, $chr, $id];
-    $sql = "UPDATE Hahmo SET  Muistiinpanot = ?, Taso = ?, Elämäpisteet = ?, Magiapisteet = ?, Voima = ?,Kestävyys = ?, Ketteryys = ?, Älykkyys = ?, Karisma = ?  WHERE ID = ?";
+    $data = [$name, $race, $class, $notes, $level, $hp, $mp, $str, $con, $dex, $int, $chr, $id];
+    $sql = "UPDATE Hahmo SET Nimi = ?, Rotu = ?, Hahmoluokka = ?, Muistiinpanot = ?, Taso = ?, Elamapisteet = ?, Magiapisteet = ?, Voima = ?, Kestavyys = ?, Ketteryys = ?, Alykkyys = ?, Karisma = ? WHERE ID = ?";
     $stm = $pdo->prepare($sql);
     return $stm->execute($data);
 }
@@ -92,3 +92,12 @@ function listAllCharactersItems ($charname) {
     $user = $stm->fetch(PDO::FETCH_ASSOC);
     return $user;
 }
+function getCharacterByCreator($creator) {
+    $pdo = connectDB();
+
+    $sql = "SELECT * FROM Hahmo WHERE Tekija = ?";
+    $stm = $pdo->prepare($sql);
+    $stm->execute([$creator]);
+
+    return $stm->fetch(PDO::FETCH_ASSOC);
+} 
