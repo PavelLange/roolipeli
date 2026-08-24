@@ -124,6 +124,22 @@ switch ($uri) {
             require_once __DIR__ . '/../partials/footer.php';
             }
         break;
+
+        case '/edit-character':
+            if(isLoggedIn()){
+            if($method == "get"){
+            require __DIR__ . '/../partials/header.php';
+            editCharacterController();  
+            require __DIR__ . '/../partials/footer.php';
+            } else {
+            updateCharacterController();
+            }
+            } else {
+            require __DIR__ . '/../partials/header.php';
+            loginController();
+            require_once __DIR__ . '/../partials/footer.php';
+            }
+        break;
     
 
         case '/view-campaign':

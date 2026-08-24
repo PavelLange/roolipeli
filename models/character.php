@@ -37,10 +37,12 @@ function AddCharacter($name, $race, $class, $notes, $level, $hp, $mp, $str, $con
 }
 
 
-function updateCharacter($notes, $level, $hp, $mp, $str, $con ,$dex, $int, $chr, $id){
+function updateCharacter($name, $race, $class, $notes, $level, $hp, $mp, $str, $con, $dex, $int, $chr, $id){ 
     $pdo = connectDB();
-    $data = [$notes, $level, $hp, $mp, $str, $con,$dex, $int, $chr, $id];
-    $sql = "UPDATE Hahmo SET  Muistiinpanot = ?, Taso = ?, Elamapisteet = ?, Magiapisteet = ?, Voima = ?,Kestavyys = ?, Ketteryys = ?, Alykkyys = ?, Karisma = ?  WHERE ID = ?";
+
+    $data = [$name, $race, $class, $notes, $level, $hp, $mp, $str, $con, $dex, $int, $chr, $id];
+    $sql = "UPDATE Hahmo SET Nimi = ?, Rotu = ?, Hahmoluokka = ?, Muistiinpanot = ?, Taso = ?, Elamapisteet = ?, Magiapisteet = ?, Voima = ?, Kestavyys = ?, Ketteryys = ?, Alykkyys = ?, Karisma = ? WHERE ID = ?";
+
     $stm = $pdo->prepare($sql);
     return $stm->execute($data);
 }
@@ -93,6 +95,15 @@ function listAllCharactersItems ($charname) {
     $user = $stm->fetch(PDO::FETCH_ASSOC);
     return $user;
 }
+function getCharacterByCreator($creator) {
+    $pdo = connectDB();
+
+    $sql = "SELECT * FROM Hahmo WHERE Tekija = ?";
+    $stm = $pdo->prepare($sql);
+    $stm->execute([$creator]);
+
+    return $stm->fetch(PDO::FETCH_ASSOC);
+} 
 
 function getAllOwnCharacters($username) {
  

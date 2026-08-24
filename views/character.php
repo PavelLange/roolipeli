@@ -17,7 +17,7 @@
             </div>
         </a>
         <?php if(isLoggedIn()):?>
-        <a href="/edit-character" class="campaign-card">
+            <a href="/edit-character" class="campaign-card">
         <?php else: ?>
         <a href="/login" class="campaign-card">
         <?php endif?>
