@@ -107,3 +107,14 @@ function viewCampaignController() {
         exit;
     }
 }
+
+function InvitationController() {
+    if (isset($_POST["accept"])) {
+        $id = $_POST["accept"];
+        $campaign
+        addUserToCampaign($_SESSION["username"] ,$id);
+        
+
+    }
+require "../views/front.php";
+}

@@ -4,17 +4,18 @@ session_start();
 
 $uri = explode("?", $_SERVER["REQUEST_URI"])[0];
 $method = strtolower($_SERVER["REQUEST_METHOD"]);
-
+require_once "../models/campaigns.php";
 require_once "../libraries/auth.php";
 require_once "../controllers/userController.php";
 require_once "../controllers/characterController.php";
 require_once "../controllers/campaignController.php";
 
+
 switch ($uri) {
 
     case '/':
         require __DIR__ . '/../partials/header.php';
-        require __DIR__ . '/../views/front.php';
+        InvitationController();
         require __DIR__ . '/../partials/footer.php';
         break;
 

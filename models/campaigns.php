@@ -61,9 +61,10 @@ function getAllOwnedCampaigns($name) {
 
 function addUserToCampaign($uname, $id){
     $pdo = connectDB();
-    $data = [$uname, $id];
-    $sql = "UPDATE Kampanjat SET Pelaajat = ? + Pelaajat WHERE ID = ?";
+    $sql = "UPDATE Kampanjat SET Pelaajat = IF(Pelaajat IS NULL OR Pelaajat = '', ?, CONCAT(Pelaajat, ', ', ?)) 
+    WHERE ID = ?";
     $stm = $pdo->prepare($sql);
+    $data = [$uname, $uname, $id];
     return $stm->execute($data);
 }
 
@@ -72,6 +73,40 @@ function deleteAllOwnedCampaigns($name) {
     $sql = "DELETE FROM Kampanjat WHERE Pelinjohtaja=?";
     $stm = $pdo->prepare($sql);
     $stm->execute([$name]);
+    $user = $stm->fetchAll(PDO::FETCH_ASSOC);
+    return $user;
+}
+
+function sendInvite($sender,$recipient, $campaign,$campaignid) {
+    $pdo = connectDB();
+    $data = [$sender, $recipient, $campaign,$campaignid];
+    $sql = "INSERT INTO Kutsut (Lahettaja, Vastaanottaja, Kampanja, Kampanjanid) VALUES (?,?,?,?)";
+    $stm = $pdo->prepare($sql);
+    $stm=$pdo->prepare($sql);
+    return $stm->execute($data);
+}
+
+function declinedInvite($id) {
+    $pdo = connectDB();
+    $sql = "DELETE FROM Kutsut WHERE ID=?";
+    $stm=$pdo->prepare($sql);
+    return $stm->execute([$id]);
+}
+
+function getInvites($user) {
+    $pdo = connectDB();
+    $sql = "SELECT * FROM Kutsut WHERE Vastaanottaja=?";
+    $stm = $pdo->prepare($sql);
+    $stm->execute([$user]);
+    $user = $stm->fetchAll(PDO::FETCH_ASSOC);
+    return $user;
+}
+
+function getInviteById($user) {
+    $pdo = connectDB();
+    $sql = "SELECT * FROM Kutsut WHERE ID=?";
+    $stm = $pdo->prepare($sql);
+    $stm->execute([$user]);
     $user = $stm->fetchAll(PDO::FETCH_ASSOC);
     return $user;
 }
