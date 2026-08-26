@@ -1849,3 +1849,27 @@ a {
         grid-template-columns: 1fr;
     }
 }
+
+.my-character-image {
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+    background: #0b0e13;
+}
+
+.my-character-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 22%;
+}
+
+.my-campaign-card:hover .my-character-image img {
+    transform: scale(1.04);
+}
+
+@media (max-width: 750px) {
+    .my-character-image {
+        height: 220px;
+    }
+}

@@ -165,28 +165,51 @@ function updateCharacterController(){
     }
 }
 
-function deleteCharacterController(){
-    try {
-        if(isset($_GET["ID"])){
-            $id = cleanUpInput($_GET["ID"]);
-            deleteCharacter($id);
-        } else {
-            echo "Virhe: id puuttuu ";    
-        }
-    } catch (PDOException $e){
-        echo "Virhe hahmoa poistettaessa: " . $e->getMessage();
+function deleteCharacterController()
+{
+    if (!isset($_GET["id"])) {
+        header("Location: /my-characters");
+        exit;
     }
 
-    $allCampaigns = getAllCampaigns();
+    try {
+        $id = cleanUpInput($_GET["id"]);
 
-    header("Location: /");
-    exit;
+        deleteCharacter($id);
+
+        header("Location: /my-characters");
+        exit;
+
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+    }
 }
 
-function editCharacterController(){
+function editCharacterController()
+{
     try {
-        $creator = cleanUpInput($_SESSION["username"]);
-        $character = getCharacterByCreator($creator);
+
+        if (!isset($_GET["id"])) {
+            header("Location: /my-characters");
+            exit;
+        }
+
+        $id = cleanUpInput($_GET["id"]);
+
+        $character = getCharacterByIdEdit($id);
+
+        if (!$character) {
+            header("Location: /my-characters");
+            exit;
+        }
+
+        if ($character["Tekija"] !== $_SESSION["username"]) {
+            header("Location: /my-characters");
+            exit;
+        }
+
+        require "../views/edit_character.php";
+
     } catch (PDOException $e){
         echo "Virhe hahmoa haettaessa: " . $e->getMessage();
     }
@@ -210,3 +233,26 @@ function editCharacterController(){
         exit;
     }
 }
+
+function myCharacterController()
+{
+    if (!isLoggedIn()) {
+        header("Location: /login");
+        exit;
+    }
+
+    try {
+
+        $username = $_SESSION["username"];
+
+        $characters = getAllOwnCharacters($username);
+
+        require "../views/my_characters.php";
+
+    } catch (PDOException $e) {
+
+        echo "Error loading characters: " . $e->getMessage();
+        exit;
+
+    }
+} 

@@ -17,15 +17,15 @@
             </div>
         </a>
         <?php if(isLoggedIn()):?>
-            <a href="/edit-character" class="campaign-card">
+            <a href="/my-characters" class="campaign-card">
         <?php else: ?>
         <a href="/login" class="campaign-card">
         <?php endif?>
             <img src="/images/Image2.jpg" alt="Edit Character">
 
             <div class="campaign-card-content">
-                <h2>Edit Character</h2>
-                <p>Make Changes To Your Character.</p>
+                <h2>My Characters</h2>
+                <p>View And Manage Your Characters.</p>
             </div>
         </a>
 
