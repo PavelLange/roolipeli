@@ -1,5 +1,9 @@
 <?php require_once "../libraries/auth.php"?>
 <?php require_once "../controllers/campaignController.php" ?>
+<?php require_once "../libraries/auth.php";
+
+$currentPage = $_SERVER['REQUEST_URI'];
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,15 +31,15 @@
         <!-- Main navigation -->
         <nav class="main-nav" aria-label="Main navigation">
 
-            <a href="/" class="nav-link active">
+            <a href="/" class="nav-link <?= $currentPage === '/' ? 'active' : '' ?>">
                 Home
             </a>
 
-            <a href="/campaigns" class="nav-link">
+            <a href="/campaigns" class="nav-link <?= str_starts_with($currentPage, '/campaigns') ? 'active' : '' ?>">
                 Campaigns
             </a>
 
-            <a href="/characters" class="nav-link">
+            <a href="/characters" class="nav-link <?= str_starts_with($currentPage, '/characters') ? 'active' : '' ?>">
                 Characters
             </a>
 

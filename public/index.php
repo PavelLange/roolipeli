@@ -174,6 +174,30 @@ switch ($uri) {
                     loginController();
                 }
             break;
+            
+            case "/delete-character":
+                if (isLoggedIn()) {
+                    deleteCharacterController();
+                } else {
+                    loginController();
+                }
+            break;
+
+            case '/my-characters':
+                if (isLoggedIn()) {
+                    require __DIR__ . '/../partials/header.php';
+            
+                    myCharacterController();
+            
+                    require __DIR__ . '/../partials/footer.php';
+                } else {
+                    require __DIR__ . '/../partials/header.php';
+            
+                    loginController();
+            
+                    require __DIR__ . '/../partials/footer.php';
+                }
+                break;
         
     default:
         http_response_code(404);
