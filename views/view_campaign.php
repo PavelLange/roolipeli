@@ -45,49 +45,35 @@
             </p>
 
 
-            <div class="campaign-character-list">
+            <div class="campaign-character-list" id="campaign-character-list">
 
                 <!-- PLACEHOLDER CHARACTER -->
-
-                <article class="campaign-character-card">
+                <?php foreach ($campaignCharacters as $character): ?>
+                <article
+                    class="campaign-character-card"
+                    data-character-id="<?= htmlspecialchars($character['ID']) ?>"
+                >
 
                     <div>
-                        <h3>Drakona</h3>
+                        <h3><?= htmlspecialchars($character["Nimi"]) ?></h3>
 
                         <p>
-                            Human · Mage
+                            <?= htmlspecialchars($character["Rotu"]) ?>
+                            ·
+                            <?= htmlspecialchars($character["Hahmoluokka"]) ?>
                         </p>
                     </div>
 
                     <button
                         type="button"
-                        class="button button-secondary"
+                        class="button button-secondary remove-character-button"
+                        data-character-id="<?= htmlspecialchars($character['ID']) ?>"
+                        data-campaign-id="<?= htmlspecialchars($campaign['ID']) ?>"
                     >
                         Remove
                     </button>
-
                 </article>
-
-
-                <article class="campaign-character-card">
-
-                    <div>
-                        <h3>Arkon</h3>
-
-                        <p>
-                            Elf · Warrior
-                        </p>
-                    </div>
-
-                    <button
-                        type="button"
-                        class="button button-secondary"
-                    >
-                        Remove
-                    </button>
-
-                </article>
-
+                <?php endforeach; ?>
             </div>
 
         </div>
@@ -104,39 +90,22 @@
             </p>
 
 
-            <div class="character-list">
+            <div class="character-list" id="character-list">
+                <?php foreach ($campaignCharacters as $character): ?>
+                    <article
+                        class="character-display-card"
+                        data-character-id="<?= htmlspecialchars($character['ID']) ?>"
+                    >
+                        <h3><?= htmlspecialchars($character["Nimi"]) ?></h3>
+                        <p><?= htmlspecialchars($character["Rotu"]) ?> · <?= htmlspecialchars($character["Hahmoluokka"]) ?></p>
+                        <div class="character-stats">
+                            <span>HP: <?= htmlspecialchars($character["Elamapisteet"]) ?></span>
+                            <span>Mana: <?= htmlspecialchars($character["Magiapisteet"]) ?></span>
+                            <span>Status: <?= htmlspecialchars($character["Status"]) ?></span>
+                        </div>
 
-                <article class="character-display-card">
-
-                    <h3>Drakona</h3>
-
-                    <p>Human · Mage</p>
-
-                    <div class="character-stats">
-
-                        <span>HP: 65</span>
-                        <span>Mana: 35</span>
-
-                    </div>
-
-                </article>
-
-
-                <article class="character-display-card">
-
-                    <h3>Arkon</h3>
-
-                    <p>Elf · Warrior</p>
-
-                    <div class="character-stats">
-
-                        <span>HP: 90</span>
-                        <span>Mana: 20</span>
-
-                    </div>
-
-                </article>
-
+                    </article>
+                <?php endforeach; ?>
             </div>
 
         </div>
@@ -157,8 +126,10 @@
 
                 <?php foreach ($availableCharacters as $character): ?>
 
-                <article class="available-character-card">
-
+                <article
+                    class="available-character-card"
+                    data-character-id="<?= htmlspecialchars($character['ID']) ?>"
+                >
                     <div>
                         <h3><?php echo htmlspecialchars($character['Nimi']); ?></h3>
 
@@ -166,13 +137,27 @@
                             <?php echo htmlspecialchars($character['Rotu']); ?> · <?php echo htmlspecialchars($character['Hahmoluokka']); ?>
                         </p>
                     </div>
-
+                    <?php if (in_array($character['ID'], array_column($campaignCharacters, 'ID'))): ?>
+                        <button
+                            type="button"
+                            class="button button-primary add-character-button"
+                            disabled
+                            data-character-id="<?= htmlspecialchars($character['ID']) ?>"
+                            data-campaign-id="<?= htmlspecialchars($campaign['ID']) ?>"
+                        >
+                            Added
+                        </button>
+                    <?php else: ?>
                     <button
                         type="button"
-                        class="button button-primary"
+                        class="button button-primary add-character-button"
+                        data-character-id="<?= htmlspecialchars($character['ID']) ?>"
+                        data-campaign-id="<?= htmlspecialchars($campaign['ID']) ?>"
                     >
                         Add
                     </button>
+                    <?php endif; ?>
+
 
                 </article>
 
@@ -205,3 +190,5 @@
     </section>
 
 </main>
+
+<script src="js/campaign.js"></script>

@@ -75,3 +75,52 @@ function deleteAllOwnedCampaigns($name) {
     $user = $stm->fetchAll(PDO::FETCH_ASSOC);
     return $user;
 }
+
+function addCharacterToCampaign($campaignId, $characterId) {
+    $pdo = connectDB();
+
+    $sql = "
+        INSERT INTO Kampanjahahmot (KampanjaID, HahmoID)
+        VALUES (?, ?)
+    ";
+
+    $statement = $pdo->prepare($sql);
+
+    return $statement->execute([
+        $campaignId,
+        $characterId
+    ]);
+}
+
+function removeCharacterFromCampaign($campaignId, $characterId) {
+    $pdo = connectDB();
+
+    $sql = "
+        DELETE FROM Kampanjahahmot
+        WHERE KampanjaID = ? AND HahmoID = ?
+    ";
+
+    $statement = $pdo->prepare($sql);
+
+    return $statement->execute([
+        $campaignId,
+        $characterId
+    ]);
+}
+
+function getCampaignCharacters($campaignId) {
+    $pdo = connectDB();
+
+    $sql = "
+        SELECT Hahmo.*
+        FROM Hahmo
+        INNER JOIN Kampanjahahmot
+            ON Hahmo.ID = Kampanjahahmot.HahmoID
+        WHERE Kampanjahahmot.KampanjaID = ?
+    ";
+
+    $statement = $pdo->prepare($sql);
+    $statement->execute([$campaignId]);
+
+    return $statement->fetchAll(PDO::FETCH_ASSOC);
+}

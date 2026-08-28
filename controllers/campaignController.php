@@ -101,10 +101,66 @@ function viewCampaignController() {
         echo "Virhe kampanjaa haettaessa: " . $e->getMessage();
     }
     if($campaign) {
+        $campaignCharacters = getCampaignCharacters($id);
         $availableCharacters = getAllOwnCharacters($_SESSION["username"]);
         require "../views/view_campaign.php";
     } else {
         header("Location: /");
         exit;
     }
+}
+
+function addCharacterToCampaignController() {
+    if (
+        !isset($_POST['campaign_id'], $_POST['character_id'])
+    ) {
+        http_response_code(400);
+        echo json_encode([
+            "error" => "Campaign ID and character ID are required"
+        ]);
+        exit;
+    }
+
+    $campaignId = cleanUpInput($_POST['campaign_id']);
+    $characterId = cleanUpInput($_POST['character_id']);
+
+    addCharacterToCampaign($campaignId, $characterId);
+
+    header("Content-Type: application/json");
+
+    $character = getAllCharacterInfo($characterId);
+
+    echo json_encode([
+        "success" => true,
+        "character" => [
+            "id" => $character["ID"],
+            "name" => $character["Nimi"],
+            "race" => $character["Rotu"],
+            "className" => $character["Hahmoluokka"],
+            "hp" => $character["Elamapisteet"],
+            "mana" => $character["Magiapisteet"],
+            "status" => $character["Status"]
+        ]
+    ]);
+
+}
+
+function removeCharacterFromCampaignController() {
+    if (
+        !isset($_POST['campaign_id'], $_POST['character_id'])
+    ) {
+        http_response_code(400);
+        echo json_encode([
+            "error" => "Campaign ID and character ID are required"
+        ]);
+        exit;
+    }
+
+    $campaignId = cleanUpInput($_POST['campaign_id']);
+    $characterId = cleanUpInput($_POST['character_id']);
+
+    removeCharacterFromCampaign($campaignId, $characterId);
+
+    header("Content-Type: application/json");
+    echo json_encode(["success" => true]);
 }
