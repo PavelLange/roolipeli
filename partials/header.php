@@ -98,7 +98,7 @@
             <h1><?= $invite["Lahettaja"] ?> invited you to a campaign</h1>
             <h2>Campaign: <?= $invite["Kampanja"] ?></h2>
             <?php $id = $invite["ID"]?>
-            <button class="accept" name="accept" value="<?=$id?>" >Accept</button><button class="decline" value="decline">Decline</button>
+            <button class="accept" name="accept" value="<?=$id?>" >Accept </button><button class="decline" name="decline" value="<?=$id?>">Decline</button>
             <hr style="width:100%"/>
             </form>
             </div>

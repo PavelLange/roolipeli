@@ -65,7 +65,8 @@ function addUserToCampaign($uname, $id){
     WHERE ID = ?";
     $stm = $pdo->prepare($sql);
     $data = [$uname, $uname, $id];
-    return $stm->execute($data);
+    $success = $stm->execute($data);
+    return $success;
 }
 
 function deleteAllOwnedCampaigns($name) {
@@ -86,12 +87,6 @@ function sendInvite($sender,$recipient, $campaign,$campaignid) {
     return $stm->execute($data);
 }
 
-function declinedInvite($id) {
-    $pdo = connectDB();
-    $sql = "DELETE FROM Kutsut WHERE ID=?";
-    $stm=$pdo->prepare($sql);
-    return $stm->execute([$id]);
-}
 
 function getInvites($user) {
     $pdo = connectDB();
@@ -107,6 +102,13 @@ function getInviteById($user) {
     $sql = "SELECT * FROM Kutsut WHERE ID=?";
     $stm = $pdo->prepare($sql);
     $stm->execute([$user]);
-    $user = $stm->fetchAll(PDO::FETCH_ASSOC);
+    $user = $stm->fetch(PDO::FETCH_ASSOC);
     return $user;
+}
+
+function deleteInvitation($id) {
+    $pdo = connectDB();
+    $sql = "DELETE FROM Kutsut WHERE ID=?";
+    $stm=$pdo->prepare($sql);
+    return $stm->execute([$id]);
 }

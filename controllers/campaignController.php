@@ -111,10 +111,18 @@ function viewCampaignController() {
 function InvitationController() {
     if (isset($_POST["accept"])) {
         $id = $_POST["accept"];
-        $campaign
-        addUserToCampaign($_SESSION["username"] ,$id);
-        
+        $campaign = getInviteById($id);
+        $success = addUserToCampaign($_SESSION["username"] ,$campaign["Kampanjanid"]);
+        if($success) {
+            deleteInvitation($id);
+            header("Location: /my-campaigns");
+        }
 
+    }
+    if (isset($_POST["decline"])) {
+        $id = $_POST["decline"];
+        deleteInvitation($id);
+        header("Refresh: 0");
     }
 require "../views/front.php";
 }
