@@ -60,7 +60,6 @@ switch ($uri) {
         }
         break;
 
-
     case '/new-campaign':
         if (isLoggedIn()) {
             require __DIR__ . '/../partials/header.php';
@@ -174,6 +173,22 @@ switch ($uri) {
                     loginController();
                 }
             break;
+
+            case '/add-character-to-campaign':
+                if (isLoggedIn() && $method === 'post') {
+                    addCharacterToCampaignController();
+                } else {
+                    http_response_code(403);
+                    echo "Not allowed";
+                }
+                break;
+
+            case '/remove-character-from-campaign':
+                if (isLoggedIn() && $method === 'post') {
+                    removeCharacterFromCampaignController();
+                } else {
+                    http_response_code(403);
+                    echo "Not allowed";
             
             case "/delete-character":
                 if (isLoggedIn()) {
