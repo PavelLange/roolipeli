@@ -37,15 +37,39 @@ function AddCharacter($name, $race, $class, $notes, $level, $hp, $mp, $str, $con
 }
 
 
-function updateCharacter($name, $race, $class, $notes, $level, $hp, $mp, $str, $con, $dex, $int, $chr, $id){ 
+function updateCharacter($name, $notes, $hp, $mp, $str, $con, $dex, $int, $chr, $id
+) {
     $pdo = connectDB();
 
-    $data = [$name, $race, $class, $notes, $level, $hp, $mp, $str, $con, $dex, $int, $chr, $id];
-    $sql = "UPDATE Hahmo SET Nimi = ?, Rotu = ?, Hahmoluokka = ?, Muistiinpanot = ?, Taso = ?, Elamapisteet = ?, Magiapisteet = ?, Voima = ?, Kestavyys = ?, Ketteryys = ?, Alykkyys = ?, Karisma = ? WHERE ID = ?";
+    $sql = "UPDATE Hahmo
+            SET
+                Nimi = ?,
+                Muistiinpanot = ?,
+                Elamapisteet = ?,
+                Magiapisteet = ?,
+                Voima = ?,
+                Kestavyys = ?,
+                Ketteryys = ?,
+                Alykkyys = ?,
+                Karisma = ?
+            WHERE ID = ?";
 
     $stm = $pdo->prepare($sql);
-    return $stm->execute($data);
+
+    return $stm->execute([
+        $name,
+        $notes,
+        $hp,
+        $mp,
+        $str,
+        $con,
+        $dex,
+        $int,
+        $chr,
+        $id
+    ]);
 }
+
 
 function deleteCharacter($id){
     $pdo = connectDB();

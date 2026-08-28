@@ -1925,3 +1925,76 @@ a {
         height: 220px;
     }
 }
+
+.stat-control {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.stat-control input {
+    width: 70px;
+    text-align: center;
+}
+
+.stat-button {
+    width: 38px;
+    height: 38px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+
+.stat-button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.stat-points-counter {
+    margin-top: 0.5rem;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+}
+
+.character-info-box {
+    display: flex;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    background: var(--background-secondary);
+}
+
+.character-info-item {
+    flex: 1;
+}
+
+.character-info-label {
+    display: block;
+    margin-bottom: 0.35rem;
+
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+
+    color: #a78bfa;
+}
+
+.character-info-value {
+    display: block;
+
+    font-size: 1.15rem;
+    font-weight: 700;
+
+    color: #ffffff;
+}
+
+.character-info-divider {
+    width: 1px;
+    height: 45px;
+    margin: 0 1.5rem;
+
+    background: var(--border-color);
+}
