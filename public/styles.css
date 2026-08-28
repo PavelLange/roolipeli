@@ -1937,6 +1937,18 @@ a {
     border-radius: 5px;
 }
 
+.add-character-column {
+    order: 1;
+}
+
+.campaign-character-column {
+    order: 2;
+}
+
+.characters-column {
+    order: 3;
+}
+
 .character-column h2 {
     margin: 0 0 8px;
 

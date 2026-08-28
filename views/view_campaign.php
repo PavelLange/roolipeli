@@ -36,7 +36,7 @@
 
         <!-- LEFT: REMOVE CHARACTER -->
 
-        <div class="character-column">
+        <div class="character-column campaign-character-column">
 
             <h2>Characters in campaign</h2>
 
@@ -81,7 +81,7 @@
 
         <!-- MIDDLE: CAMPAIGN CHARACTERS -->
 
-        <div class="character-column">
+        <div class="character-column characters-column">
 
             <h2>Characters</h2>
 
@@ -113,7 +113,7 @@
 
         <!-- RIGHT: ADD CHARACTER -->
 
-        <div class="character-column">
+        <div class="character-column add-character-column">
 
             <h2>Add character</h2>
 
