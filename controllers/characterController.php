@@ -137,31 +137,174 @@ function addCharacterController()
     }
 }
 
-function updateCharacterController(){
-    if(isset($_POST['name'],$_POST['race'], $_POST['class'], $_POST['notes'], $_POST['level'], $_POST['health'], $_POST['mana'], $_POST['strength'], $_POST['constitution'], $_POST['agility'], $_POST['intelligence'], $_POST['charisma'])){
-        $name = cleanUpInput($_POST['name']);
-        $race = cleanUpInput($_POST['race']);
-        $class = cleanUpInput($_POST['class']);
-        $notes = cleanUpInput($_POST['notes']);   
-        $level = cleanUpInput($_POST['level']);  
-        $hp = cleanUpInput($_POST['health']);    
-        $mp = cleanUpInput($_POST['mana']);   
-        $str = cleanUpInput($_POST['strength']);
-        $con = cleanUpInput($_POST['constitution']);
-        $dex = cleanUpInput($_POST['agility']);
-        $int = cleanUpInput($_POST['intelligence']);
-        $chr = cleanUpInput($_POST['charisma']);   
-        $id = cleanUpInput($_POST['id']);
-
-        try{
-            updateCharacter($name,$race,$class,$notes, $level, $hp, $mp, $str, $con, $dex, $int, $chr, $id);
-            header("Location: /front");    
-        } catch (PDOException $e){
-                echo "Virhe hahmoa päivitettäessä: " . $e->getMessage();
-        }
-    } else {
-        header("Location: /");
+function updateCharacterController()
+{
+    if (!isset($_POST['id'], $_POST['name'], $_POST['notes'])) {
+        header("Location: /my-characters");
         exit;
+    }
+
+    $id = cleanUpInput($_POST['id']);
+    $name = cleanUpInput($_POST['name']);
+    $notes = cleanUpInput($_POST['notes']);
+
+    if (strlen($name) < 1) {
+        echo '<h1 class="centered">Please enter a character name.</h1>';
+        return;
+    }
+
+    try {
+
+        $character = getCharacterByIdEdit($id);
+
+        if (!$character) {
+            header("Location: /my-characters");
+            exit;
+        }
+
+        if ($character["Tekija"] !== $_SESSION["username"]) {
+            header("Location: /my-characters");
+            exit;
+        }
+
+        $newHp = isset($_POST['health'])
+            ? (int)$_POST['health']
+            : (int)$character['Elamapisteet'];
+
+        $newMp = isset($_POST['mana'])
+            ? (int)$_POST['mana']
+            : (int)$character['Magiapisteet'];
+
+        $newStr = isset($_POST['strength'])
+            ? (int)$_POST['strength']
+            : (int)$character['Voima'];
+
+        $newCon = isset($_POST['constitution'])
+            ? (int)$_POST['constitution']
+            : (int)$character['Kestavyys'];
+
+        $newDex = isset($_POST['agility'])
+            ? (int)$_POST['agility']
+            : (int)$character['Ketteryys'];
+
+        $newInt = isset($_POST['intelligence'])
+            ? (int)$_POST['intelligence']
+            : (int)$character['Alykkyys'];
+
+        $newChr = isset($_POST['charisma'])
+            ? (int)$_POST['charisma']
+            : (int)$character['Karisma'];
+
+
+        $stats = [
+            'health' => [
+                'old' => (int)$character['Elamapisteet'],
+                'new' => $newHp
+            ],
+
+            'mana' => [
+                'old' => (int)$character['Magiapisteet'],
+                'new' => $newMp
+            ],
+
+            'strength' => [
+                'old' => (int)$character['Voima'],
+                'new' => $newStr
+            ],
+
+            'constitution' => [
+                'old' => (int)$character['Kestavyys'],
+                'new' => $newCon
+            ],
+
+            'agility' => [
+                'old' => (int)$character['Ketteryys'],
+                'new' => $newDex
+            ],
+
+            'intelligence' => [
+                'old' => (int)$character['Alykkyys'],
+                'new' => $newInt
+            ],
+
+            'charisma' => [
+                'old' => (int)$character['Karisma'],
+                'new' => $newChr
+            ]
+        ];
+
+
+        foreach ($stats as $stat) {
+
+            if ($stat['new'] < 0) {
+
+                echo '<h1 class="centered">Stats cannot be below zero.</h1>';
+                return;
+
+            }
+
+        }
+
+
+        $totalDecrease = 0;
+        $totalIncrease = 0;
+
+
+        foreach ($stats as $stat) {
+
+            $difference = $stat['new'] - $stat['old'];
+
+            if ($difference < 0) {
+
+                $totalDecrease += abs($difference);
+
+            } elseif ($difference > 0) {
+
+                $totalIncrease += $difference;
+
+            }
+
+        }
+
+
+        if ($totalDecrease > 5) {
+
+            echo '<h1 class="centered">You can transfer a maximum of 5 stat points.</h1>';
+            return;
+
+        }
+
+
+        if ($totalIncrease !== $totalDecrease) {
+
+            echo '<h1 class="centered">Stat points must be transferred between stats.</h1>';
+            return;
+
+        }
+
+
+        updateCharacter(
+            $name,
+            $notes,
+            $newHp,
+            $newMp,
+            $newStr,
+            $newCon,
+            $newDex,
+            $newInt,
+            $newChr,
+            $id
+        );
+
+
+        header("Location: /my-characters");
+        exit;
+
+
+    } catch (PDOException $e) {
+
+        echo "Virhe hahmoa päivitettäessä: " . $e->getMessage();
+
     }
 }
 
@@ -212,25 +355,6 @@ function editCharacterController()
 
     } catch (PDOException $e){
         echo "Virhe hahmoa haettaessa: " . $e->getMessage();
-    }
-    if($character){
-        $id = $character["ID"];
-        $name = $character["Nimi"];
-        $race = $character["Rotu"];
-        $class = $character["Hahmoluokka"];
-        $notes = $character["Muistiinpanot"];
-        $level = $character["Taso"];
-        $hp = $character["Elamapisteet"];
-        $mp = $character["Magiapisteet"];
-        $str = $character["Voima"];
-        $con = $character["Kestavyys"];
-        $dex = $character["Ketteryys"];
-        $int = $character["Alykkyys"];
-        $chr = $character["Karisma"];
-        require "../views/edit_character.php";
-    } else {
-        header("Location: /");
-        exit;
     }
 }
 
