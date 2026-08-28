@@ -59,7 +59,6 @@ switch ($uri) {
         }
         break;
 
-
     case '/new-campaign':
         if (isLoggedIn()) {
             require __DIR__ . '/../partials/header.php';

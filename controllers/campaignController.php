@@ -101,6 +101,7 @@ function viewCampaignController() {
         echo "Virhe kampanjaa haettaessa: " . $e->getMessage();
     }
     if($campaign) {
+        $availableCharacters = getAllOwnCharacters($_SESSION["username"]);
         require "../views/view_campaign.php";
     } else {
         header("Location: /");
