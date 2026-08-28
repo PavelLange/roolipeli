@@ -1,3 +1,5 @@
+<?php require_once "../libraries/auth.php"?>
+<?php require_once "../controllers/campaignController.php" ?>
 <?php require_once "../libraries/auth.php";
 
 $currentPage = $_SERVER['REQUEST_URI'];
@@ -60,6 +62,23 @@ $currentPage = $_SERVER['REQUEST_URI'];
             <a href="/logout" class="login-link">
                 Logout
             </a>
+
+            <button class="nav-button" id="invite" type="button" onclick="toggleInvites()">
+                <img src="/images/invites.png" class="invite-img">
+            </button>
+
+            
+            <script>
+            function toggleInvites() {
+                const invites = document.getElementById("Invite-div");
+                if (invites.style.display === "none") {
+                    invites.style.display = "grid";
+                } else {
+                    invites.style.display = "none";
+                }
+            }
+            </script>    
+
             <a href="/profile" class="nav-button">
                 Profile
             </a>
@@ -69,5 +88,26 @@ $currentPage = $_SERVER['REQUEST_URI'];
         </div>
             
     </div>
+    
 
 </header>
+<div id="Invite-div" style="display:none;">
+            <?php $allinvites = getInvites($_SESSION["username"]); ?>
+            <?php if(empty($allinvites)) :?>
+            <h1>Looks like you dont have any invites.</h1>
+            <?php else: ?>
+            <?php foreach($allinvites as $invite):?>
+            <form method="POST">
+            <div  class="invite">
+            <h1><?= $invite["Lahettaja"] ?> invited you to a campaign</h1>
+            <h2>Campaign: <?= $invite["Kampanja"] ?></h2>
+            <?php $id = $invite["ID"]?>
+            <button class="accept" name="accept" value="<?=$id?>" >Accept </button><button class="decline" name="decline" value="<?=$id?>">Decline</button>
+            <hr style="width:100%"/>
+            </form>
+            </div>
+
+            <?php endforeach ?>
+            <?php endif?>    
+            </div>
+</div>

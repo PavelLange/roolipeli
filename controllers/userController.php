@@ -16,7 +16,7 @@ function registerController(){
         }elseif(dupeMail($email)) {
             $error2 = "E-mail already in use!";
         }
-        else {
+        else {  
             try {
             AddUser($username, $email, $password);
 
