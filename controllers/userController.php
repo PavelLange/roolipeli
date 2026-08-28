@@ -43,10 +43,12 @@ function loginController(){
         $password = cleanUpInput($_POST['password']);
         
         $result = login($username, $password);
+        $_SESSION["message"] = "Username or password is incorrect!";
         if($result){
             $_SESSION['username'] = $result['Kayttajanimi'];
             $_SESSION['user_id'] = $result['ID'];
             $_SESSION['session_id'] = session_id();
+            $_SESSION["message"] = "Welcome back, " . $_SESSION["username"] . "!";
             header("Location: /"); 
         }
     }

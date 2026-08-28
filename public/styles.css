@@ -1998,3 +1998,32 @@ a {
 
     background: var(--border-color);
 }
+
+.message-div {
+    margin-top: 10px;
+    display: flex;
+    width: 100%;
+    height: auto;
+    margin: 0;
+    justify-content: center;
+
+}
+#message {
+    color: white;
+    background:black;
+    border: solid white 4px;
+    border-radius: 6px;
+    padding: 10px 18px;
+    width:fit-content;
+    margin: 10px auto;
+    animation: messagefade 1s ease 2.5s forwards;
+}
+
+@keyframes messagefade{
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}

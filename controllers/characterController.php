@@ -125,7 +125,8 @@ function addCharacterController()
 
             if (strlen($name) > 1) {
                 addCharacter($name, $race, $class, $notes, $level, $hp, $mp, $str, $con, $dex, $int, $chr, $creator);
-                header("Location: /");
+                $_SESSION["message"] = "Character has been created!";
+                header("Location: /my-characters");
                 exit;
             } else {
                 echo '<h1 class="centered">Please enter a character name.</h1>';
@@ -296,7 +297,7 @@ function updateCharacterController()
             $id
         );
 
-
+        $_SESSION["message"] = "Character has been updated!";
         header("Location: /my-characters");
         exit;
 
@@ -319,7 +320,7 @@ function deleteCharacterController()
         $id = cleanUpInput($_GET["id"]);
 
         deleteCharacter($id);
-
+        $_SESSION["message"] = "Character has been deleted!";
         header("Location: /my-characters");
         exit;
 
