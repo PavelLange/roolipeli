@@ -7,6 +7,7 @@ function addCampaignController(){
         $name = cleanUpInput($_POST['name']);
         $notes = cleanUpInput($_POST['notes']);               
         $gmaster = $_SESSION["user"];
+        $_SESSION["message"] = "Campaign has been created!";
         if(strlen($name) > 1 || strlen($notes) > 1)  {
         addCampaign($name, $creator, $notes); 
         header("Location: /my-campaigns"); 
@@ -27,6 +28,7 @@ function updateCampaignController(){
         $id = cleanUpInput($_POST['id']);
         try{
             updateCampaign($name, $notes, $id);
+            $_SESSION["message"] = "Campaign has been updated!";
             header("Location: /my-campaigns");    
         } catch (PDOException $e){
                 echo "Virhe kampanjaa päivitettäessä: " . $e->getMessage();
@@ -43,7 +45,8 @@ function deleteCampaignController(){
             $id = cleanUpInput($_GET["id"]);
             $master = getAllCampaigns($id);
             if($master["Pelinjohtaja"] === $_SESSION["username"]) {
-            deleteCampaign($id);  
+            deleteCampaign($id);
+            $_SESSION["message"] = "Campaign has been deleted!";  
             }
             
         } else {
@@ -115,6 +118,7 @@ function InvitationController() {
         $success = addUserToCampaign($_SESSION["username"] ,$campaign["Kampanjanid"]);
         if($success) {
             deleteInvitation($id);
+            $_SESSION["message"] = "You have joined the campaign!";
             header("Location: /my-campaigns");
         }
 

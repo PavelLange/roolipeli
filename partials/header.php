@@ -1,7 +1,7 @@
 <?php require_once "../libraries/auth.php"?>
 <?php require_once "../controllers/campaignController.php" ?>
 <?php require_once "../libraries/auth.php";
-
+$message = "";
 $currentPage = $_SERVER['REQUEST_URI'];
 ?>
 <!DOCTYPE html>
@@ -111,3 +111,12 @@ $currentPage = $_SERVER['REQUEST_URI'];
             <?php endif?>    
             </div>
 </div>
+<br>
+<?php if(isset($_SESSION["message"])):?>
+<div class="message-div">
+    <div class="message-div" id="message">
+        <h2 name="message"><?=$_SESSION["message"]?></h2>
+    </div>
+</div>
+<?php unset($_SESSION["message"]);?>
+<?php endif?>
