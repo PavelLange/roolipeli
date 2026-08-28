@@ -4,17 +4,18 @@ session_start();
 
 $uri = explode("?", $_SERVER["REQUEST_URI"])[0];
 $method = strtolower($_SERVER["REQUEST_METHOD"]);
-
+require_once "../models/campaigns.php";
 require_once "../libraries/auth.php";
 require_once "../controllers/userController.php";
 require_once "../controllers/characterController.php";
 require_once "../controllers/campaignController.php";
 
+
 switch ($uri) {
 
     case '/':
         require __DIR__ . '/../partials/header.php';
-        require __DIR__ . '/../views/front.php';
+        InvitationController();
         require __DIR__ . '/../partials/footer.php';
         break;
 
@@ -188,6 +189,28 @@ switch ($uri) {
                 } else {
                     http_response_code(403);
                     echo "Not allowed";
+            
+            case "/delete-character":
+                if (isLoggedIn()) {
+                    deleteCharacterController();
+                } else {
+                    loginController();
+                }
+            break;
+
+            case '/my-characters':
+                if (isLoggedIn()) {
+                    require __DIR__ . '/../partials/header.php';
+            
+                    myCharacterController();
+            
+                    require __DIR__ . '/../partials/footer.php';
+                } else {
+                    require __DIR__ . '/../partials/header.php';
+            
+                    loginController();
+            
+                    require __DIR__ . '/../partials/footer.php';
                 }
                 break;
         
