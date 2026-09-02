@@ -106,3 +106,12 @@ function deleteUser($id) {
     $stm=$pdo->prepare($sql);
     return $stm->execute([$id]);
 }
+
+function getAllUsers() {
+    $pdo = connectDB();
+    $sql = "SELECT ID, Kayttajanimi FROM Kayttajat ORDER BY Kayttajanimi ASC";
+    $stm = $pdo->prepare($sql);
+    $stm->execute();
+    $users = $stm->fetchAll(PDO::FETCH_ASSOC);
+    return $users;
+}

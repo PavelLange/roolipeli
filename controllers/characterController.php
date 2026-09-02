@@ -380,4 +380,5 @@ function myCharacterController()
         exit;
 
     }
-} 
+}
+

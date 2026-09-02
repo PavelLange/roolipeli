@@ -30,7 +30,108 @@
     </section>
 
 
-    <!-- CHARACTER MANAGEMENT -->
+    <!-- PLAYER MANAGEMENT -->
+
+    <section class="campaign-players">
+
+        <!-- INVITE BOX -->
+        <div class="invite-box-container" data-campaign-id="<?= htmlspecialchars($campaign['ID']) ?>" data-players='<?= json_encode($availablePlayers) ?>'>
+            <h2>Invite Players</h2>
+            <p class="column-description">Add new players to your campaign</p>
+            <div class="invite-controls">
+                <div class="invite-input-wrapper">
+                    <input 
+                        type="text" 
+                        id="invite-input" 
+                        class="invite-input" 
+                        placeholder="Search for a player..."
+                        autocomplete="off"
+                    />
+                    <div id="invite-suggestions" class="invite-suggestions" style="display: none;"></div>
+                </div>
+                <button id="invite-button" class="button" type="button">Invite Player</button>
+            </div>
+            <p id="invite-message" style="display: none;"></p>
+        </div>
+
+        <!-- PLAYER COLUMNS -->
+        <div class="player-columns-wrapper">
+
+        <!-- PENDING INVITATIONS -->
+        <div class="player-column">
+            <h2>Pending Invitations</h2>
+            <p class="column-description">
+                Players waiting to accept the invitation.
+            </p>
+
+            <div class="player-list">
+                <?php if (!empty($pendingInvitations)): ?>
+                    <?php foreach ($pendingInvitations as $invitation): ?>
+                        <article class="player-card pending">
+                            <div>
+                                <h3><?= htmlspecialchars($invitation['Vastaanottaja']) ?></h3>
+                                <p class="status">⏳ Pending</p>
+                            </div>
+                            <?php if ($_SESSION["username"] === $campaign["Pelinjohtaja"]): ?>
+                                <button 
+                                    type="button" 
+                                    class="button button-secondary cancel-invitation-button"
+                                    data-invitation-id="<?= htmlspecialchars($invitation['ID']) ?>"
+                                >
+                                    Cancel
+                                </button>
+                            <?php endif; ?>
+                        </article>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p class="empty-state">No pending invitations yet.</p>
+                <?php endif; ?>
+            </div>
+        </div>
+
+
+        <!-- ACCEPTED PLAYERS -->
+        <div class="player-column">
+            <h2>Campaign Players</h2>
+            <p class="column-description">
+                Players who have accepted and joined the campaign.
+            </p>
+
+            <div class="player-list">
+                <?php 
+                    // Parse the Pelaajat string to get player list
+                    $playerList = array_map('trim', explode(',', $campaign["Pelaajat"] ?? ''));
+                    $playerList = array_filter($playerList); // Remove empty values
+                    
+                    if (!empty($playerList)):
+                ?>
+                    <?php foreach ($playerList as $player): ?>
+                        <article class="player-card accepted">
+                            <div>
+                                <h3><?= htmlspecialchars($player) ?></h3>
+                                <p class="status">✓ Joined</p>
+                            </div>
+                            <?php if ($_SESSION["username"] === $campaign["Pelinjohtaja"]): ?>
+                                <button 
+                                    type="button" 
+                                    class="button button-secondary remove-player-button"
+                                    data-player-name="<?= htmlspecialchars($player) ?>"
+                                    data-campaign-id="<?= htmlspecialchars($campaign['ID']) ?>"
+                                >
+                                    Remove
+                                </button>
+                            <?php endif; ?>
+                        </article>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p class="empty-state">No players have joined yet.</p>
+                <?php endif; ?>
+            </div>
+        </div>
+
+        </div>
+
+    </section>
 
     <section class="campaign-characters">
 

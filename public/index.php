@@ -215,6 +215,36 @@ switch ($uri) {
                     require __DIR__ . '/../partials/footer.php';
                 }
                 break;
+
+            case '/send-invitation':
+                if (isLoggedIn() && $method === 'post') {
+                    sendInvitationController();
+                } else {
+                    http_response_code(403);
+                    header("Content-Type: application/json");
+                    echo json_encode(["error" => "Not allowed"]);
+                }
+                break;
+
+            case '/cancel-invitation':
+                if (isLoggedIn() && $method === 'post') {
+                    cancelInvitationController();
+                } else {
+                    http_response_code(403);
+                    header("Content-Type: application/json");
+                    echo json_encode(["error" => "Not allowed"]);
+                }
+                break;
+
+            case '/remove-player-from-campaign':
+                if (isLoggedIn() && $method === 'post') {
+                    removePlayerFromCampaignController();
+                } else {
+                    http_response_code(403);
+                    header("Content-Type: application/json");
+                    echo json_encode(["error" => "Not allowed"]);
+                }
+                break;
         
     default:
         http_response_code(404);

@@ -160,3 +160,57 @@ function deleteInvitation($id) {
     $stm=$pdo->prepare($sql);
     return $stm->execute([$id]);
 }
+
+function checkIfAlreadyInvited($vastaanottaja, $kampanjanid) {
+    $pdo = connectDB();
+    $sql = "SELECT * FROM Kutsut WHERE Vastaanottaja=? AND Kampanjanid=? AND Hyvatty=FALSE";
+    $stm = $pdo->prepare($sql);
+    $stm->execute([$vastaanottaja, $kampanjanid]);
+    $result = $stm->fetch(PDO::FETCH_ASSOC);
+    return $result ? true : false;
+}
+
+function deleteAllInvitationsForUserAndCampaign($vastaanottaja, $kampanjanid) {
+    $pdo = connectDB();
+    $sql = "DELETE FROM Kutsut WHERE Vastaanottaja=? AND Kampanjanid=?";
+    $stm = $pdo->prepare($sql);
+    return $stm->execute([$vastaanottaja, $kampanjanid]);
+}
+
+function acceptInvitation($invitationId) {
+    $pdo = connectDB();
+    $sql = "UPDATE Kutsut SET Hyvatty=TRUE WHERE ID=?";
+    $stm = $pdo->prepare($sql);
+    return $stm->execute([$invitationId]);
+}
+
+function getInvitationsByUser($username) {
+    $pdo = connectDB();
+    $sql = "SELECT Kutsut.*, Kampanjat.Nimi as KampanjaNimi FROM Kutsut 
+            JOIN Kampanjat ON Kutsut.Kampanjanid = Kampanjat.ID 
+            WHERE Kutsut.Vastaanottaja=? AND Kutsut.Hyvatty=FALSE 
+            ORDER BY Kutsut.Luotu DESC";
+    $stm = $pdo->prepare($sql);
+    $stm->execute([$username]);
+    return $stm->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getPendingInvitationsForCampaign($campaignId) {
+    $pdo = connectDB();
+    $sql = "SELECT * FROM Kutsut 
+            WHERE Kampanjanid=? AND Hyvatty=FALSE 
+            ORDER BY Luotu DESC";
+    $stm = $pdo->prepare($sql);
+    $stm->execute([$campaignId]);
+    return $stm->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getAcceptedInvitationsForCampaign($campaignId) {
+    $pdo = connectDB();
+    $sql = "SELECT * FROM Kutsut 
+            WHERE Kampanjanid=? AND Hyvatty=TRUE 
+            ORDER BY Luotu DESC";
+    $stm = $pdo->prepare($sql);
+    $stm->execute([$campaignId]);
+    return $stm->fetchAll(PDO::FETCH_ASSOC);
+}
