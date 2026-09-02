@@ -97,8 +97,7 @@ function addCharacterController()
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-        if (isset($_POST['name'], $_POST['class'], $_POST['notes'])
-        ) {
+        if (isset($_POST['name'], $_POST['class'], $_POST['notes'])) {
             $name = cleanUpInput($_POST['name']);
             $class = cleanUpInput($_POST['class']);
             $notes = cleanUpInput($_POST['notes']);
@@ -140,17 +139,27 @@ function addCharacterController()
 
 function updateCharacterController()
 {
-    if (!isset($_POST['id'], $_POST['name'], $_POST['notes'])) {
+    if (!isset(
+        $_POST['id'],
+        $_POST['notes'],
+        $_POST['level']
+    )) {
         header("Location: /my-characters");
         exit;
     }
 
+
     $id = cleanUpInput($_POST['id']);
-    $name = cleanUpInput($_POST['name']);
     $notes = cleanUpInput($_POST['notes']);
 
-    if (strlen($name) < 1) {
-        echo '<h1 class="centered">Please enter a character name.</h1>';
+    $newLevel = (int)$_POST['level'];
+
+    if ($newLevel < 1) {
+
+        echo '<h1 class="centered">
+                Level cannot be below 1.
+              </h1>';
+
         return;
     }
 
@@ -168,36 +177,61 @@ function updateCharacterController()
             exit;
         }
 
+        $currentLevel = (int)$character["Taso"];
+
+        $newLevel = isset($_POST["level"])
+            ? (int)$_POST["level"]
+            : $currentLevel;
+
+
+        if ($newLevel < $currentLevel) {
+
+            echo '<h1 class="centered">
+            Character level cannot be decreased after saving.
+          </h1>';
+
+            return;
+        }
+
+
+        $name = $character["Nimi"];
+
         $newHp = isset($_POST['health'])
             ? (int)$_POST['health']
             : (int)$character['Elamapisteet'];
+
 
         $newMp = isset($_POST['mana'])
             ? (int)$_POST['mana']
             : (int)$character['Magiapisteet'];
 
+
         $newStr = isset($_POST['strength'])
             ? (int)$_POST['strength']
             : (int)$character['Voima'];
+
 
         $newCon = isset($_POST['constitution'])
             ? (int)$_POST['constitution']
             : (int)$character['Kestavyys'];
 
+
         $newDex = isset($_POST['agility'])
             ? (int)$_POST['agility']
             : (int)$character['Ketteryys'];
+
 
         $newInt = isset($_POST['intelligence'])
             ? (int)$_POST['intelligence']
             : (int)$character['Alykkyys'];
 
+
         $newChr = isset($_POST['charisma'])
             ? (int)$_POST['charisma']
             : (int)$character['Karisma'];
 
-
         $stats = [
+
             'health' => [
                 'old' => (int)$character['Elamapisteet'],
                 'new' => $newHp
@@ -232,20 +266,20 @@ function updateCharacterController()
                 'old' => (int)$character['Karisma'],
                 'new' => $newChr
             ]
-        ];
 
+        ];
 
         foreach ($stats as $stat) {
 
             if ($stat['new'] < 0) {
 
-                echo '<h1 class="centered">Stats cannot be below zero.</h1>';
+                echo '<h1 class="centered">
+                        Stats cannot be below zero.
+                      </h1>';
+
                 return;
-
             }
-
         }
-
 
         $totalDecrease = 0;
         $totalIncrease = 0;
@@ -253,40 +287,32 @@ function updateCharacterController()
 
         foreach ($stats as $stat) {
 
-            $difference = $stat['new'] - $stat['old'];
+            $difference =
+                $stat['new'] - $stat['old'];
+
 
             if ($difference < 0) {
 
                 $totalDecrease += abs($difference);
-
             } elseif ($difference > 0) {
 
                 $totalIncrease += $difference;
-
             }
-
         }
-
 
         if ($totalDecrease > 5) {
 
-            echo '<h1 class="centered">You can transfer a maximum of 5 stat points.</h1>';
+            echo '<h1 class="centered">
+                    You can transfer a maximum of 5 stat points.
+                  </h1>';
+
             return;
-
         }
-
-
-        if ($totalIncrease !== $totalDecrease) {
-
-            echo '<h1 class="centered">Stat points must be transferred between stats.</h1>';
-            return;
-
-        }
-
 
         updateCharacter(
             $name,
             $notes,
+            $newLevel,
             $newHp,
             $newMp,
             $newStr,
@@ -297,17 +323,20 @@ function updateCharacterController()
             $id
         );
 
-        $_SESSION["message"] = "Character has been updated!";
+
+        $_SESSION["message"] =
+            "Character has been updated!";
+
+
         header("Location: /my-characters");
         exit;
-
-
     } catch (PDOException $e) {
 
-        echo "Virhe hahmoa päivitettäessä: " . $e->getMessage();
-
+        echo "Virhe hahmoa päivitettäessä: "
+            . $e->getMessage();
     }
 }
+
 
 function deleteCharacterController()
 {
@@ -323,7 +352,6 @@ function deleteCharacterController()
         $_SESSION["message"] = "Character has been deleted!";
         header("Location: /my-characters");
         exit;
-
     } catch (PDOException $e) {
         echo $e->getMessage();
     }
@@ -353,8 +381,7 @@ function editCharacterController()
         }
 
         require "../views/edit_character.php";
-
-    } catch (PDOException $e){
+    } catch (PDOException $e) {
         echo "Virhe hahmoa haettaessa: " . $e->getMessage();
     }
 }
@@ -373,11 +400,9 @@ function myCharacterController()
         $characters = getAllOwnCharacters($username);
 
         require "../views/my_characters.php";
-
     } catch (PDOException $e) {
 
         echo "Error loading characters: " . $e->getMessage();
         exit;
-
     }
-} 
+}
