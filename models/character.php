@@ -143,3 +143,19 @@ function getAllOwnCharacters($username) {
  
     return $user;
 }
+
+function setDead($id) {
+    $pdo = connectDB();
+    $data = [$id];
+    $sql = "UPDATE Hahmo SET Status = 'Dead'  WHERE ID = ?";
+    $stm = $pdo->prepare($sql);
+    return $stm->execute($data);
+}
+
+function setAlive($id) {
+    $pdo = connectDB();
+    $data = [$id];
+    $sql = "UPDATE Hahmo SET Status = 'Alive'  WHERE ID = ?";
+    $stm = $pdo->prepare($sql);
+    return $stm->execute($data);
+}

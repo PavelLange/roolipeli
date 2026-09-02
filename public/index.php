@@ -145,11 +145,12 @@ switch ($uri) {
         case '/view-campaign':
             if(isLoggedIn()){
                 
-            if($method == "get"){
+            if($method == "get" || $method == "post"){
             require __DIR__ . '/../partials/header.php';
             viewCampaignController();  
             require __DIR__ . '/../partials/footer.php';
-            } else {
+            } 
+            else {
             require __DIR__ . '/../partials/header.php';
             loginController();
             require_once __DIR__ . '/../partials/footer.php';
@@ -216,6 +217,15 @@ switch ($uri) {
                 }
                 break;
         
+
+            case '/view-items': 
+                break;
+
+            case '/new-item':
+                require __DIR__ . '/../partials/header.php';
+                require __DIR__ . '/../views/new_item.php';
+                require __DIR__ . '/../partials/footer.php';
+                break;
     default:
         http_response_code(404);
 

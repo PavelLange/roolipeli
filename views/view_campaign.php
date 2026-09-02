@@ -1,3 +1,4 @@
+
 <main class="campaign-view-page">
 
     <!-- CAMPAIGN HEADER -->
@@ -15,6 +16,11 @@
                 Game Master:
                 <?= htmlspecialchars($campaign["Pelinjohtaja"] ?? "Game Master") ?>
             </p>
+
+            <p>
+            Players: 
+            <?= htmlspecialchars($campaign["Pelaajat"] ?? "Players")?>
+            </p>
         </div>
 
         <div class="campaign-notes">
@@ -25,6 +31,18 @@
                     $campaign["Muistiinpanot"] ?? "Campaign notes will appear here."
                 ) ?>
             </p>
+            <br>
+            <h3>Items
+            <br>
+            <br>
+            <?php $id = $campaign["ID"] ?>
+            <a href="/view-items?id=<?=$id?>">
+            <button class="button button-secondary">View items</button>
+            </a>
+            <a href="/new-item?id=<?=$id?>">
+            <button class="button button-secondary" >Add item</button>
+            </a>
+            
         </div>
 
     </section>
@@ -63,7 +81,7 @@
                             <?= htmlspecialchars($character["Hahmoluokka"]) ?>
                         </p>
                     </div>
-
+                    <?php if($character["Tekija"] == $_SESSION["username"] || $campaign["Pelinjohtaja"] == $_SESSION["username"]):?>
                     <button
                         type="button"
                         class="button button-secondary remove-character-button"
@@ -72,6 +90,7 @@
                     >
                         Remove
                     </button>
+                    <?php endif?>
                 </article>
                 <?php endforeach; ?>
             </div>
@@ -102,6 +121,14 @@
                             <span>HP: <?= htmlspecialchars($character["Elamapisteet"]) ?></span>
                             <span>Mana: <?= htmlspecialchars($character["Magiapisteet"]) ?></span>
                             <span>Status: <?= htmlspecialchars($character["Status"]) ?></span>
+                            <?php ?>
+                            <form method="POST">
+                            <?php if($character["Status"] == "Alive" && $campaign["Pelinjohtaja"] === $_SESSION["username"]):?>
+                                <button class="set-button" name="alive" type="submit" value="<?=$character["ID"]?>">Set dead</button>
+                            <?php elseif($character["Status"] == "Dead" && $campaign["Pelinjohtaja"] === $_SESSION["username"]):?>
+                                <button class="set-button" name="dead" type="submit" value="<?=$character["ID"]?>" >Set alive</button>
+                            <?php endif ?>
+                            </form>
                         </div>
 
                     </article>
@@ -190,5 +217,10 @@
     </section>
 
 </main>
-
+<script>
+    const username = <?= json_encode($_SESSION["username"])?>
+</script>
+<script>
+    const gamemaster = <?= json_encode($campaign["Pelinjohtaja"])?>
+</script>
 <script src="js/campaign.js"></script>

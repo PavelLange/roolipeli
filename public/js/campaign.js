@@ -1,6 +1,7 @@
 const addButtons = document.querySelectorAll(".add-character-button");
 const removeButtons = document.querySelectorAll(".remove-character-button");
-
+console.log(username);
+console.log(gamemaster);
 addButtons.forEach((button) => {
     button.addEventListener("click", async () => {
         const characterId = button.dataset.characterId;
@@ -92,9 +93,18 @@ function addCharacterToPage(character) {
             <span>HP: ${character.hp}</span>
             <span>Mana: ${character.mana}</span>
             <span>Status: ${character.status}</span>
+            <form method="POST">
+            ${
+                character.status == "Alive" && username == gamemaster ? `
+                <button class="set-button" name="alive" type="submit" value='<?=$character["ID"]?>'>Set dead</button>`
+                : character.status == "Dead" && username == gamemaster ?
+                `<button class="set-button" name="dead" type="submit" value='<?=$character["ID"]?>' >Set alive</button>`
+                : ``
+            }
+            
+            </form>
         </div>
-    `;
-
+    `
     characterList.appendChild(characterCard);
 }
 
