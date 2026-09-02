@@ -189,8 +189,10 @@ switch ($uri) {
                 } else {
                     http_response_code(403);
                     echo "Not allowed";
-            
-            case "/delete-character":
+                }
+            break;
+
+            case '/delete-character':
                 if (isLoggedIn()) {
                     deleteCharacterController();
                 } else {

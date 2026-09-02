@@ -125,6 +125,7 @@ function getCampaignCharacters($campaignId) {
     $statement->execute([$campaignId]);
 
     return $statement->fetchAll(PDO::FETCH_ASSOC);
+}
 function sendInvite($sender,$recipient, $campaign,$campaignid) {
     $pdo = connectDB();
     $data = [$sender, $recipient, $campaign,$campaignid];
