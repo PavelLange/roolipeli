@@ -3,14 +3,13 @@
     <section class="campaign-form-card">
 
         <div class="campaign-form-heading">
-            <p class="eyebrow">New Item</p>
+            <p class="eyebrow">Edit Item</p>
 
-            <h1>Create a new item
+            <h1>Edit item
             </h1>
 
             <p>
-                Create a new item that can be anything you want.
-                Items can be viewed in the campaign.
+                Update your item to whatever you want. Changes get applied immediately
             </p>
         </div>
 
