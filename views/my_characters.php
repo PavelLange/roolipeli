@@ -12,6 +12,26 @@
 
     </section>
 
+    <section class="character-summary">
+
+        <div class="summary-card">
+            <span>Characters</span>
+            <strong><?= $totalCharacters ?></strong>
+        </div>
+
+        <div class="summary-card">
+            <span>Highest Level</span>
+            <strong><?= $highestLevel ?></strong>
+        </div>
+
+        <div class="summary-card">
+            <span>Total HP</span>
+            <strong><?= $totalHp ?></strong>
+        </div>
+
+    </section>
+
+
 
     <section class="my-campaigns">
 
@@ -51,9 +71,10 @@
 
                     <div class="my-campaign-content">
 
-                        <p class="campaign-status">
+                        <p class="campaign-status <?= htmlspecialchars($character["Hahmoluokka"]) ?>">
                             <?= htmlspecialchars($character["Hahmoluokka"]) ?>
                         </p>
+
 
                         <br>
 
@@ -105,5 +126,14 @@
         <?php endif; ?>
 
     </section>
+
+    <a href="/new-character" class="button button-primary bottom-action">
+        + Create New Character
+    </a>
+
+    <a href="/" class="button button-secondary bottom-action">
+        ← Back to Home
+    </a>
+
 
 </main>

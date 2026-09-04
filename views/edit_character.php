@@ -580,7 +580,17 @@
                 .querySelectorAll(".stat-plus")
                 .forEach(function(button) {
 
-                    if (available <= 0) {
+                    const statName =
+                        button.dataset.stat;
+
+                    const stat =
+                        stats[statName];
+
+                    const current =
+                        parseInt(stat.input.value);
+
+
+                    if (available <= 0 || current >= 100) {
 
                         button.disabled = true;
 
@@ -697,6 +707,9 @@
                     const current =
                         parseInt(stat.input.value);
 
+                    if (current >= 100) {
+                        return;
+                    }
 
                     stat.input.value =
                         current + 1;
