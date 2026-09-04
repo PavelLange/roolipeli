@@ -103,6 +103,16 @@ function viewCampaignController() {
     } catch (PDOException $e){
         echo "Virhe kampanjaa haettaessa: " . $e->getMessage();
     }
+    if(isset($_POST["alive"])) {
+        $id = $_POST["alive"];
+        setDead($id);
+        header("Refresh: 0");
+    }
+    if(isset($_POST["dead"])) {
+        $id = $_POST["dead"];
+        setAlive($id);
+        header("Refresh: 0");
+    }
     if($campaign) {
         $campaignCharacters = getCampaignCharacters($id);
         $availableCharacters = getAllOwnCharacters($_SESSION["username"]);

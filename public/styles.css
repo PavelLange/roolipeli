@@ -1913,6 +1913,20 @@ a {
     padding: 60px 0 100px;
 }
 
+.set-button {
+    cursor: pointer;
+    margin-left: 20px;
+    font-size: 12px;
+    height: 20px;
+    color: white;
+    background: var(--red);
+    border: 1px solid var(--red-light);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+.item-button {
+    height: 40px;
+}
 
 /* CAMPAIGN HEADER */
 
@@ -1947,6 +1961,7 @@ a {
 
 .campaign-notes {
     width: min(450px, 100%);
+    word-wrap: break-word;
 }
 
 .campaign-notes h3 {
@@ -2132,6 +2147,11 @@ a {
 
     .campaign-header {
         flex-direction: column;
+    }
+}
+@media (max-width: 1206px) {
+    .set-button {
+        height:auto;
     }
 }
 .my-character-image {

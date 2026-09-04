@@ -160,3 +160,4 @@ function deleteInvitation($id) {
     $stm=$pdo->prepare($sql);
     return $stm->execute([$id]);
 }
+

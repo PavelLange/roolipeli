@@ -1,7 +1,8 @@
 <?php
 require_once "../models/character.php";
 require_once "../libraries/cleaners.php";
-
+require_once "../libraries/cleaners.php";
+require_once "../libraries/auth.php";
 $characterTypes = [
 
     'fighter' => [
@@ -442,4 +443,64 @@ function viewCharacterController()
         echo "Error loading character: " . $e->getMessage();
         exit;
     }
+} 
+
+function addItemController() {
+if(isset($_POST["name"], $_POST["desc"], $_POST["amount"])) {
+    $campaignid = cleanUpInput($_GET["id"]);
+    $name = cleanUpInput($_POST["name"]);
+    $desc = cleanUpInput($_POST["desc"]);
+    $amount = cleanUpInput($_POST["amount"]);
+    try {
+        addItem($campaignid,$name,$amount,$desc);
+        header("Location:view-campaign?id=$campaignid");
+    }
+    catch (PDOException $e){
+        echo "Error adding item: " . $e->getMessage();
+        exit;
+    }
+    }
+require "../views/new_item.php";
+}
+function viewItemController() {
+    $campaignid = cleanUpInput($_GET["id"]);
+    $allItems = listAllCharactersItems($campaignid);
+    require "../views/view_items.php";
+}
+
+function editItemController()
+{
+    if(isset($_SESSION["username"])) {
+        $cid = $_GET["cid"];
+        $id = $_GET["id"];
+        $user = $_SESSION["username"];
+        if(isInCampaign($cid,$user) == true) {
+            $iteminfo = getItemByIdEdit($id);
+            require "../views/edit_item.php";
+        } else {
+            header("Location:/");
+        }
+    } else {
+        header("Location:/login");
+    }
+    
+    
+
+}
+function updateItemController() {
+if(isset($_POST["name"], $_POST["desc"], $_POST["amount"])) {
+    $name = cleanUpInput($_POST["name"]);
+    $desc = cleanUpInput($_POST["desc"]);
+    $amount = cleanUpInput($_POST["amount"]);
+    $id = $_GET["id"];
+    $cid = $_GET["cid"];
+        try {
+            updateItem($name, $amount, $desc,$id);
+            header("Location: /view-items?id=$cid");
+            }
+        catch (PDOException $e){
+            echo "Error updating item: " . $e->getMessage();
+            exit;
+        }
+        }    
 }
