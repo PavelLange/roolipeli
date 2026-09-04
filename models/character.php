@@ -37,7 +37,7 @@ function AddCharacter($name, $race, $class, $notes, $level, $hp, $mp, $str, $con
 }
 
 
-function updateCharacter($name, $notes, $hp, $mp, $str, $con, $dex, $int, $chr, $id
+function updateCharacter($name, $notes, $level, $hp, $mp, $str, $con, $dex, $int, $chr, $id
 ) {
     $pdo = connectDB();
 
@@ -45,6 +45,7 @@ function updateCharacter($name, $notes, $hp, $mp, $str, $con, $dex, $int, $chr, 
             SET
                 Nimi = ?,
                 Muistiinpanot = ?,
+                Taso = ?,
                 Elamapisteet = ?,
                 Magiapisteet = ?,
                 Voima = ?,
@@ -59,6 +60,7 @@ function updateCharacter($name, $notes, $hp, $mp, $str, $con, $dex, $int, $chr, 
     return $stm->execute([
         $name,
         $notes,
+        $level,
         $hp,
         $mp,
         $str,
