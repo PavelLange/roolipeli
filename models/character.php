@@ -1,6 +1,6 @@
 <?php
 require_once "../models/db.php";
-
+require_once "../models/users.php";
 function getAllCharacterInfo ($id) {
     $pdo = connectDB();
     $sql = "SELECT * FROM Hahmo WHERE ID=?";
@@ -78,19 +78,19 @@ function deleteCharacter($id){
     return $stm->execute([$id]);
 }
 
-function AddItem($character,$item, $amount ) {
+function AddItem($campaignid,$item, $amount,$desc) {
     $pdo = connectDB();
-    $data = [$character, $item, $amount];
-    $sql = "INSERT INTO Esineet (Hahmo, Esine, Maara ) VALUES (?,?,?)";
+    $data = [$campaignid, $item, $amount, $desc];
+    $sql = "INSERT INTO Esineet (Kampanjaid, Esine, Maara,Kuvaus) VALUES (?,?,?,?)";
     $stm = $pdo->prepare($sql);
     $stm=$pdo->prepare($sql);
     return $stm->execute($data);
 }
 
-function updateItem($character,$item, $amount, $id){
+function updateItem($item, $amount,$desc, $id){
     $pdo = connectDB();
-    $data = [$character, $item, $amount, $id];
-    $sql = "UPDATE Esineet SET Hahmo = ? , Esine = ?, Maara = ?  WHERE ID = ?";
+    $data = [$item, $amount, $desc, $id];
+    $sql = "UPDATE Esineet SET Esine = ?, Maara = ?, Kuvaus = ? WHERE ID = ?";
     $stm = $pdo->prepare($sql);
     return $stm->execute($data);
 }
@@ -111,12 +111,22 @@ function getCharacterByIdEdit($id){
     return $all;
 }
 
-function listAllCharactersItems ($charname) {
+function getItemByIdEdit($id){
     $pdo = connectDB();
-    $sql = "SELECT * FROM Esineet WHERE Hahmo = ?";
+    $sql = "SELECT * FROM Esineet WHERE ID=?";
+    $stm= $pdo->prepare($sql);
+    $stm->execute([$id]);
+    $all = $stm->fetch(PDO::FETCH_ASSOC);
+    return $all;
+}
+
+
+function listAllCharactersItems ($campaignid) {
+    $pdo = connectDB();
+    $sql = "SELECT * FROM Esineet WHERE Kampanjaid = ?";
     $stm = $pdo->prepare($sql);
-    $stm->execute([$charname]);
-    $user = $stm->fetch(PDO::FETCH_ASSOC);
+    $stm->execute([$campaignid]);
+    $user = $stm->fetchAll(PDO::FETCH_ASSOC);
     return $user;
 }
 function getCharacterByCreator($creator) {

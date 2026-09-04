@@ -106,3 +106,18 @@ function deleteUser($id) {
     $stm=$pdo->prepare($sql);
     return $stm->execute([$id]);
 }
+
+function checkUserInCampaign($id,$username) {
+ 
+    $pdo = connectDB();
+ 
+    $sql = "SELECT Pelaajat FROM Kampanjat WHERE ID=? AND (Pelaajat LIKE ? OR Pelinjohtaja LIKE ?)";
+ 
+    $stm = $pdo->prepare($sql);
+ 
+    $stm->execute([$id,"%$username%", $username]);
+ 
+    $user = $stm->fetch(PDO::FETCH_ASSOC);
+    
+    return $user;
+}

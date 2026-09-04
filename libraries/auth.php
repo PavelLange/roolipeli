@@ -24,3 +24,13 @@ function isMaster (){
         return false;
     }
 }
+
+function isInCampaign($id,$user) {
+    $campuser = checkUserInCampaign($id,$user);
+    if($campuser) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}

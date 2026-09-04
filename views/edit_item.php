@@ -24,6 +24,7 @@
                     type="text"
                     id="item-name"
                     name="name"
+                    value="<?=$iteminfo["Esine"]?>"
                     placeholder="Enter item name..."
                     required
                 >
@@ -38,7 +39,7 @@
                     name="desc"
                     rows="8"
                     placeholder="Write a description or notes about your item..."
-                ></textarea>
+                ><?= $iteminfo["Kuvaus"] ?></textarea>
             </div>
 
             <div class="form-group">
@@ -48,6 +49,7 @@
                     type="number"
                     id="item-amount"
                     name="amount"
+                    value="<?=$iteminfo["Maara"]?>"
                     placeholder="Enter item amount..."
                     min=1
                     required
@@ -58,8 +60,7 @@
             <div class="campaign-form-actions">
 
                 <a
-                <?php $id = $_GET["id"]?>
-                    href="/view-campaign?id=<?=$id?>"
+                    href="/view-items?id=<?=$cid?>"
                     class="button button-secondary"
                 >
                     Cancel
@@ -69,7 +70,7 @@
                     type="submit"
                     class="button button-primary"
                 >
-                    Create Item
+                    Update Item
                 </button>
 
             </div>
