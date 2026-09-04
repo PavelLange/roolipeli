@@ -271,10 +271,10 @@ function updateCharacterController()
 
         foreach ($stats as $stat) {
 
-            if ($stat['new'] < 0) {
+            if ($stat['new'] < 0 || $stat['new'] > 100) {
 
                 echo '<h1 class="centered">
-                        Stats cannot be below zero.
+                        Stats must be between 0 and 100.
                       </h1>';
 
                 return;
@@ -398,6 +398,23 @@ function myCharacterController()
         $username = $_SESSION["username"];
 
         $characters = getAllOwnCharacters($username);
+
+        $totalCharacters = count($characters);
+
+        $highestLevel = 0;
+        $totalHp = 0;
+
+        foreach ($characters as $character) {
+
+            $level = (int)$character["Taso"];
+            $hp = (int)$character["Elamapisteet"];
+
+            if ($level > $highestLevel) {
+                $highestLevel = $level;
+            }
+
+            $totalHp += $hp;
+        }
 
         require "../views/my_characters.php";
     } catch (PDOException $e) {
