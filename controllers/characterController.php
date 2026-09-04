@@ -453,6 +453,7 @@ if(isset($_POST["name"], $_POST["desc"], $_POST["amount"])) {
     $amount = cleanUpInput($_POST["amount"]);
     try {
         addItem($campaignid,$name,$amount,$desc);
+        $_SESSION["message"] = "Item has been added!";
         header("Location:view-campaign?id=$campaignid");
     }
     catch (PDOException $e){
@@ -496,6 +497,7 @@ if(isset($_POST["name"], $_POST["desc"], $_POST["amount"])) {
     $cid = $_GET["cid"];
         try {
             updateItem($name, $amount, $desc,$id);
+            $_SESSION["message"] = "Item has been updated!";
             header("Location: /view-items?id=$cid");
             }
         catch (PDOException $e){
@@ -503,4 +505,28 @@ if(isset($_POST["name"], $_POST["desc"], $_POST["amount"])) {
             exit;
         }
         }    
+}
+
+
+function deleteItemController(){
+    if (!isset($_GET["id"], $_GET["cid"])) {
+        exit;
+    }
+    try {
+            $id = cleanUpInput($_GET["id"]);
+            $cid = cleanUpInput($_GET["cid"]);
+            $user = $_SESSION["username"];
+            if(isInCampaign($cid,$user) == true) {
+            deleteItem($id);
+            $_SESSION["message"] = "Item has been deleted!";  
+            header("Location: /view-items?id=" . $cid);
+            exit;
+            }
+            else {
+                header("Location: /");
+            }
+        
+    } catch (PDOException $e){
+        echo "Virhe kampanjaa poistettaessa: " . $e->getMessage();
+    }
 }
