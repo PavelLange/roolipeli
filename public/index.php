@@ -262,6 +262,16 @@ switch ($uri) {
                     require_once __DIR__ . '/../partials/footer.php';
                     }
                 break;
+
+            case '/delete-item':
+                if(isLoggedIn()) {
+                    deleteItemController();
+                }
+                else {
+                    require __DIR__ . '/../partials/header.php';
+                    loginController();
+                    require __DIR__ . '/../partials/footer.php';
+                }
     default:
         http_response_code(404);
 
