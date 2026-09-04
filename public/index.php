@@ -140,7 +140,24 @@ switch ($uri) {
             require_once __DIR__ . '/../partials/footer.php';
             }
         break;
-    
+
+        case '/view-character':
+            if (isLoggedIn()) {
+                if ($method === "get") {
+                    require __DIR__ . '/../partials/header.php';
+                    viewCharacterController();
+                    require __DIR__ . '/../partials/footer.php';
+                } else {
+                    header("Location: /my-characters");
+                    exit;
+                }
+            } else {
+                require __DIR__ . '/../partials/header.php';
+                loginController();
+                require __DIR__ . '/../partials/footer.php';
+            }
+            break;
+            
 
         case '/view-campaign':
             if(isLoggedIn()){

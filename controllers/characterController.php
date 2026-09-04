@@ -406,3 +406,40 @@ function myCharacterController()
         exit;
     }
 }
+
+function viewCharacterController()
+{
+    if (!isLoggedIn()) {
+        header("Location: /login");
+        exit;
+    }
+
+    if (!isset($_GET["id"])) {
+        header("Location: /my-characters");
+        exit;
+    }
+
+    try {
+
+        $id = cleanUpInput($_GET["id"]);
+
+        $character = getCharacterByIdEdit($id);
+
+        if (!$character) {
+            header("Location: /my-characters");
+            exit;
+        }
+
+        if ($character["Tekija"] !== $_SESSION["username"]) {
+            header("Location: /my-characters");
+            exit;
+        }
+
+        require "../views/view_character.php";
+
+    } catch (PDOException $e) {
+
+        echo "Error loading character: " . $e->getMessage();
+        exit;
+    }
+}

@@ -15,7 +15,7 @@
 
     <section class="my-campaigns">
 
-        <?php if (empty($characters)): ?>
+        <?php if (empty($characters)) : ?>
 
             <div class="campaign-empty">
 
@@ -30,27 +30,21 @@
                     Create your first character and begin your adventure.
                 </p>
 
-                <a
-                    href="/new-character"
-                    class="button button-primary"
-                >
+                <a href="/new-character" class="button button-primary">
                     Create Character
                 </a>
 
             </div>
 
-        <?php else: ?>
+        <?php else : ?>
 
-            <?php foreach ($characters as $character): ?>
+            <?php foreach ($characters as $character) : ?>
 
                 <article class="my-campaign-card">
 
                     <div class="my-character-image">
 
-                    <img
-                        src="/images/<?= htmlspecialchars($character["Hahmoluokka"]) ?>.jpg"
-                        alt="<?= htmlspecialchars($character["Nimi"]) ?>"
-                    >
+                        <img src="/images/<?= htmlspecialchars($character["Hahmoluokka"]) ?>.jpg" alt="<?= htmlspecialchars($character["Nimi"]) ?>">
 
                     </div>
 
@@ -85,34 +79,18 @@
                             <?= htmlspecialchars($character["Elamapisteet"]) ?>
                         </p>
 
-                        <p>
-                            Mana:
-                            <?= htmlspecialchars($character["Magiapisteet"]) ?>
-                        </p>
-
-                        <br>
-
-                        <p>
-                            <?= htmlspecialchars(
-                                substr($character["Muistiinpanot"] ?? '', 0, 200)
-                            ) ?>
-                        </p>
-
 
                         <div class="my-campaign-actions">
 
-                            <a
-                                href="/edit-character?id=<?= htmlspecialchars($character["ID"]) ?>"
-                                class="button button-primary"
-                            >
+                            <a href="/view-character?id=<?= (int)$character["ID"] ?>" class="button button-primary">
+                                View Character
+                            </a>
+
+                            <a href="/edit-character?id=<?= htmlspecialchars($character["ID"]) ?>" class="button button-primary">
                                 Edit Character
                             </a>
 
-                            <a
-                                href="/delete-character?id=<?= htmlspecialchars($character["ID"]) ?>"
-                                class="button button-secondary"
-                                onclick="return confirm('Are you sure you want to delete this character?');"
-                            >
+                            <a href="/delete-character?id=<?= htmlspecialchars($character["ID"]) ?>" class="button button-secondary" onclick="return confirm('Are you sure you want to delete this character?');">
                                 Delete
                             </a>
 
