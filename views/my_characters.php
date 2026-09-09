@@ -19,19 +19,7 @@
             <strong><?= $totalCharacters ?></strong>
         </div>
 
-        <div class="summary-card">
-            <span>Highest Level</span>
-            <strong><?= $highestLevel ?></strong>
-        </div>
-
-        <div class="summary-card">
-            <span>Total HP</span>
-            <strong><?= $totalHp ?></strong>
-        </div>
-
     </section>
-
-
 
     <section class="my-campaigns">
 
