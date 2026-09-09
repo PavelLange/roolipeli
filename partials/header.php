@@ -91,25 +91,32 @@ $currentPage = $_SERVER['REQUEST_URI'];
     
 
 </header>
-<div id="Invite-div" style="display:none;">
-            <?php $allinvites = getInvites($_SESSION["username"]); ?>
-            <?php if(empty($allinvites)) :?>
-            <h1>Looks like you dont have any invites.</h1>
-            <?php else: ?>
-            <?php foreach($allinvites as $invite):?>
-            <form method="POST">
-            <div  class="invite">
-            <h1><?= $invite["Lahettaja"] ?> invited you to a campaign</h1>
-            <h2>Campaign: <?= $invite["Kampanja"] ?></h2>
-            <?php $id = $invite["ID"]?>
-            <button class="accept" name="accept" value="<?=$id?>" >Accept </button><button class="decline" name="decline" value="<?=$id?>">Decline</button>
-            <hr style="width:100%"/>
+<div id="Invite-div" class="invite-panel" style="display:none;">
+    <?php $allinvites = isLoggedIn() ? getInvites($_SESSION["username"]) : []; ?>
+    <?php if(empty($allinvites)) :?>
+        <div class="invite-empty">
+            <h2>No invitations yet</h2>
+            <p>New campaign invitations will appear here.</p>
+        </div>
+    <?php else: ?>
+        <div class="invite-panel-heading">
+            <p class="eyebrow">Your inbox</p>
+            <h2>Campaign invitations</h2>
+        </div>
+        <?php foreach($allinvites as $invite):?>
+            <form class="invite" method="POST">
+                <div class="invite-copy">
+                    <h3><?= htmlspecialchars($invite["Lahettaja"]) ?> invited you to a campaign</h3>
+                    <p>Campaign: <strong><?= htmlspecialchars($invite["Kampanja"]) ?></strong></p>
+                </div>
+                <?php $id = $invite["ID"]?>
+                <div class="invite-actions">
+                    <button class="accept" name="accept" value="<?= htmlspecialchars($id) ?>">Accept</button>
+                    <button class="decline" name="decline" value="<?= htmlspecialchars($id) ?>">Decline</button>
+                </div>
             </form>
-            </div>
-
-            <?php endforeach ?>
-            <?php endif?>    
-            </div>
+        <?php endforeach ?>
+    <?php endif?>
 </div>
 <br>
 <?php if(isset($_SESSION["message"])):?>
