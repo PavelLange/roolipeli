@@ -402,21 +402,6 @@ function myCharacterController()
 
         $totalCharacters = count($characters);
 
-        $highestLevel = 0;
-        $totalHp = 0;
-
-        foreach ($characters as $character) {
-
-            $level = (int)$character["Taso"];
-            $hp = (int)$character["Elamapisteet"];
-
-            if ($level > $highestLevel) {
-                $highestLevel = $level;
-            }
-
-            $totalHp += $hp;
-        }
-
         require "../views/my_characters.php";
     } catch (PDOException $e) {
 
