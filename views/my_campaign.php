@@ -63,7 +63,7 @@
                 </h2>
                 <br>
                 <p>
-                <?= htmlspecialchars(substr($owned["Muistiinpanot"], 0, 200))  ?>
+                <?= htmlspecialchars(substr($owned["Muistiinpanot"], 0, 70))  ?>
                     . . .
                 </p>
 
@@ -125,7 +125,7 @@
                 </h2>
                 <br>
                 <p>
-                    <?= htmlspecialchars(substr($joined["Muistiinpanot"], 0, 200))  ?>
+                    <?= htmlspecialchars(substr($joined["Muistiinpanot"], 0, 70))  ?>
                     . . .
                 </p>
 

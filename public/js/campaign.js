@@ -164,9 +164,18 @@ function addCharacterToPage(character) {
             <span>HP: ${character.hp}</span>
             <span>Mana: ${character.mana}</span>
             <span>Status: ${character.status}</span>
+            <form method="POST">
+            ${
+                character.status == "Alive" && username == gamemaster ? `
+                <button class="set-button" name="alive" type="submit" value='<?=$character["ID"]?>'>Set dead</button>`
+                : character.status == "Dead" && username == gamemaster ?
+                `<button class="set-button" name="dead" type="submit" value='<?=$character["ID"]?>' >Set alive</button>`
+                : ``
+            }
+            
+            </form>
         </div>
-    `;
-
+    `
     characterList.appendChild(characterCard);
 }
 

@@ -140,16 +140,34 @@ switch ($uri) {
             require_once __DIR__ . '/../partials/footer.php';
             }
         break;
-    
+
+        case '/view-character':
+            if (isLoggedIn()) {
+                if ($method === "get") {
+                    require __DIR__ . '/../partials/header.php';
+                    viewCharacterController();
+                    require __DIR__ . '/../partials/footer.php';
+                } else {
+                    header("Location: /my-characters");
+                    exit;
+                }
+            } else {
+                require __DIR__ . '/../partials/header.php';
+                loginController();
+                require __DIR__ . '/../partials/footer.php';
+            }
+            break;
+            
 
         case '/view-campaign':
             if(isLoggedIn()){
                 
-            if($method == "get"){
+            if($method == "get" || $method == "post"){
             require __DIR__ . '/../partials/header.php';
             viewCampaignController();  
             require __DIR__ . '/../partials/footer.php';
-            } else {
+            } 
+            else {
             require __DIR__ . '/../partials/header.php';
             loginController();
             require_once __DIR__ . '/../partials/footer.php';
@@ -246,6 +264,44 @@ switch ($uri) {
                 }
                 break;
         
+
+            case '/view-items': 
+                require __DIR__ . '/../partials/header.php';
+                viewItemController();
+                require __DIR__ . '/../partials/footer.php';
+                break;
+
+            case '/new-item':
+                require __DIR__ . '/../partials/header.php';
+                addItemController();
+                require __DIR__ . '/../partials/footer.php';
+                break;
+
+            case '/edit-item':
+                if(isLoggedIn()) {
+                    if($method === "get") {
+                    require __DIR__ . '/../partials/header.php';
+                    editItemController();
+                    require __DIR__ . '/../partials/footer.php';
+                    } else {
+                        updateItemController();
+                    }
+                } else {
+                    require __DIR__ . '/../partials/header.php';
+                    loginController();
+                    require_once __DIR__ . '/../partials/footer.php';
+                    }
+                break;
+
+            case '/delete-item':
+                if(isLoggedIn()) {
+                    deleteItemController();
+                }
+                else {
+                    require __DIR__ . '/../partials/header.php';
+                    loginController();
+                    require __DIR__ . '/../partials/footer.php';
+                }
     default:
         http_response_code(404);
 

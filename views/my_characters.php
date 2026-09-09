@@ -12,10 +12,30 @@
 
     </section>
 
+    <section class="character-summary">
+
+        <div class="summary-card">
+            <span>Characters</span>
+            <strong><?= $totalCharacters ?></strong>
+        </div>
+
+        <div class="summary-card">
+            <span>Highest Level</span>
+            <strong><?= $highestLevel ?></strong>
+        </div>
+
+        <div class="summary-card">
+            <span>Total HP</span>
+            <strong><?= $totalHp ?></strong>
+        </div>
+
+    </section>
+
+
 
     <section class="my-campaigns">
 
-        <?php if (empty($characters)): ?>
+        <?php if (empty($characters)) : ?>
 
             <div class="campaign-empty">
 
@@ -30,36 +50,31 @@
                     Create your first character and begin your adventure.
                 </p>
 
-                <a
-                    href="/new-character"
-                    class="button button-primary"
-                >
+                <a href="/new-character" class="button button-primary">
                     Create Character
                 </a>
 
             </div>
 
-        <?php else: ?>
+        <?php else : ?>
 
-            <?php foreach ($characters as $character): ?>
+            <?php foreach ($characters as $character) : ?>
 
                 <article class="my-campaign-card">
 
                     <div class="my-character-image">
 
-                    <img
-                        src="/images/<?= htmlspecialchars($character["Hahmoluokka"]) ?>.jpg"
-                        alt="<?= htmlspecialchars($character["Nimi"]) ?>"
-                    >
+                        <img src="/images/<?= htmlspecialchars($character["Hahmoluokka"]) ?>.jpg" alt="<?= htmlspecialchars($character["Nimi"]) ?>">
 
                     </div>
 
 
                     <div class="my-campaign-content">
 
-                        <p class="campaign-status">
+                        <p class="campaign-status <?= htmlspecialchars($character["Hahmoluokka"]) ?>">
                             <?= htmlspecialchars($character["Hahmoluokka"]) ?>
                         </p>
+
 
                         <br>
 
@@ -85,34 +100,18 @@
                             <?= htmlspecialchars($character["Elamapisteet"]) ?>
                         </p>
 
-                        <p>
-                            Mana:
-                            <?= htmlspecialchars($character["Magiapisteet"]) ?>
-                        </p>
-
-                        <br>
-
-                        <p>
-                            <?= htmlspecialchars(
-                                substr($character["Muistiinpanot"] ?? '', 0, 200)
-                            ) ?>
-                        </p>
-
 
                         <div class="my-campaign-actions">
 
-                            <a
-                                href="/edit-character?id=<?= htmlspecialchars($character["ID"]) ?>"
-                                class="button button-primary"
-                            >
+                            <a href="/view-character?id=<?= (int)$character["ID"] ?>" class="button button-primary">
+                                View Character
+                            </a>
+
+                            <a href="/edit-character?id=<?= htmlspecialchars($character["ID"]) ?>" class="button button-primary">
                                 Edit Character
                             </a>
 
-                            <a
-                                href="/delete-character?id=<?= htmlspecialchars($character["ID"]) ?>"
-                                class="button button-secondary"
-                                onclick="return confirm('Are you sure you want to delete this character?');"
-                            >
+                            <a href="/delete-character?id=<?= htmlspecialchars($character["ID"]) ?>" class="button button-secondary" onclick="return confirm('Are you sure you want to delete this character?');">
                                 Delete
                             </a>
 
@@ -127,5 +126,14 @@
         <?php endif; ?>
 
     </section>
+
+    <a href="/new-character" class="button button-primary bottom-action">
+        + Create New Character
+    </a>
+
+    <a href="/" class="button button-secondary bottom-action">
+        ← Back to Home
+    </a>
+
 
 </main>

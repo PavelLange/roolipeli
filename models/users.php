@@ -114,4 +114,17 @@ function getAllUsers() {
     $stm->execute();
     $users = $stm->fetchAll(PDO::FETCH_ASSOC);
     return $users;
+function checkUserInCampaign($id,$username) {
+ 
+    $pdo = connectDB();
+ 
+    $sql = "SELECT Pelaajat FROM Kampanjat WHERE ID=? AND (Pelaajat LIKE ? OR Pelinjohtaja LIKE ?)";
+ 
+    $stm = $pdo->prepare($sql);
+ 
+    $stm->execute([$id,"%$username%", $username]);
+ 
+    $user = $stm->fetch(PDO::FETCH_ASSOC);
+    
+    return $user;
 }
