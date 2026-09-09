@@ -2116,13 +2116,19 @@ a {
 
 .set-button {
     cursor: pointer;
-    margin-left: 20px;
+    width:70px;
+    padding: 1px;
     font-size: 12px;
-    height: 20px;
+    height: auto;
     color: white;
     background: var(--red);
+    text-transform: uppercase;
     border: 1px solid var(--red-light);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+.set-button:hover {
+    transform: translateY(-2px);
 }
 
 .item-button {
@@ -2619,6 +2625,25 @@ a {
     font-size: 13px;
 }
 
+.manage {
+    height:auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 3px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    cursor: pointer;
+    background: var(--black);
+    color:white;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+.manage:hover {
+    transform: translateY(-2px);
+}
 
 /* CREATE CHARACTER */
 
@@ -3185,4 +3210,8 @@ a {
 .intelligence-fill,
 .charisma-fill {
     background: #8b5cf6;
+}
+.item-a {
+    width:134px;
+    text-decoration: none;
 }

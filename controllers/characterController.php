@@ -114,8 +114,9 @@ function addCharacterController()
             $level = 1;
 
             $hp = $character['health'];
+            $hpmax = $hp;
             $mp = $character['mana'];
-
+            $mpmax = $mp;
             $str = $character['strength'];
             $con = $character['constitution'];
             $dex = $character['agility'];
@@ -124,7 +125,7 @@ function addCharacterController()
             $creator = $_SESSION["username"];
 
             if (strlen($name) > 1) {
-                addCharacter($name, $race, $class, $notes, $level, $hp, $mp, $str, $con, $dex, $int, $chr, $creator);
+                addCharacter($name, $race, $class, $notes, $level, $hp, $hpmax , $mp, $mpmax ,$str, $con, $dex, $int, $chr, $creator);
                 $_SESSION["message"] = "Character has been created!";
                 header("Location: /my-characters");
                 exit;
@@ -199,13 +200,11 @@ function updateCharacterController()
 
         $newHp = isset($_POST['health'])
             ? (int)$_POST['health']
-            : (int)$character['Elamapisteet'];
-
+            : (int)$character['Elamamax'];   
 
         $newMp = isset($_POST['mana'])
             ? (int)$_POST['mana']
-            : (int)$character['Magiapisteet'];
-
+            : (int)$character['Magiamax'];  
 
         $newStr = isset($_POST['strength'])
             ? (int)$_POST['strength']
@@ -309,12 +308,15 @@ function updateCharacterController()
 
             return;
         }
-
+        $hp = $newHp;
+        $mp = $newMp;
         updateCharacter(
             $name,
             $notes,
             $newLevel,
+            $hp,
             $newHp,
+            $mp,
             $newMp,
             $newStr,
             $newCon,
@@ -529,7 +531,28 @@ function deleteItemController(){
             }
         
     } catch (PDOException $e){
-        echo "Virhe kampanjaa poistettaessa: " . $e->getMessage();
+        echo "Virhe esinetta poistettaessa: " . $e->getMessage();
     }
 }
 
+function manageCharacterController() {
+    $id = $_GET["id"];
+    $cid = $_GET["cid"];
+    $character = getAllCharacterInfo($id);
+    if(isset($_POST["hpamount"], $_POST["mpamount"])) {
+        $hp = cleanUpInput($_POST["hpamount"]);
+        $mp = cleanUpInput($_POST["mpamount"]);
+        
+        
+            try {
+                manageCharacter($hp,$mp,$id);
+                $_SESSION["message"] = "Character has been updated!";
+                header("Location: /view-campaign?id=$cid");
+                }
+            catch (PDOException $e){
+                echo "Error updating item: " . $e->getMessage();
+                exit;
+            }
+            }
+            require "../views/manage_character.php";    
+    }

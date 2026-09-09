@@ -302,6 +302,11 @@ switch ($uri) {
                     loginController();
                     require __DIR__ . '/../partials/footer.php';
                 }
+            
+            case '/manage-character':
+                require __DIR__ . '/../partials/header.php';
+                manageCharacterController();
+                require __DIR__ . '/../partials/footer.php';
     default:
         http_response_code(404);
 
