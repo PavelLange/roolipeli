@@ -547,3 +547,4 @@ function deleteItemController(){
         echo "Virhe kampanjaa poistettaessa: " . $e->getMessage();
     }
 }
+
