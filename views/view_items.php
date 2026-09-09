@@ -27,5 +27,9 @@ Delete
 <a href="/new-item?id=<?=$cid?>">
 <button>CREATE ITEM</button>
 </a>
+
 <?php endif?>
+<a href="view-campaign?id=<?=$cid?>">
+<button>back</button>
+</a>
 </div>
