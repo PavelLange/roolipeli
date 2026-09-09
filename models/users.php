@@ -114,6 +114,7 @@ function getAllUsers() {
     $stm->execute();
     $users = $stm->fetchAll(PDO::FETCH_ASSOC);
     return $users;
+}
 function checkUserInCampaign($id,$username) {
  
     $pdo = connectDB();

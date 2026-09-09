@@ -143,7 +143,7 @@
                                 −
                             </button>
 
-                            <input id="health" type="number" name="health" value="<?= htmlspecialchars($character["Elamapisteet"]) ?>" readonly>
+                            <input id="health" type="number" name="health" value="<?= htmlspecialchars($character["Elamamax"]) ?>" readonly>
 
                             <button type="button" class="stat-button stat-plus" data-stat="health">
                                 +
@@ -168,7 +168,7 @@
                                 −
                             </button>
 
-                            <input id="mana" type="number" name="mana" value="<?= htmlspecialchars($character["Magiapisteet"]) ?>" readonly>
+                            <input id="mana" type="number" name="mana" value="<?= htmlspecialchars($character["Magiamax"]) ?>" readonly>
 
                             <button type="button" class="stat-button stat-plus" data-stat="mana">
                                 +

@@ -26,18 +26,18 @@ function listAllRaces() {
     return $stm->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function AddCharacter($name, $race, $class, $notes, $level, $hp, $mp, $str, $con, $dex, $int, $chr, $creator) {
+function AddCharacter($name, $race, $class, $notes, $level, $hp, $hpmax ,$mp, $mpmax ,$str, $con, $dex, $int, $chr, $creator) {
 
     $pdo = connectDB();
-    $data = [$name, $race, $class, $notes, $level, $hp, $mp, $str, $con, $dex, $int, $chr, $creator];
-    $sql = "INSERT INTO Hahmo (Nimi, Rotu, Hahmoluokka, Muistiinpanot, Taso, Elamapisteet, Magiapisteet, Voima, Kestavyys, Ketteryys, Alykkyys, Karisma, Tekija) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $data = [$name, $race, $class, $notes, $level, $hp, $hpmax,$mp,$mpmax ,$str, $con, $dex, $int, $chr, $creator];
+    $sql = "INSERT INTO Hahmo (Nimi, Rotu, Hahmoluokka, Muistiinpanot, Taso, Elamapisteet, Elamamax , Magiapisteet, Magiamax ,Voima, Kestavyys, Ketteryys, Alykkyys, Karisma, Tekija) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
     $stm = $pdo->prepare($sql);
     $stm=$pdo->prepare($sql);
     return $stm->execute($data);
 }
 
 
-function updateCharacter($name, $notes, $level, $hp, $mp, $str, $con, $dex, $int, $chr, $id
+function updateCharacter($name, $notes, $level,$hp ,$hpmax, $mp, $mpmax ,$str, $con, $dex, $int, $chr, $id
 ) {
     $pdo = connectDB();
 
@@ -47,7 +47,9 @@ function updateCharacter($name, $notes, $level, $hp, $mp, $str, $con, $dex, $int
                 Muistiinpanot = ?,
                 Taso = ?,
                 Elamapisteet = ?,
+                Elamamax = ?,
                 Magiapisteet = ?,
+                Magiamax = ?,
                 Voima = ?,
                 Kestavyys = ?,
                 Ketteryys = ?,
@@ -62,7 +64,9 @@ function updateCharacter($name, $notes, $level, $hp, $mp, $str, $con, $dex, $int
         $notes,
         $level,
         $hp,
+        $hpmax,
         $mp,
+        $mpmax,
         $str,
         $con,
         $dex,
@@ -168,6 +172,13 @@ function setAlive($id) {
     $pdo = connectDB();
     $data = [$id];
     $sql = "UPDATE Hahmo SET Status = 'Alive'  WHERE ID = ?";
+    $stm = $pdo->prepare($sql);
+    return $stm->execute($data);
+}
+function manageCharacter($hp,$mp,$id) {
+    $pdo = connectDB();
+    $data = [$hp,$mp,$id];
+    $sql = "UPDATE Hahmo SET Elamapisteet = ?, Magiapisteet = ? WHERE ID = ?";
     $stm = $pdo->prepare($sql);
     return $stm->execute($data);
 }

@@ -186,8 +186,12 @@ function addCharacterToCampaignController() {
             "race" => $character["Rotu"],
             "className" => $character["Hahmoluokka"],
             "hp" => $character["Elamapisteet"],
+            "hpMax" => $character["Elamamax"],
             "mana" => $character["Magiapisteet"],
-            "status" => $character["Status"]
+            "manaMax" => $character["Magiamax"],
+            "status" => $character["Status"],
+            "creator" => $character["Tekija"],
+            "campaignid" => $campaignId
         ]
     ]);
 

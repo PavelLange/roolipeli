@@ -36,7 +36,7 @@
             <br>
             <br>
             <?php $id = $campaign["ID"] ?>
-            <a href="/view-items?id=<?=$id?>">
+            <a class="item-a" href="/view-items?id=<?=$id?>">
             <button class="button button-secondary">View items</button>
             </a>
             <a href="/new-item?id=<?=$id?>">
@@ -180,6 +180,8 @@
                             <?= htmlspecialchars($character["Rotu"]) ?>
                             ·
                             <?= htmlspecialchars($character["Hahmoluokka"]) ?>
+                            · 
+                            <?= htmlspecialchars($character["Tekija"]) ?>
                         </p>
                     </div>
                     <?php if($character["Tekija"] == $_SESSION["username"] || $campaign["Pelinjohtaja"] == $_SESSION["username"]):?>
@@ -217,12 +219,15 @@
                         data-character-id="<?= htmlspecialchars($character['ID']) ?>"
                     >
                         <h3><?= htmlspecialchars($character["Nimi"]) ?></h3>
-                        <p><?= htmlspecialchars($character["Rotu"]) ?> · <?= htmlspecialchars($character["Hahmoluokka"]) ?></p>
+                        <p><?= htmlspecialchars($character["Rotu"]) ?> · <?= htmlspecialchars($character["Hahmoluokka"])?> · <?= htmlspecialchars($character["Tekija"])?></p>
                         <div class="character-stats">
-                            <span>HP: <?= htmlspecialchars($character["Elamapisteet"]) ?></span>
-                            <span>Mana: <?= htmlspecialchars($character["Magiapisteet"]) ?></span>
+                            <?php if($character["Status"] == "Dead"):?>
+                            <span>HP: 0/<?=htmlspecialchars($character["Elamamax"])  ?></span>
+                            <?php else:?>
+                            <span>HP: <?= htmlspecialchars($character["Elamapisteet"]) ?>/<?=htmlspecialchars($character["Elamamax"])  ?></span>
+                            <?php endif;?>
+                            <span>Mana: <?= htmlspecialchars($character["Magiapisteet"]) ?>/<?= htmlspecialchars($character["Magiamax"]) ?></span>
                             <span>Status: <?= htmlspecialchars($character["Status"]) ?></span>
-                            <?php ?>
                             <form method="POST">
                             <?php if($character["Status"] == "Alive" && $campaign["Pelinjohtaja"] === $_SESSION["username"]):?>
                                 <button class="set-button" name="alive" type="submit" value="<?=$character["ID"]?>">Set dead</button>
@@ -230,6 +235,13 @@
                                 <button class="set-button" name="dead" type="submit" value="<?=$character["ID"]?>" >Set alive</button>
                             <?php endif ?>
                             </form>
+                            <?php if($campaign["Pelinjohtaja"] === $_SESSION["username"] || $character["Tekija"] === $_SESSION["username"]):?>
+                            <?php $id = $character["ID"]; ?>
+                            <?php $cid = $campaign["ID"]; ?>
+                            <a href="/manage-character?id=<?=$id?>&cid=<?=$cid?>">
+                            <button class="manage" type="submit">Manage</button>
+                            </a>
+                            <?php endif?>
                         </div>
 
                     </article>
@@ -323,5 +335,8 @@
 </script>
 <script>
     const gamemaster = <?= json_encode($campaign["Pelinjohtaja"])?>
+</script>
+<script>
+    const cid = <?= json_encode($campaign["ID"])?>
 </script>
 <script src="js/campaign.js"></script>

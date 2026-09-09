@@ -5,7 +5,6 @@ const inviteInput = document.querySelector("#invite-input");
 const inviteSuggestions = document.querySelector("#invite-suggestions");
 const cancelInvitationButtons = document.querySelectorAll(".cancel-invitation-button");
 const removePlayerButtons = document.querySelectorAll(".remove-player-button");
-
 // Store selected player data
 let selectedPlayer = { id: null, name: null };
 let allPlayers = [];
@@ -135,7 +134,7 @@ function addCharacterToPage(character) {
     removeCard.innerHTML = `
         <div>
             <h3>${character.name}</h3>
-            <p>${character.race} · ${character.className}</p>
+            <p>${character.race} · ${character.className} · ${character.creator}</p>
         </div>
         <button
             type="button"
@@ -156,13 +155,13 @@ function addCharacterToPage(character) {
 
     characterCard.className = "character-display-card";
     characterCard.dataset.characterId = character.id;
-
+    
     characterCard.innerHTML = `
         <h3>${character.name}</h3>
-        <p>${character.race} · ${character.className}</p>
+        <p>${character.race} · ${character.className} · ${character.creator}</p>
         <div class="character-stats">
-            <span>HP: ${character.hp}</span>
-            <span>Mana: ${character.mana}</span>
+            <span>HP: ${character.hp}/${character.hpMax}</span>
+            <span>Mana: ${character.mana}/${character.manaMax}</span>
             <span>Status: ${character.status}</span>
             <form method="POST">
             ${
@@ -174,6 +173,13 @@ function addCharacterToPage(character) {
             }
             
             </form>
+            ${
+                character.creator == username || gamemaster == username ? `
+                <a href="/manage-character?id=${character.id}&cid=${cid}">
+                <button class="manage">Manage</button>
+                </a>`
+                : ``
+            }
         </div>
     `
     characterList.appendChild(characterCard);
