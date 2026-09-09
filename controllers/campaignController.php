@@ -378,20 +378,36 @@ function removePlayerFromCampaignController() {
 
 function InvitationController() {
     if (isset($_POST["accept"])) {
-        $id = $_POST["accept"];
+        $id = cleanUpInput($_POST["accept"]);
         $campaign = getInviteById($id);
-        $success = addUserToCampaign($_SESSION["username"] ,$campaign["Kampanjanid"]);
-        if($success) {
-            deleteInvitation($id);
-            $_SESSION["message"] = "You have joined the campaign!";
-            header("Location: /my-campaigns");
+        if (!$campaign || $campaign["Vastaanottaja"] !== $_SESSION["username"]) {
+            $_SESSION["message"] = "Invitation not found.";
+            header("Location: /");
+            exit;
         }
 
+        try {
+            $success = addUserToCampaign($_SESSION["username"], $campaign["Kampanjanid"]);
+            if (!$success) {
+                throw new RuntimeException("Campaign membership could not be updated.");
+            }
+
+            deleteInvitation($id);
+            $_SESSION["message"] = "You have joined the campaign!";
+        } catch (PDOException $e) {
+            $_SESSION["message"] = "We could not accept the invitation. Please try again.";
+        } catch (RuntimeException $e) {
+            $_SESSION["message"] = $e->getMessage();
+        }
+
+        header("Location: /");
+        exit;
     }
+
     if (isset($_POST["decline"])) {
-        $id = $_POST["decline"];
+        $id = cleanUpInput($_POST["decline"]);
         deleteInvitation($id);
-        header("Refresh: 0");
+        header("Location: /");
+        exit;
     }
-require "../views/front.php";
 }

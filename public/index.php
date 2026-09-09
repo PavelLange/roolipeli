@@ -14,8 +14,13 @@ require_once "../controllers/campaignController.php";
 switch ($uri) {
 
     case '/':
+        if ($method === 'post') {
+            InvitationController();
+            break;
+        }
+
         require __DIR__ . '/../partials/header.php';
-        InvitationController();
+        require __DIR__ . '/../views/front.php';
         require __DIR__ . '/../partials/footer.php';
         break;
 
