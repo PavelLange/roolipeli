@@ -217,7 +217,7 @@ function removeCharacterFromPage(characterId) {
 if (inviteButton) {
     inviteButton.addEventListener("click", async () => {
         const messageElement = document.querySelector("#invite-message");
-        const inviteBox = document.querySelector(".invite-box");
+        const inviteBox = document.querySelector(".invite-box-container");
         const campaignId = inviteBox?.dataset.campaignId;
 
         if (!selectedPlayer.id) {
