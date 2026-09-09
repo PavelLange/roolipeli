@@ -269,17 +269,21 @@ function updateCharacterController()
 
         ];
 
-        foreach ($stats as $stat) {
+        foreach ($stats as $statName => $stat) {
 
-            if ($stat['new'] < 0 || $stat['new'] > 100) {
-
+            $maxValue = ($statName === 'health' || $statName === 'mana')
+                ? 1000
+                : 100;
+        
+            if ($stat['new'] < 0 || $stat['new'] > $maxValue) {
+        
                 echo '<h1 class="centered">
-                        Stats must be between 0 and 100.
+                        Invalid stat value.
                       </h1>';
-
+        
                 return;
             }
-        }
+        }        
 
         $totalDecrease = 0;
         $totalIncrease = 0;

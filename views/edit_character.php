@@ -346,7 +346,7 @@
 
         const MAX_TRANSFER = 5;
         const POINTS_PER_LEVEL = 5;
-        const MAX_LEVEL = 10;
+        const MAX_LEVEL = 100;
 
 
         /* =========================
@@ -590,13 +590,18 @@
                         parseInt(stat.input.value);
 
 
-                    if (available <= 0 || current >= 100) {
+                    const maxValue =
+                        (statName === "health" || statName === "mana") ?
+                        1000 :
+                        100;
+
+                    if (available <= 0 || current >= maxValue) {
 
                         button.disabled = true;
 
                         return;
-
                     }
+
 
 
                     button.disabled = false;
@@ -680,26 +685,26 @@
 
 
         /* =========================
-           STAT PLUS
-        ========================= */
+   STAT PLUS
+========================= */
 
         document
             .querySelectorAll(".stat-plus")
             .forEach(function(button) {
 
-                button.addEventListener("click", function() {
+                let interval;
+
+                function increaseStat() {
 
                     const available =
                         getAvailablePoints();
-
 
                     if (available <= 0) {
                         return;
                     }
 
-
                     const statName =
-                        this.dataset.stat;
+                        button.dataset.stat;
 
                     const stat =
                         stats[statName];
@@ -707,19 +712,63 @@
                     const current =
                         parseInt(stat.input.value);
 
-                    if (current >= 100) {
+                    const maxValue =
+                        (statName === "health" || statName === "mana") ?
+                        1000 :
+                        100;
+
+                    if (current >= maxValue) {
                         return;
                     }
 
                     stat.input.value =
                         current + 1;
 
-
                     updateUI();
+                }
+
+
+                // Single click
+                button.addEventListener("click", function() {
+                    increaseStat();
+                });
+
+
+                // Start holding the button
+                button.addEventListener("mousedown", function() {
+
+                    // Wait briefly before starting
+                    interval = setTimeout(function() {
+
+                        // Increase continuously while holding
+                        interval = setInterval(function() {
+                            increaseStat();
+                        }, 100);
+
+                    }, 300);
+
+                });
+
+
+                // Stop when the mouse button is released
+                button.addEventListener("mouseup", function() {
+
+                    clearTimeout(interval);
+                    clearInterval(interval);
+
+                });
+
+
+                // Stop when the mouse leaves the button
+                button.addEventListener("mouseleave", function() {
+
+                    clearTimeout(interval);
+                    clearInterval(interval);
 
                 });
 
             });
+
 
 
         /* =========================
