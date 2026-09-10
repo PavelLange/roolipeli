@@ -1,5 +1,6 @@
 <?php
 require_once "../models/character.php";
+require_once "../models/campaigns.php";
 require_once "../libraries/cleaners.php";
 require_once "../libraries/cleaners.php";
 require_once "../libraries/auth.php";
@@ -459,8 +460,9 @@ if(isset($_POST["name"], $_POST["desc"], $_POST["amount"])) {
     $name = cleanUpInput($_POST["name"]);
     $desc = cleanUpInput($_POST["desc"]);
     $amount = cleanUpInput($_POST["amount"]);
+    $ownerid = cleanUpInput($_POST["owner"]);
     try {
-        addItem($campaignid,$name,$amount,$desc);
+        addItem($ownerid,$campaignid,$name,$amount,$desc);
         $_SESSION["message"] = "Item has been added!";
         header("Location:view-campaign?id=$campaignid");
     }
@@ -485,6 +487,7 @@ function editItemController()
         $user = $_SESSION["username"];
         if(isInCampaign($cid,$user) == true) {
             $iteminfo = getItemByIdEdit($id);
+            $campaignchars = getCampaignCharacters($cid);
             require "../views/edit_item.php";
         } else {
             header("Location:/");
@@ -501,10 +504,11 @@ if(isset($_POST["name"], $_POST["desc"], $_POST["amount"])) {
     $name = cleanUpInput($_POST["name"]);
     $desc = cleanUpInput($_POST["desc"]);
     $amount = cleanUpInput($_POST["amount"]);
+    $ownerid = cleanUpInput($_POST["owner"]);
     $id = $_GET["id"];
     $cid = $_GET["cid"];
         try {
-            updateItem($name, $amount, $desc,$id);
+            updateItem($ownerid,$name, $amount, $desc,$id);
             $_SESSION["message"] = "Item has been updated!";
             header("Location: /view-items?id=$cid");
             }

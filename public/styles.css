@@ -222,6 +222,33 @@
     padding: 0;
 }
 
+.invite-anim {
+        padding: 11px 19px;
+        color: white;
+        background: var(--red);
+        border: 1px solid var(--red-light);
+        border-radius: 3px;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.9px;
+        text-transform: uppercase;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        transition: background-color 0.2s ease, transform 0.2s ease;
+        animation: invite-anim 1.5s infinite;
+
+}
+
+@keyframes invite-anim {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+ 
+    }
+}
+
 .accept {
     color: var(--dark);
     background: var(--gold);
@@ -2233,6 +2260,13 @@ a {
     min-height: 40px;
     padding: 0 16px;
 }
+.item-owner {
+    margin: 0 0 6px;
+    flex-shrink: 0;
+    min-width: 62px;
+    text-align: center;
+}
+
 
 .button-danger {
     color: var(--text);

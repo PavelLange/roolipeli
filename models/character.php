@@ -84,19 +84,19 @@ function deleteCharacter($id){
     return $stm->execute([$id]);
 }
 
-function AddItem($campaignid,$item, $amount,$desc) {
+function AddItem($ownerid,$campaignid,$item, $amount,$desc) {
     $pdo = connectDB();
-    $data = [$campaignid, $item, $amount, $desc];
-    $sql = "INSERT INTO Esineet (Kampanjaid, Esine, Maara,Kuvaus) VALUES (?,?,?,?)";
+    $data = [$ownerid,$campaignid, $item, $amount, $desc];
+    $sql = "INSERT INTO Esineet (Hahmoid,Kampanjaid, Esine, Maara,Kuvaus) VALUES (?,?,?,?,?)";
     $stm = $pdo->prepare($sql);
     $stm=$pdo->prepare($sql);
     return $stm->execute($data);
 }
 
-function updateItem($item, $amount,$desc, $id){
+function updateItem($ownerid,$item, $amount,$desc, $id){
     $pdo = connectDB();
-    $data = [$item, $amount, $desc, $id];
-    $sql = "UPDATE Esineet SET Esine = ?, Maara = ?, Kuvaus = ? WHERE ID = ?";
+    $data = [$ownerid,$item, $amount, $desc, $id];
+    $sql = "UPDATE Esineet SET Hahmoid = ?, Esine = ?, Maara = ?, Kuvaus = ? WHERE ID = ?";
     $stm = $pdo->prepare($sql);
     return $stm->execute($data);
 }
