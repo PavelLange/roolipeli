@@ -3401,3 +3401,251 @@ a {
     width:134px;
     text-decoration: none;
 }
+
+/* =========================================
+   AVATAR SELECTION
+   ========================================= */
+
+   .avatar-selection {
+    margin-top: 40px;
+}
+
+.avatar-selection h2 {
+    margin-bottom: 8px;
+}
+
+.avatar-description {
+    margin-bottom: 20px;
+    opacity: 0.7;
+}
+
+
+/* =========================================
+   TABS
+   ========================================= */
+
+.avatar-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.avatar-tab {
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.05);
+    color: inherit;
+
+    padding: 12px 20px;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.avatar-tab:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+.avatar-tab.active {
+    background: #7c5cff;
+    border-color: #7c5cff;
+    color: white;
+}
+
+
+/* =========================================
+   CURRENT RACE
+   ========================================= */
+
+.current-race-label {
+    margin-bottom: 20px;
+
+    font-size: 18px;
+    font-weight: 600;
+
+    color: #7c5cff;
+}
+
+
+/* =========================================
+   PORTRAIT GRID
+   ========================================= */
+
+.portrait-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fill,
+            minmax(130px, 1fr)
+        );
+
+    gap: 16px;
+}
+
+
+.portrait-card {
+    padding: 0;
+
+    border: 3px solid transparent;
+
+    background: transparent;
+
+    border-radius: 12px;
+
+    overflow: hidden;
+
+    cursor: pointer;
+
+    aspect-ratio: 1 / 1.15;
+
+    transition: 0.2s ease;
+}
+
+
+.portrait-card img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    display: block;
+}
+
+
+.portrait-card:hover {
+    transform: translateY(-3px);
+
+    border-color:
+        rgba(124,92,255,0.5);
+}
+
+
+.portrait-card.selected {
+    border-color: #7c5cff;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(124,92,255,0.2);
+}
+
+
+.portrait-empty {
+    opacity: 0.6;
+
+    padding: 20px 0;
+}
+
+
+/* =========================================
+   SELECTED PREVIEW
+   ========================================= */
+
+.selected-avatar-preview {
+    margin-top: 30px;
+
+    width: 160px;
+    height: 190px;
+
+    border:
+        2px dashed
+        rgba(255,255,255,0.2);
+
+    border-radius: 12px;
+
+    overflow: hidden;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    opacity: 0.8;
+}
+
+
+.selected-avatar-preview img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+
+/* =========================================
+   CUSTOM UPLOAD
+   ========================================= */
+
+.custom-avatar-upload {
+    padding: 25px;
+
+    border:
+        1px dashed
+        rgba(255,255,255,0.2);
+
+    border-radius: 12px;
+}
+
+
+.custom-avatar-upload label {
+    display: block;
+
+    margin-bottom: 12px;
+
+    font-weight: 600;
+}
+
+
+.custom-avatar-upload input[type="file"] {
+    width: 100%;
+}
+
+
+.custom-avatar-upload p {
+    margin-top: 10px;
+
+    font-size: 14px;
+
+    opacity: 0.6;
+}
+
+
+.custom-avatar-preview {
+    margin-top: 20px;
+}
+
+
+.custom-avatar-preview img {
+    width: 180px;
+    height: 210px;
+
+    object-fit: cover;
+
+    border-radius: 12px;
+
+    display: block;
+}
+
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 600px) {
+
+    .portrait-grid {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+
+    .avatar-tabs {
+        flex-direction: column;
+    }
+
+}

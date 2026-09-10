@@ -26,11 +26,11 @@ function listAllRaces() {
     return $stm->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function AddCharacter($name, $race, $class, $notes, $level, $hp, $hpmax ,$mp, $mpmax ,$str, $con, $dex, $int, $chr, $creator) {
+function AddCharacter($name, $race, $class, $notes, $level, $hp, $hpmax ,$mp, $mpmax ,$str, $con, $dex, $int, $chr, $creator, $avatar) {
 
     $pdo = connectDB();
-    $data = [$name, $race, $class, $notes, $level, $hp, $hpmax,$mp,$mpmax ,$str, $con, $dex, $int, $chr, $creator];
-    $sql = "INSERT INTO Hahmo (Nimi, Rotu, Hahmoluokka, Muistiinpanot, Taso, Elamapisteet, Elamamax , Magiapisteet, Magiamax ,Voima, Kestavyys, Ketteryys, Alykkyys, Karisma, Tekija) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
+    $data = [$name, $race, $class, $notes, $level, $hp, $hpmax,$mp,$mpmax ,$str, $con, $dex, $int, $chr, $creator, $avatar];
+    $sql = "INSERT INTO Hahmo (Nimi, Rotu, Hahmoluokka, Muistiinpanot, Taso, Elamapisteet, Elamamax , Magiapisteet, Magiamax ,Voima, Kestavyys, Ketteryys, Alykkyys, Karisma, Tekija, Avatar) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stm = $pdo->prepare($sql);
     $stm=$pdo->prepare($sql);
     return $stm->execute($data);
