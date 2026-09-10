@@ -62,9 +62,9 @@
                     </div>
 
                     <div class="stat-bar">
-                        <div class="stat-bar-fill hp-fill" style="width: <?= min((int)$character["Elamapisteet"], 100) ?>%;"></div>
+                        <div class="stat-bar-fill hp-fill" style="width: <?= min(((int)$character["Elamapisteet"]/ 1000) * 100, 100) ?>%;"></div>
                     </div>
-
+ 
                 </div>
 
                 <div class="view-stat">
@@ -78,7 +78,7 @@
                     </div>
 
                     <div class="stat-bar">
-                        <div class="stat-bar-fill mp-fill" style="width: <?= min((int)$character["Magiapisteet"], 100) ?>%;"></div>
+                        <div class="stat-bar-fill mp-fill" style="width: <?= min(((int)$character["Magiapisteet"] / 1000) * 100, 100) ?>%;"></div>
                     </div>
 
                 </div>

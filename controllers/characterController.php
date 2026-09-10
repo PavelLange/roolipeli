@@ -126,7 +126,7 @@ function addCharacterController()
             $creator = $_SESSION["username"];
 
             if (strlen($name) > 1) {
-                addCharacter($name, $race, $class, $notes, $level, $hp, $hpmax , $mp, $mpmax ,$str, $con, $dex, $int, $chr, $creator);
+                addCharacter($name, $race, $class, $notes, $level, $hp, $hpmax, $mp, $mpmax, $str, $con, $dex, $int, $chr, $creator);
                 $_SESSION["message"] = "Character has been created!";
                 header("Location: /my-characters");
                 exit;
@@ -201,11 +201,11 @@ function updateCharacterController()
 
         $newHp = isset($_POST['health'])
             ? (int)$_POST['health']
-            : (int)$character['Elamamax'];   
+            : (int)$character['Elamamax'];
 
         $newMp = isset($_POST['mana'])
             ? (int)$_POST['mana']
-            : (int)$character['Magiamax'];  
+            : (int)$character['Magiamax'];
 
         $newStr = isset($_POST['strength'])
             ? (int)$_POST['strength']
@@ -275,22 +275,22 @@ function updateCharacterController()
             $maxValue = ($statName === 'health' || $statName === 'mana')
                 ? 1000
                 : 100;
-        
+
             if ($stat['new'] < 0 || $stat['new'] > $maxValue) {
-        
+
                 echo '<h1 class="centered">
                         Invalid stat value.
                       </h1>';
-        
+
                 return;
             }
-        }        
+        }
 
         $totalDecrease = 0;
         $totalIncrease = 0;
 
 
-        foreach ($stats as $stat) {
+        foreach ($stats as $statName => $stat) {
 
             $difference =
                 $stat['new'] - $stat['old'];
@@ -298,21 +298,36 @@ function updateCharacterController()
 
             if ($difference < 0) {
 
-                $totalDecrease += abs($difference);
+                $decrease =
+                    abs($difference);
+
+
+                // Health and Magic can be decreased by 50 points.
+                // Other stats can be decreased by 5 points.
+                $maxDecrease =
+                    ($statName === 'health' || $statName === 'mana')
+                    ? 50
+                    : 5;
+
+
+                if ($decrease > $maxDecrease) {
+
+                    echo '<h1 class="centered">
+                    Invalid stat change.
+                  </h1>';
+
+                    return;
+                }
+
+
+                $totalDecrease += $decrease;
             } elseif ($difference > 0) {
 
                 $totalIncrease += $difference;
             }
         }
 
-        if ($totalDecrease > 5) {
 
-            echo '<h1 class="centered">
-                    You can transfer a maximum of 5 stat points.
-                  </h1>';
-
-            return;
-        }
         $hp = $newHp;
         $mp = $newMp;
         updateCharacter(
@@ -446,13 +461,12 @@ function viewCharacterController()
         }
 
         require "../views/view_character.php";
-
     } catch (PDOException $e) {
 
         echo "Error loading character: " . $e->getMessage();
         exit;
     }
-} 
+}
 
 function addItemController() {
 if(isset($_POST["name"], $_POST["desc"], $_POST["amount"])) {
@@ -471,9 +485,10 @@ if(isset($_POST["name"], $_POST["desc"], $_POST["amount"])) {
         exit;
     }
     }
-require "../views/new_item.php";
+    require "../views/new_item.php";
 }
-function viewItemController() {
+function viewItemController()
+{
     $campaignid = cleanUpInput($_GET["id"]);
     $allItems = listAllCharactersItems($campaignid);
     require "../views/view_items.php";
@@ -481,11 +496,11 @@ function viewItemController() {
 
 function editItemController()
 {
-    if(isset($_SESSION["username"])) {
+    if (isset($_SESSION["username"])) {
         $cid = $_GET["cid"];
         $id = $_GET["id"];
         $user = $_SESSION["username"];
-        if(isInCampaign($cid,$user) == true) {
+        if (isInCampaign($cid, $user) == true) {
             $iteminfo = getItemByIdEdit($id);
             $campaignchars = getCampaignCharacters($cid);
             require "../views/edit_item.php";
@@ -495,9 +510,6 @@ function editItemController()
     } else {
         header("Location:/login");
     }
-    
-    
-
 }
 function updateItemController() {
 if(isset($_POST["name"], $_POST["desc"], $_POST["amount"])) {
@@ -511,56 +523,54 @@ if(isset($_POST["name"], $_POST["desc"], $_POST["amount"])) {
             updateItem($ownerid,$name, $amount, $desc,$id);
             $_SESSION["message"] = "Item has been updated!";
             header("Location: /view-items?id=$cid");
-            }
-        catch (PDOException $e){
+        } catch (PDOException $e) {
             echo "Error updating item: " . $e->getMessage();
             exit;
         }
-        }    
+    }
 }
 
 
-function deleteItemController(){
+function deleteItemController()
+{
     if (!isset($_GET["id"], $_GET["cid"])) {
         exit;
     }
     try {
-            $id = cleanUpInput($_GET["id"]);
-            $cid = cleanUpInput($_GET["cid"]);
-            $user = $_SESSION["username"];
-            if(isInCampaign($cid,$user) == true) {
+        $id = cleanUpInput($_GET["id"]);
+        $cid = cleanUpInput($_GET["cid"]);
+        $user = $_SESSION["username"];
+        if (isInCampaign($cid, $user) == true) {
             deleteItem($id);
-            $_SESSION["message"] = "Item has been deleted!";  
+            $_SESSION["message"] = "Item has been deleted!";
             header("Location: /view-items?id=" . $cid);
             exit;
-            }
-            else {
-                header("Location: /");
-            }
-        
-    } catch (PDOException $e){
+        } else {
+            header("Location: /");
+        }
+    } catch (PDOException $e) {
         echo "Virhe esinetta poistettaessa: " . $e->getMessage();
     }
 }
 
-function manageCharacterController() {
+function manageCharacterController()
+{
     $id = $_GET["id"];
     $cid = $_GET["cid"];
     $character = getAllCharacterInfo($id);
-    if(isset($_POST["hpamount"], $_POST["mpamount"])) {
+    if (isset($_POST["hpamount"], $_POST["mpamount"])) {
         $hp = cleanUpInput($_POST["hpamount"]);
         $mp = cleanUpInput($_POST["mpamount"]);
-        
-        
-            try {
-                manageCharacter($hp,$mp,$id);
-                $_SESSION["message"] = "Character has been updated!";
-                header("Location: /view-campaign?id=$cid");
-                }
-            catch (PDOException $e){
-                echo "Error updating item: " . $e->getMessage();
-                exit;
-            }
-            }
-            require "../views/manage_character.php";    
+
+
+        try {
+            manageCharacter($hp, $mp, $id);
+            $_SESSION["message"] = "Character has been updated!";
+            header("Location: /view-campaign?id=$cid");
+        } catch (PDOException $e) {
+            echo "Error updating item: " . $e->getMessage();
+            exit;
+        }
     }
+    require "../views/manage_character.php";
+}
