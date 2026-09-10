@@ -345,6 +345,7 @@
     document.addEventListener("DOMContentLoaded", function() {
 
         const MAX_TRANSFER = 5;
+        const MAX_HEALTH_MAGIC_TRANSFER = 50;
         const POINTS_PER_LEVEL = 5;
         const MAX_LEVEL = 100;
 
@@ -556,9 +557,14 @@
 
 
                     const decrease =
-                        getTotalDecrease();
+                        stat.original - current;
 
-                    if (decrease >= MAX_TRANSFER) {
+                    const maxTransfer =
+                        (statName === "health" || statName === "mana") ?
+                        MAX_HEALTH_MAGIC_TRANSFER :
+                        MAX_TRANSFER;
+
+                    if (decrease >= maxTransfer) {
 
                         button.disabled = true;
 
@@ -640,17 +646,19 @@
 
 
         /* =========================
-           STAT MINUS
+        STAT MINUS
         ========================= */
 
         document
             .querySelectorAll(".stat-minus")
             .forEach(function(button) {
 
-                button.addEventListener("click", function() {
+                let interval;
+
+                function decreaseStat() {
 
                     const statName =
-                        this.dataset.stat;
+                        button.dataset.stat;
 
                     const stat =
                         stats[statName];
@@ -658,17 +666,22 @@
                     const current =
                         parseInt(stat.input.value);
 
-
-                    const decrease =
-                        getTotalDecrease();
-
-
                     if (current <= 0) {
                         return;
                     }
 
 
-                    if (decrease >= MAX_TRANSFER) {
+                    const decrease =
+                        stat.original - current;
+
+
+                    const maxTransfer =
+                        (statName === "health" || statName === "mana") ?
+                        MAX_HEALTH_MAGIC_TRANSFER :
+                        MAX_TRANSFER;
+
+
+                    if (decrease >= maxTransfer) {
                         return;
                     }
 
@@ -679,14 +692,55 @@
 
                     updateUI();
 
+                }
+
+
+                // Single click
+                button.addEventListener("click", function() {
+                    decreaseStat();
+                });
+
+
+                // Start holding the button
+                button.addEventListener("mousedown", function() {
+
+                    // Wait briefly before starting
+                    interval = setTimeout(function() {
+
+                        // Decrease continuously while holding
+                        interval = setInterval(function() {
+                            decreaseStat();
+                        }, 100);
+
+                    }, 300);
+
+                });
+
+
+                // Stop when mouse button is released
+                button.addEventListener("mouseup", function() {
+
+                    clearTimeout(interval);
+                    clearInterval(interval);
+
+                });
+
+
+                // Stop when mouse leaves the button
+                button.addEventListener("mouseleave", function() {
+
+                    clearTimeout(interval);
+                    clearInterval(interval);
+
                 });
 
             });
 
 
+
         /* =========================
-   STAT PLUS
-========================= */
+        STAT PLUS
+        ========================= */
 
         document
             .querySelectorAll(".stat-plus")
@@ -775,7 +829,9 @@
            LEVEL PLUS
         ========================= */
 
-        levelPlus.addEventListener("click", function() {
+        let levelPlusInterval;
+
+        function increaseLevel() {
 
             const currentLevel =
                 parseInt(levelInput.value);
@@ -787,8 +843,44 @@
             levelInput.value =
                 currentLevel + 1;
 
-
             updateUI();
+        }
+
+
+        // Single click
+        levelPlus.addEventListener("click", function() {
+            increaseLevel();
+        });
+
+
+        // Start holding
+        levelPlus.addEventListener("mousedown", function() {
+
+            levelPlusInterval = setTimeout(function() {
+
+                levelPlusInterval = setInterval(function() {
+                    increaseLevel();
+                }, 100);
+
+            }, 300);
+
+        });
+
+
+        // Stop holding
+        levelPlus.addEventListener("mouseup", function() {
+
+            clearTimeout(levelPlusInterval);
+            clearInterval(levelPlusInterval);
+
+        });
+
+
+        // Stop if mouse leaves button
+        levelPlus.addEventListener("mouseleave", function() {
+
+            clearTimeout(levelPlusInterval);
+            clearInterval(levelPlusInterval);
 
         });
 
@@ -797,7 +889,9 @@
            LEVEL MINUS
         ========================= */
 
-        levelMinus.addEventListener("click", function() {
+        let levelMinusInterval;
+
+        function decreaseLevel() {
 
             const currentLevel =
                 parseInt(levelInput.value);
@@ -806,12 +900,47 @@
                 return;
             }
 
-
             levelInput.value =
                 currentLevel - 1;
 
-
             updateUI();
+        }
+
+
+        // Single click
+        levelMinus.addEventListener("click", function() {
+            decreaseLevel();
+        });
+
+
+        // Start holding
+        levelMinus.addEventListener("mousedown", function() {
+
+            levelMinusInterval = setTimeout(function() {
+
+                levelMinusInterval = setInterval(function() {
+                    decreaseLevel();
+                }, 100);
+
+            }, 300);
+
+        });
+
+
+        // Stop holding
+        levelMinus.addEventListener("mouseup", function() {
+
+            clearTimeout(levelMinusInterval);
+            clearInterval(levelMinusInterval);
+
+        });
+
+
+        // Stop if mouse leaves button
+        levelMinus.addEventListener("mouseleave", function() {
+
+            clearTimeout(levelMinusInterval);
+            clearInterval(levelMinusInterval);
 
         });
 
