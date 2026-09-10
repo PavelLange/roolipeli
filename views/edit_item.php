@@ -54,7 +54,17 @@
                     required
                 >
             </div>
-
+            <div class="form-group">
+                <label for="owner">Item owner </label>
+                <select id="owner" name="owner">
+                    <option value="-1">-</option>
+                    <?php foreach ($campaignchars as $char): ?>
+                    <option value="<?=$char["ID"]?>" <?= $iteminfo["Hahmoid"] === $char["ID"] ? 'selected' : ''?>>
+                    <?= $char["Nimi"]?> 
+                    </option>
+                    <?php endforeach;?>
+                </select>
+            </div> 
 
             <div class="campaign-form-actions">
 

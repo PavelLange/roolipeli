@@ -62,8 +62,8 @@ $currentPage = $_SERVER['REQUEST_URI'];
             <a href="/logout" class="login-link">
                 Logout
             </a>
-
-            <button class="nav-button" id="invite" type="button" onclick="toggleInvites()">
+            <?php $allinvites = isLoggedIn() ? getInvites($_SESSION["username"]) : []; ?>
+            <button class="<?= ! empty($allinvites) ? 'invite-anim' : 'nav-button' ?>" id="invite" type="button" onclick="toggleInvites()">
                 <img src="/images/invites.png" class="invite-img">
             </button>
 
