@@ -19,7 +19,7 @@
         </div>
 
 
-        <form class="character-form" action="/edit-character" method="post" id="edit-character-form">
+        <form class="character-form" action="/edit-character" method="post" id="edit-character-form" enctype="multipart/form-data">
 
             <input type="hidden" name="id" value="<?= htmlspecialchars($character["ID"]) ?>">
 
@@ -307,6 +307,150 @@
 
             </div>
 
+            <!-- Avatar -->
+
+            <div class="avatar-selection">
+
+                <h2>
+                    Choose Avatar
+                </h2>
+
+                <p class="avatar-description">
+                    Change your character's portrait or keep the current one.
+                </p>
+
+
+                <!-- Avatar tabs -->
+
+                <div class="avatar-tabs">
+
+                    <button type="button" class="avatar-tab active" data-avatar-tab="library">
+                        Portrait Library
+                    </button>
+
+                    <button type="button" class="avatar-tab" data-avatar-tab="upload">
+                        Custom Upload
+                    </button>
+
+                </div>
+
+
+                <!-- Library -->
+
+                <div class="avatar-panel" id="avatar-library-panel">
+
+                    <button type="button" class="open-portrait-library" id="open-portrait-library">
+                        Choose from Portrait Library
+                    </button>
+
+                </div>
+
+
+                <!-- Portrait Modal -->
+
+                <!-- AVATAR LIBRARY -->
+
+                <div class="portrait-modal" id="portrait-modal">
+
+                    <div class="portrait-modal-content">
+
+                        <button type="button" class="portrait-modal-close" id="close-portrait-library">
+                            ×
+                        </button>
+
+                        <h2>
+                            Portrait Library
+                        </h2>
+
+                        <div class="portrait-grid" id="portrait-grid">
+
+                            <?php                          
+
+                            $libraryAvatars = [
+                                "images/fighter.jpg",
+                                "images/villain.jpg",
+                                "images/mage.jpg",
+                                "images/paladin.jpg",
+                                "images/bard.jpg",
+                                "images/priest.jpg",
+                                "images/ranger.jpg",
+                                "images/orc.jpg",
+                                "images/dwarf.jpg",
+                                "images/gnome.jpg"
+                            ];
+
+                            ?>
+
+                            <?php foreach ($libraryAvatars as $avatar) : ?>
+
+                                <button type="button" class="portrait-card <?= $character["Avatar"] === $avatar ? "selected" : "" ?>" data-avatar="<?= htmlspecialchars($avatar) ?>">
+
+                                    <img src="/<?= htmlspecialchars($avatar) ?>" alt="Character portrait">
+
+                                </button>
+
+                            <?php endforeach; ?>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Upload -->
+
+                <div class="avatar-panel" id="avatar-upload-panel" style="display:none;">
+
+                    <div class="custom-avatar-upload">
+
+                        <label for="custom-avatar">
+                            Upload your own portrait
+                        </label>
+
+                        <input type="file" id="custom-avatar" name="custom_avatar" accept="image/jpeg,image/png,image/webp">
+
+                        <p>
+                            JPG, PNG or WEBP. Maximum 5 MB.
+                        </p>
+
+                        <div id="custom-avatar-preview" class="custom-avatar-preview"></div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Avatar type -->
+
+                <input type="hidden" name="avatar_type" id="avatar-type" value="current">
+
+
+                <!-- Selected avatar -->
+
+                <input type="hidden" name="avatar" id="selected-avatar" value="<?= htmlspecialchars($character["Avatar"] ?? "") ?>">
+
+
+                <!-- Current / selected preview -->
+
+                <div class="selected-avatar-preview" id="selected-avatar-preview">
+
+                    <?php if (!empty($character["Avatar"])) : ?>
+
+                        <img src="/<?= htmlspecialchars($character["Avatar"]) ?>" alt="Current avatar">
+
+                    <?php else : ?>
+
+                        <span>
+                            No avatar selected
+                        </span>
+
+                    <?php endif; ?>
+
+                </div>
+
+            </div>
+
 
             <!-- Notes -->
 
@@ -413,6 +557,275 @@
             }
 
         };
+
+        /* =========================
+            AVATAR
+        ========================= */
+
+        const portraitModal =
+            document.getElementById("portrait-modal");
+
+        const openPortraitLibrary =
+            document.getElementById("open-portrait-library");
+
+        const closePortraitLibrary =
+            document.getElementById("close-portrait-library");
+
+        const portraitCards =
+            document.querySelectorAll(".portrait-card");
+
+        const selectedAvatar =
+            document.getElementById("selected-avatar");
+
+        const selectedPreview =
+            document.getElementById("selected-avatar-preview");
+
+        const avatarType =
+            document.getElementById("avatar-type");
+
+        const customAvatar =
+            document.getElementById("custom-avatar");
+
+        const customPreview =
+            document.getElementById("custom-avatar-preview");
+
+        const libraryPanel =
+            document.getElementById("avatar-library-panel");
+
+        const uploadPanel =
+            document.getElementById("avatar-upload-panel");
+
+        const avatarTabs =
+            document.querySelectorAll(".avatar-tab");
+
+        /* =========================
+        PORTRAIT LIBRARY MODAL
+        ========================= */
+
+        openPortraitLibrary.addEventListener("click", function() {
+
+            portraitModal.classList.add("active");
+
+        });
+
+
+        closePortraitLibrary.addEventListener("click", function() {
+
+            portraitModal.classList.remove("active");
+
+        });
+
+
+        portraitModal.addEventListener("click", function(event) {
+
+            if (event.target === portraitModal) {
+
+                portraitModal.classList.remove("active");
+
+            }
+
+        });
+
+        /* =========================
+        PORTRAIT SELECTION
+        ========================= */
+
+        portraitCards.forEach(function(card) {
+
+            card.addEventListener("click", function() {
+
+                portraitCards.forEach(function(item) {
+
+                    item.classList.remove("selected");
+
+                });
+
+
+                this.classList.add("selected");
+
+
+                const avatar =
+                    this.dataset.avatar;
+
+
+                selectedAvatar.value =
+                    avatar;
+
+
+                avatarType.value =
+                    "library";
+
+
+                selectedPreview.innerHTML =
+                    '<img src="/' +
+                    avatar +
+                    '" alt="Selected avatar">';
+
+
+                portraitModal.classList.remove("active");
+
+            });
+
+        });
+
+        /* =========================
+        AVATAR TABS
+        ========================= */
+
+        avatarTabs.forEach(function(tab) {
+
+            tab.addEventListener("click", function() {
+
+                avatarTabs.forEach(function(item) {
+
+                    item.classList.remove("active");
+
+                });
+
+
+                this.classList.add("active");
+
+
+                const type =
+                    this.dataset.avatarTab;
+
+
+                if (type === "library") {
+
+                    libraryPanel.style.display =
+                        "block";
+
+                    uploadPanel.style.display =
+                        "none";
+
+
+                    avatarType.value =
+                        "library";
+
+                }
+
+
+                if (type === "upload") {
+
+                    libraryPanel.style.display =
+                        "none";
+
+                    uploadPanel.style.display =
+                        "block";
+
+
+                    avatarType.value =
+                        "upload";
+
+                }
+
+            });
+
+        });
+
+        /* =========================
+        CUSTOM AVATAR UPLOAD
+        ========================= */
+
+        customAvatar.addEventListener("change", function() {
+
+            const file =
+                this.files[0];
+
+
+            if (!file) {
+
+                customPreview.innerHTML = "";
+
+                return;
+
+            }
+
+
+            /*
+             * Maximum 5 MB
+             */
+
+            if (file.size > 5 * 1024 * 1024) {
+
+                alert(
+                    "Image must be smaller than 5 MB."
+                );
+
+                this.value = "";
+
+                customPreview.innerHTML = "";
+
+                return;
+
+            }
+
+
+            /*
+             * Allowed types
+             */
+
+            const allowedTypes = [
+                "image/jpeg",
+                "image/png",
+                "image/webp"
+            ];
+
+
+            if (!allowedTypes.includes(file.type)) {
+
+                alert(
+                    "Please upload a JPG, PNG or WEBP image."
+                );
+
+                this.value = "";
+
+                customPreview.innerHTML = "";
+
+                return;
+
+            }
+
+
+            /*
+             * Avatar will be uploaded
+             */
+
+            avatarType.value =
+                "upload";
+
+
+            /*
+             * Preview
+             */
+
+            const reader =
+                new FileReader();
+
+
+            reader.onload = function(event) {
+
+                const imageURL =
+                    event.target.result;
+
+
+                customPreview.innerHTML =
+                    '<img src="' +
+                    imageURL +
+                    '" alt="Custom avatar preview">';
+
+
+                selectedPreview.innerHTML =
+                    '<img src="' +
+                    imageURL +
+                    '" alt="Selected avatar">';
+
+            };
+
+
+            reader.readAsDataURL(file);
+
+        });
 
 
         /* =========================

@@ -37,7 +37,7 @@ function AddCharacter($name, $race, $class, $notes, $level, $hp, $hpmax ,$mp, $m
 }
 
 
-function updateCharacter($name, $notes, $level,$hp ,$hpmax, $mp, $mpmax ,$str, $con, $dex, $int, $chr, $id
+function updateCharacter($name, $notes, $level,$hp ,$hpmax, $mp, $mpmax ,$str, $con, $dex, $int, $chr, $avatar, $id
 ) {
     $pdo = connectDB();
 
@@ -54,7 +54,8 @@ function updateCharacter($name, $notes, $level,$hp ,$hpmax, $mp, $mpmax ,$str, $
                 Kestavyys = ?,
                 Ketteryys = ?,
                 Alykkyys = ?,
-                Karisma = ?
+                Karisma = ?,
+                Avatar = ?
             WHERE ID = ?";
 
     $stm = $pdo->prepare($sql);
@@ -72,6 +73,7 @@ function updateCharacter($name, $notes, $level,$hp ,$hpmax, $mp, $mpmax ,$str, $
         $dex,
         $int,
         $chr,
+        $avatar,
         $id
     ]);
 }

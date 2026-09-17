@@ -133,20 +133,56 @@
 
                 <div class="avatar-panel" id="avatar-library-panel">
 
-                    <div class="current-race-label" id="current-race-label">
-                        Select a character first.
-                    </div>
+                    <button type="button" class="open-portrait-library" id="open-portrait-library">
+                        Choose from Portrait Library
+                    </button>
+
+                </div>
 
 
-                    <div class="portrait-grid" id="portrait-grid">
+                <div class="portrait-modal" id="portrait-modal">
 
-                        <p class="portrait-empty">
-                            Select a character class to see portraits.
-                        </p>
+                    <div class="portrait-modal-content">
+
+                        <button type="button" class="portrait-modal-close" id="close-portrait-library">
+                            ×
+                        </button>
+
+                        <h2>Portrait Library</h2>
+
+                        <div class="portrait-grid" id="portrait-grid">
+
+                            <?php
+                            $libraryAvatars = [
+                                "images/fighter.jpg",
+                                "images/villain.jpg",
+                                "images/mage.jpg",
+                                "images/paladin.jpg",
+                                "images/bard.jpg",
+                                "images/priest.jpg",
+                                "images/ranger.jpg",
+                                "images/orc.jpg",
+                                "images/dwarf.jpg",
+                                "images/gnome.jpg"
+                            ];
+                            ?>
+
+                            <?php foreach ($libraryAvatars as $avatar) : ?>
+
+                                <button type="button" class="portrait-card" data-avatar="<?= htmlspecialchars($avatar) ?>">
+
+                                    <img src="/<?= htmlspecialchars($avatar) ?>" alt="Character portrait">
+
+                                </button>
+
+                            <?php endforeach; ?>
+
+                        </div>
 
                     </div>
 
                 </div>
+
 
                 <div class="avatar-panel" id="avatar-upload-panel" style="display:none;">
 
@@ -224,8 +260,7 @@
 
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-
+    document.addEventListener("DOMContentLoaded", function() {
 
         /*
          * =========================================
@@ -233,21 +268,187 @@
          * =========================================
          */
 
-        const characterTypes =
-            <?= json_encode($characterTypes) ?>;
-
+        const characterTypes = <?= json_encode($characterTypes) ?>;
 
         const characterCards =
-            document.querySelectorAll(
-                '.character-card'
-            );
-
+            document.querySelectorAll(".character-card");
 
         const createButton =
-            document.getElementById(
-                'create-character-button'
-            );
+            document.getElementById("create-character-button");
 
+
+        /*
+         * =========================================
+         * AVATAR ELEMENTS
+         * =========================================
+         */
+
+        const portraitGrid =
+            document.getElementById("portrait-grid");
+
+        const selectedAvatar =
+            document.getElementById("selected-avatar");
+
+        const selectedPreview =
+            document.getElementById("selected-avatar-preview");
+
+        const avatarType =
+            document.getElementById("avatar-type");
+
+        const customAvatar =
+            document.getElementById("custom-avatar");
+
+        const customPreview =
+            document.getElementById("custom-avatar-preview");
+
+        const libraryPanel =
+            document.getElementById("avatar-library-panel");
+
+        const uploadPanel =
+            document.getElementById("avatar-upload-panel");
+
+        const avatarTabs =
+            document.querySelectorAll(".avatar-tab");
+
+        const portraitModal =
+            document.getElementById("portrait-modal");
+
+        const openPortraitLibrary =
+            document.getElementById("open-portrait-library");
+
+        const closePortraitLibrary =
+            document.getElementById("close-portrait-library");
+
+        const portraitCards =
+            document.querySelectorAll(".portrait-card");
+
+
+
+        /*
+         * =========================================
+         * AVATAR LIBRARY
+         * =========================================
+         */
+
+        const libraryAvatars = [
+            "images/fighter.jpg",
+            "images/villain.jpg",
+            "images/mage.jpg",
+            "images/paladin.jpg",
+            "images/bard.jpg",
+            "images/priest.jpg",
+            "images/ranger.jpg",
+            "images/orc.jpg",
+            "images/dwarf.jpg",
+            "images/gnome.jpg"
+        ];
+
+        /*
+         * =========================================
+         * PORTRAIT LIBRARY MODAL
+         * =========================================
+         */
+
+        openPortraitLibrary.addEventListener("click", function() {
+
+            portraitModal.classList.add("active");
+
+        });
+
+
+        closePortraitLibrary.addEventListener("click", function() {
+
+            portraitModal.classList.remove("active");
+
+        });
+
+
+        /*
+         * Close modal when clicking outside
+         */
+
+        portraitModal.addEventListener("click", function(event) {
+
+            if (event.target === portraitModal) {
+
+                portraitModal.classList.remove("active");
+
+            }
+
+        });
+
+        /*
+         * =========================================
+         * PORTRAIT SELECTION
+         * =========================================
+         */
+
+        portraitCards.forEach(function(card) {
+
+            card.addEventListener("click", function() {
+
+                /*
+                 * Remove old selection
+                 */
+
+                portraitCards.forEach(function(item) {
+
+                    item.classList.remove("selected");
+
+                });
+
+
+                /*
+                 * Select current portrait
+                 */
+
+                this.classList.add("selected");
+
+
+                /*
+                 * Get selected avatar
+                 */
+
+                const avatar =
+                    this.dataset.avatar;
+
+
+                /*
+                 * Save avatar to hidden input
+                 */
+
+                selectedAvatar.value = avatar;
+
+                avatarType.value = "library";
+
+
+                /*
+                 * Show selected avatar
+                 * in preview
+                 */
+
+                selectedPreview.innerHTML =
+                    '<img src="/' +
+                    avatar +
+                    '" alt="Selected avatar">';
+
+
+                /*
+                 * Close modal
+                 */
+
+                portraitModal.classList.remove("active");
+
+
+                /*
+                 * Update create button
+                 */
+
+                updateCreateButton();
+
+            });
+
+        });
 
 
         /*
@@ -258,311 +459,77 @@
 
         characterCards.forEach(function(card) {
 
-            card.addEventListener(
-                'click',
-                function() {
+            card.addEventListener("click", function() {
 
+                /*
+                 * Remove old selection
+                 */
 
-                    /*
-                     * Remove previous selection
-                     */
+                characterCards.forEach(function(item) {
 
-                    characterCards.forEach(
-                        function(card) {
-
-                            card.classList.remove(
-                                'selected'
-                            );
-
-                        }
-                    );
-
-
-                    /*
-                     * Select current character
-                     */
-
-                    this.classList.add(
-                        'selected'
-                    );
-
-
-                    const characterKey =
-                        this.dataset.character;
-
-
-                    const character =
-                        characterTypes[
-                            characterKey
-                        ];
-
-
-                    /*
-                     * Fill hidden inputs
-                     */
-
-                    document.getElementById(
-                            'selected-race'
-                        ).value =
-                        character.race;
-
-
-                    document.getElementById(
-                            'selected-class'
-                        ).value =
-                        characterKey;
-
-
-                    document.getElementById(
-                            'selected-level'
-                        ).value =
-                        1;
-
-
-                    document.getElementById(
-                            'selected-health'
-                        ).value =
-                        character.health;
-
-
-                    document.getElementById(
-                            'selected-mana'
-                        ).value =
-                        character.mana;
-
-
-                    document.getElementById(
-                            'selected-strength'
-                        ).value =
-                        character.strength;
-
-
-                    document.getElementById(
-                            'selected-constitution'
-                        ).value =
-                        character.constitution;
-
-
-                    document.getElementById(
-                            'selected-agility'
-                        ).value =
-                        character.agility;
-
-
-                    document.getElementById(
-                            'selected-intelligence'
-                        ).value =
-                        character.intelligence;
-
-
-                    document.getElementById(
-                            'selected-charisma'
-                        ).value =
-                        character.charisma;
-
-
-                    /*
-                     * Enable button
-                     */
-
-                    createButton.disabled =
-                        false;
-
-
-                    /*
-                     * Automatically show
-                     * correct race portraits.
-                     */
-
-                    loadRacePortraits(
-                        character.race
-                    );
+                    item.classList.remove("selected");
 
                 });
 
+
+                /*
+                 * Select character
+                 */
+
+                this.classList.add("selected");
+
+
+                const characterKey =
+                    this.dataset.character;
+
+                const character =
+                    characterTypes[characterKey];
+
+
+                /*
+                 * Fill hidden character inputs
+                 */
+
+                document.getElementById("selected-race").value =
+                    character.race;
+
+                document.getElementById("selected-class").value =
+                    characterKey;
+
+                document.getElementById("selected-level").value =
+                    1;
+
+                document.getElementById("selected-health").value =
+                    character.health;
+
+                document.getElementById("selected-mana").value =
+                    character.mana;
+
+                document.getElementById("selected-strength").value =
+                    character.strength;
+
+                document.getElementById("selected-constitution").value =
+                    character.constitution;
+
+                document.getElementById("selected-agility").value =
+                    character.agility;
+
+                document.getElementById("selected-intelligence").value =
+                    character.intelligence;
+
+                document.getElementById("selected-charisma").value =
+                    character.charisma;
+
+
+                /*
+                 * Update create button
+                 */
+
+                updateCreateButton();
+
+            });
+
         });
-
-
-
-        /*
-         * =========================================
-         * RACE PORTRAITS
-         * =========================================
-         */
-
-        const portraitGrid =
-            document.getElementById(
-                'portrait-grid'
-            );
-
-
-        const selectedAvatar =
-            document.getElementById(
-                'selected-avatar'
-            );
-
-
-        const selectedPreview =
-            document.getElementById(
-                'selected-avatar-preview'
-            );
-
-
-        const currentRaceLabel =
-            document.getElementById(
-                'current-race-label'
-            );
-
-
-
-        /*
-         * Load portraits dynamically
-         */
-
-        function loadRacePortraits(race) {
-
-            const raceFolder =
-                race.toLowerCase();
-
-
-            currentRaceLabel.textContent =
-                race + " Portraits";
-
-
-            portraitGrid.innerHTML =
-                '';
-
-
-            /*
-             * PHP-generated portrait list
-             */
-
-            const portraits =
-                window.racePortraits[
-                    raceFolder
-                ] || [];
-
-
-            if (
-                portraits.length === 0
-            ) {
-
-                portraitGrid.innerHTML =
-                    '<p class="portrait-empty">' +
-                    'No portraits available for ' +
-                    race +
-                    ' yet.' +
-                    '</p>';
-
-                return;
-            }
-
-
-            portraits.forEach(
-                function(image) {
-
-                    const portrait =
-                        document.createElement(
-                            'button'
-                        );
-
-
-                    portrait.type =
-                        'button';
-
-
-                    portrait.className =
-                        'portrait-card';
-
-
-                    const img =
-                        document.createElement(
-                            'img'
-                        );
-
-
-                    img.src =
-                        '/' + image;
-
-
-                    img.alt =
-                        race +
-                        ' character portrait';
-
-
-                    portrait.appendChild(
-                        img
-                    );
-
-
-                    portrait.addEventListener(
-                        'click',
-                        function() {
-
-
-                            /*
-                             * Remove previous selection
-                             */
-
-                            document
-                                .querySelectorAll(
-                                    '.portrait-card'
-                                )
-                                .forEach(
-                                    function(card) {
-
-                                        card.classList.remove(
-                                            'selected'
-                                        );
-
-                                    }
-                                );
-
-
-                            /*
-                             * Select portrait
-                             */
-
-                            this.classList.add(
-                                'selected'
-                            );
-
-
-                            /*
-                             * Save path
-                             */
-
-                            selectedAvatar.value =
-                                image;
-
-
-                            document.getElementById(
-                                    'avatar-type'
-                                ).value =
-                                'library';
-
-
-                            /*
-                             * Show preview
-                             */
-
-                            selectedPreview.innerHTML =
-                                '<img src="/' +
-                                image +
-                                '" alt="Selected avatar">';
-
-                        }
-                    );
-
-
-                    portraitGrid.appendChild(
-                        portrait
-                    );
-
-                }
-            );
-
-        }
 
 
 
@@ -572,249 +539,335 @@
          * =========================================
          */
 
-        const avatarTabs =
-            document.querySelectorAll(
-                '.avatar-tab'
-            );
+        avatarTabs.forEach(function(tab) {
+
+            tab.addEventListener("click", function() {
+
+                /*
+                 * Remove active from all tabs
+                 */
+
+                avatarTabs.forEach(function(item) {
+
+                    item.classList.remove("active");
+
+                });
 
 
-        const libraryPanel =
-            document.getElementById(
-                'avatar-library-panel'
-            );
+                /*
+                 * Activate current tab
+                 */
+
+                this.classList.add("active");
 
 
-        const uploadPanel =
-            document.getElementById(
-                'avatar-upload-panel'
-            );
+                const type =
+                    this.dataset.avatarTab;
 
 
-        const avatarType =
-            document.getElementById(
-                'avatar-type'
-            );
+                /*
+                 * =================================
+                 * LIBRARY
+                 * =================================
+                 */
+
+                if (type === "library") {
+
+                    libraryPanel.style.display = "block";
+
+                    uploadPanel.style.display = "none";
+
+                    avatarType.value = "library";
 
 
-        avatarTabs.forEach(
-            function(tab) {
+                    /*
+                     * Clear custom upload
+                     */
 
-                tab.addEventListener(
-                    'click',
-                    function() {
+                    customAvatar.value = "";
 
-
-                        avatarTabs.forEach(
-                            function(tab) {
-
-                                tab.classList.remove(
-                                    'active'
-                                );
-
-                            }
-                        );
+                    customPreview.innerHTML = "";
 
 
-                        this.classList.add(
-                            'active'
-                        );
+                    /*
+                     * Do NOT automatically select
+                     * an avatar.
+                     *
+                     * User must click one.
+                     */
+
+                    selectedAvatar.value = "";
 
 
-                        const type =
-                            this.dataset.avatarTab;
+                    selectedPreview.innerHTML =
+                        "<span>No avatar selected</span>";
 
 
-                        /*
-                         * LIBRARY
-                         */
+                    updateCreateButton();
 
-                        if (
-                            type === 'library'
-                        ) {
-
-                            libraryPanel.style.display =
-                                'block';
+                }
 
 
-                            uploadPanel.style.display =
-                                'none';
+                /*
+                 * =================================
+                 * CUSTOM UPLOAD
+                 * =================================
+                 */
+
+                if (type === "upload") {
+
+                    libraryPanel.style.display = "none";
+
+                    uploadPanel.style.display = "block";
+
+                    avatarType.value = "upload";
 
 
-                            avatarType.value =
-                                'library';
+                    /*
+                     * Clear library selection
+                     */
+
+                    selectedAvatar.value = "";
 
 
-                            document.getElementById(
-                                    'custom-avatar'
-                                ).value =
-                                '';
+                    document
+                        .querySelectorAll(".portrait-card")
+                        .forEach(function(card) {
 
-                        }
+                            card.classList.remove("selected");
 
-
-                        /*
-                         * UPLOAD
-                         */
-
-                        if (
-                            type === 'upload'
-                        ) {
-
-                            libraryPanel.style.display =
-                                'none';
+                        });
 
 
-                            uploadPanel.style.display =
-                                'block';
+                    selectedPreview.innerHTML =
+                        "<span>No avatar selected</span>";
 
 
-                            avatarType.value =
-                                'upload';
+                    updateCreateButton();
 
+                }
 
-                            selectedAvatar.value =
-                                '';
+            });
 
-
-                            document
-                                .querySelectorAll(
-                                    '.portrait-card'
-                                )
-                                .forEach(
-                                    function(card) {
-
-                                        card.classList.remove(
-                                            'selected'
-                                        );
-
-                                    }
-                                );
-
-                        }
-
-                    }
-                );
-
-            }
-        );
-
+        });
 
 
         /*
          * =========================================
-         * CUSTOM UPLOAD PREVIEW
+         * CUSTOM AVATAR UPLOAD
          * =========================================
          */
 
-        const customAvatar =
-            document.getElementById(
-                'custom-avatar'
-            );
+        customAvatar.addEventListener("change", function() {
+
+            const file =
+                this.files[0];
 
 
-        const customPreview =
-            document.getElementById(
-                'custom-avatar-preview'
-            );
+            /*
+             * No file
+             */
+
+            if (!file) {
+
+                customPreview.innerHTML = "";
+
+                selectedPreview.innerHTML =
+                    "<span>No avatar selected</span>";
+
+                updateCreateButton();
+
+                return;
+
+            }
 
 
-        customAvatar.addEventListener(
-            'change',
-            function() {
+            /*
+             * Maximum 5 MB
+             */
 
-                const file =
-                    this.files[0];
+            if (file.size > 5 * 1024 * 1024) {
+
+                alert("Image must be smaller than 5 MB.");
+
+                this.value = "";
+
+                customPreview.innerHTML = "";
+
+                selectedPreview.innerHTML =
+                    "<span>No avatar selected</span>";
+
+                updateCreateButton();
+
+                return;
+
+            }
 
 
-                if (!file) {
+            /*
+             * Check image type
+             */
 
-                    customPreview.innerHTML =
-                        '';
+            const allowedTypes = [
+                "image/jpeg",
+                "image/png",
+                "image/webp"
+            ];
 
-                    return;
-                }
+
+            if (!allowedTypes.includes(file.type)) {
+
+                alert("Please upload a JPG, PNG or WEBP image.");
+
+                this.value = "";
+
+                customPreview.innerHTML = "";
+
+                selectedPreview.innerHTML =
+                    "<span>No avatar selected</span>";
+
+                updateCreateButton();
+
+                return;
+
+            }
+
+
+            /*
+             * Clear library selection
+             */
+
+            selectedAvatar.value = "";
+
+            document
+                .querySelectorAll(".portrait-card")
+                .forEach(function(card) {
+
+                    card.classList.remove("selected");
+
+                });
+
+
+            /*
+             * Read image
+             */
+
+            const reader =
+                new FileReader();
+
+
+            reader.onload = function(event) {
+
+                const imageURL =
+                    event.target.result;
 
 
                 /*
-                 * Max 5 MB
+                 * Upload preview
                  */
 
-                if (
-                    file.size >
-                    5 * 1024 * 1024
-                ) {
-
-                    alert(
-                        'Image must be smaller than 5 MB.'
-                    );
-
-
-                    this.value =
-                        '';
-
-
-                    customPreview.innerHTML =
-                        '';
-
-
-                    return;
-                }
+                customPreview.innerHTML =
+                    '<img src="' +
+                    imageURL +
+                    '" alt="Custom avatar preview">';
 
 
                 /*
-                 * Preview
+                 * Selected avatar preview
                  */
 
-                const reader =
-                    new FileReader();
+                selectedPreview.innerHTML =
+                    '<img src="' +
+                    imageURL +
+                    '" alt="Selected avatar">';
 
 
-                reader.onload =
-                    function(event) {
+                /*
+                 * Mark avatar as selected
+                 */
 
-                        customPreview.innerHTML =
-                            '<img src="' +
-                            event.target.result +
-                            '" alt="Custom avatar preview">';
+                avatarType.value = "upload";
 
 
-                        selectedPreview.innerHTML =
-                            '<img src="' +
-                            event.target.result +
-                            '" alt="Selected avatar">';
+                updateCreateButton();
 
-                    };
+            };
 
 
-                reader.readAsDataURL(
-                    file
+            reader.readAsDataURL(file);
+
+        });
+
+
+        /*
+         * =========================================
+         * CREATE BUTTON
+         * =========================================
+         *
+         * Character + avatar are both required.
+         */
+
+        function updateCreateButton() {
+
+            const characterSelected =
+                document.querySelector(
+                    ".character-card.selected"
                 );
 
 
-                /*
-                 * Clear library selection
-                 */
-
-                selectedAvatar.value =
-                    '';
+            let avatarSelected = false;
 
 
-                document
-                    .querySelectorAll(
-                        '.portrait-card'
-                    )
-                    .forEach(
-                        function(card) {
+            /*
+             * Library avatar
+             */
 
-                            card.classList.remove(
-                                'selected'
-                            );
+            if (
+                avatarType.value === "library" &&
+                selectedAvatar.value !== ""
+            ) {
 
-                        }
-                    );
+                avatarSelected = true;
 
             }
-        );
+
+
+            /*
+             * Custom upload
+             */
+
+            if (
+                avatarType.value === "upload" &&
+                customAvatar.files.length > 0
+            ) {
+
+                avatarSelected = true;
+
+            }
+
+
+            /*
+             * Enable only when BOTH
+             * character and avatar exist.
+             */
+
+            createButton.disabled = !characterSelected ||
+                !avatarSelected;
+
+        }
+
+
+        /*
+         * =========================================
+         * INITIAL STATE
+         * =========================================
+         */
+
+        createButton.disabled = true;
+
+        selectedAvatar.value = "";
+
+        avatarType.value = "library";
 
     });
 </script>

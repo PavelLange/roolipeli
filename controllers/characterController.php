@@ -126,12 +126,30 @@ function addCharacterController()
 
             $avatar = "";
 
+            $allowedLibraryAvatars = [
+
+                "images/fighter.jpg",
+                "images/villain.jpg",
+                "images/mage.jpg",
+                "images/paladin.jpg",
+                "images/bard.jpg",
+                "images/priest.jpg",
+                "images/ranger.jpg"
+
+            ];
+
 
             /*
              * =========================================
              * PORTRAIT LIBRARY
              * =========================================
              */
+
+            /*
+ * =========================================
+ * PORTRAIT LIBRARY
+ * =========================================
+ */
 
             if (
                 isset($_POST['avatar_type']) &&
@@ -153,91 +171,29 @@ function addCharacterController()
                     );
 
 
-                /*
-                 * Only allow:
-                 *
-                 * images/portraits/race/file
-                 */
-
-                $allowedPrefix =
-                    "images/portraits/";
-
-
                 if (
-                    strpos(
+                    in_array(
                         $selectedAvatar,
-                        $allowedPrefix
-                    ) === 0
+                        $allowedLibraryAvatars,
+                        true
+                    )
                 ) {
 
-                    /*
-                     * Get selected race from path
-                     */
-
-                    $parts =
-                        explode(
-                            "/",
-                            $selectedAvatar
+                    $fullPath =
+                        realpath(
+                            $_SERVER['DOCUMENT_ROOT']
+                                . "/"
+                                . $selectedAvatar
                         );
 
 
-                    /*
-                     * Expected:
-                     *
-                     * images
-                     * portraits
-                     * human
-                     * human1.jpg
-                     */
+                    if (
+                        $fullPath !== false &&
+                        is_file($fullPath)
+                    ) {
 
-                    if (count($parts) === 4) {
-
-                        $avatarRace =
-                            strtolower(
-                                $parts[2]
-                            );
-
-
-                        /*
-                         * Make sure selected
-                         * portrait belongs to
-                         * character race.
-                         */
-
-                        if (
-                            strtolower($race)
-                            === $avatarRace
-                        ) {
-
-                            $fullPath =
-                                realpath(
-                                    $_SERVER['DOCUMENT_ROOT']
-                                        . "/"
-                                        . $selectedAvatar
-                                );
-
-
-                            $portraitDirectory =
-                                realpath(
-                                    $_SERVER['DOCUMENT_ROOT']
-                                        . "/images/portraits"
-                                );
-
-
-                            if (
-                                $fullPath !== false &&
-                                $portraitDirectory !== false &&
-                                strpos(
-                                    $fullPath,
-                                    $portraitDirectory
-                                ) === 0 &&
-                                is_file($fullPath)
-                            ) {
-
-                                $avatar =
-                                    $selectedAvatar;
-                            }
-                        }
+                        $avatar =
+                            $selectedAvatar;
                     }
                 }
             }
@@ -530,6 +486,183 @@ function updateCharacterController()
 
         ];
 
+        /*
+ * =========================================
+ * AVATAR
+ * =========================================
+ */
+
+        $avatar =
+            $character["Avatar"] ?? "";
+
+
+        /*
+* Portrait library
+*/
+
+        if (
+            isset($_POST["avatar_type"]) &&
+            $_POST["avatar_type"] === "library" &&
+            !empty($_POST["avatar"])
+        ) {
+
+            $selectedAvatar =
+                str_replace(
+                    "\\",
+                    "/",
+                    $_POST["avatar"]
+                );
+
+            $selectedAvatar =
+                ltrim(
+                    $selectedAvatar,
+                    "/"
+                );
+
+
+            $allowedLibraryAvatars = [
+
+                "images/fighter.jpg",
+                "images/villain.jpg",
+                "images/mage.jpg",
+                "images/paladin.jpg",
+                "images/bard.jpg",
+                "images/priest.jpg",
+                "images/ranger.jpg",
+                "images/orc.jpg",
+                "images/dwarf.jpg",
+                "images/gnome.jpg"
+
+            ];
+
+
+            if (
+                in_array(
+                    $selectedAvatar,
+                    $allowedLibraryAvatars,
+                    true
+                )
+            ) {
+
+                $fullPath =
+                    realpath(
+                        $_SERVER["DOCUMENT_ROOT"]
+                            . "/"
+                            . $selectedAvatar
+                    );
+
+
+                if (
+                    $fullPath !== false &&
+                    is_file($fullPath)
+                ) {
+
+                    $avatar =
+                        $selectedAvatar;
+                }
+            }
+        }
+
+
+        /*
+* Custom upload
+*/
+
+        if (
+            isset($_POST["avatar_type"]) &&
+            $_POST["avatar_type"] === "upload" &&
+            isset($_FILES["custom_avatar"]) &&
+            $_FILES["custom_avatar"]["error"]
+            === UPLOAD_ERR_OK
+        ) {
+
+            $file =
+                $_FILES["custom_avatar"];
+
+
+            $allowedTypes = [
+
+                "image/jpeg" => "jpg",
+                "image/png" => "png",
+                "image/webp" => "webp"
+
+            ];
+
+
+            $finfo =
+                finfo_open(
+                    FILEINFO_MIME_TYPE
+                );
+
+
+            $mimeType =
+                finfo_file(
+                    $finfo,
+                    $file["tmp_name"]
+                );
+
+
+            finfo_close($finfo);
+
+
+            if (
+                isset(
+                    $allowedTypes[$mimeType]
+                ) &&
+                $file["size"] <= 5 * 1024 * 1024
+            ) {
+
+                $extension =
+                    $allowedTypes[$mimeType];
+
+
+                $filename =
+                    bin2hex(
+                        random_bytes(16)
+                    )
+                    . "."
+                    . $extension;
+
+
+                $uploadDirectory =
+                    $_SERVER["DOCUMENT_ROOT"]
+                    . "/uploads/avatars/";
+
+
+                if (
+                    !is_dir(
+                        $uploadDirectory
+                    )
+                ) {
+
+                    mkdir(
+                        $uploadDirectory,
+                        0755,
+                        true
+                    );
+                }
+
+
+                $destination =
+                    $uploadDirectory
+                    . $filename;
+
+
+                if (
+                    move_uploaded_file(
+                        $file["tmp_name"],
+                        $destination
+                    )
+                ) {
+
+                    $avatar =
+                        "uploads/avatars/"
+                        . $filename;
+                }
+            }
+        }
+
+
         foreach ($stats as $statName => $stat) {
 
             $maxValue = ($statName === 'health' || $statName === 'mana')
@@ -602,7 +735,8 @@ function updateCharacterController()
             $newCon,
             $newDex,
             $newInt,
-            $newChr,
+            $newChr, 
+            $avatar,        
             $id
         );
 
