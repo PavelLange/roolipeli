@@ -271,12 +271,19 @@ switch ($uri) {
         
 
             case '/view-items': 
-                require __DIR__ . '/../partials/header.php';
-                viewItemController();
-                require __DIR__ . '/../partials/footer.php';
+                if(isLoggedIn()) {
+                    if($method === 'post' || $method === 'get') {
+                    require __DIR__ . '/../partials/header.php';
+                    viewItemController();
+                    require __DIR__ . '/../partials/footer.php';
+                    } else {
+                    header('Location: /');
+                    }
+                }
                 break;
 
             case '/new-item':
+                if($method)
                 require __DIR__ . '/../partials/header.php';
                 addItemController();
                 require __DIR__ . '/../partials/footer.php';
@@ -308,10 +315,30 @@ switch ($uri) {
                     require __DIR__ . '/../partials/footer.php';
                 }
             
-            case '/manage-character':
-                require __DIR__ . '/../partials/header.php';
-                manageCharacterController();
-                require __DIR__ . '/../partials/footer.php';
+        case '/manage-character':
+            require __DIR__ . '/../partials/header.php';
+            manageCharacterController();
+            require __DIR__ . '/../partials/footer.php';
+            break;
+            
+        case '/new-NPC':
+            require __DIR__ . '/../partials/header.php';
+            addNPCController();
+            require __DIR__ . '/../partials/footer.php';
+            break;
+        
+        case '/view-NPCs':
+            require __DIR__ . '/../partials/header.php';
+            viewNPCController();
+            require __DIR__ . '/../partials/footer.php';
+            break;
+
+        case '/edit-NPC':
+            require __DIR__ . '/../partials/header.php';
+            editNPCController();
+            require __DIR__ . '/../partials/footer.php';
+            break;
+    
     default:
         http_response_code(404);
 
