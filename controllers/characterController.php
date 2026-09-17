@@ -125,8 +125,225 @@ function addCharacterController()
             $chr = $character['charisma'];
             $creator = $_SESSION["username"];
 
+            $avatar = "";
+
+            $allowedLibraryAvatars = [
+
+                "images/fighter.jpg",
+                "images/villain.jpg",
+                "images/mage.jpg",
+                "images/paladin.jpg",
+                "images/bard.jpg",
+                "images/priest.jpg",
+                "images/ranger.jpg"
+
+            ];
+
+
+            /*
+             * =========================================
+             * PORTRAIT LIBRARY
+             * =========================================
+             */
+
+            /*
+ * =========================================
+ * PORTRAIT LIBRARY
+ * =========================================
+ */
+
+            if (
+                isset($_POST['avatar_type']) &&
+                $_POST['avatar_type'] === 'library' &&
+                !empty($_POST['avatar'])
+            ) {
+
+                $selectedAvatar =
+                    str_replace(
+                        "\\",
+                        "/",
+                        $_POST['avatar']
+                    );
+
+                $selectedAvatar =
+                    ltrim(
+                        $selectedAvatar,
+                        "/"
+                    );
+
+
+                if (
+                    in_array(
+                        $selectedAvatar,
+                        $allowedLibraryAvatars,
+                        true
+                    )
+                ) {
+
+                    $fullPath =
+                        realpath(
+                            $_SERVER['DOCUMENT_ROOT']
+                                . "/"
+                                . $selectedAvatar
+                        );
+
+
+                    if (
+                        $fullPath !== false &&
+                        is_file($fullPath)
+                    ) {
+
+                        $avatar =
+                            $selectedAvatar;
+                    }
+                }
+            }
+
+
+
+            /*
+             * =========================================
+             * CUSTOM UPLOAD
+             * =========================================
+             */
+
+            if (
+                isset($_POST['avatar_type']) &&
+                $_POST['avatar_type'] === 'upload' &&
+                isset($_FILES['custom_avatar']) &&
+                $_FILES['custom_avatar']['error']
+                === UPLOAD_ERR_OK
+            ) {
+
+                $file =
+                    $_FILES['custom_avatar'];
+
+
+                /*
+                 * Allowed image types
+                 */
+
+                $allowedTypes = [
+
+                    'image/jpeg' => 'jpg',
+
+                    'image/png' => 'png',
+
+                    'image/webp' => 'webp'
+
+                ];
+
+
+                /*
+                 * Detect real MIME type
+                 */
+
+                $finfo =
+                    finfo_open(
+                        FILEINFO_MIME_TYPE
+                    );
+
+                $mimeType =
+                    finfo_file(
+                        $finfo,
+                        $file['tmp_name']
+                    );
+
+                finfo_close($finfo);
+
+
+                if (
+                    isset(
+                        $allowedTypes[$mimeType]
+                    )
+                ) {
+
+
+                    /*
+                     * Maximum 5 MB
+                     */
+
+                    if (
+                        $file['size']
+                        <= 5 * 1024 * 1024
+                    ) {
+
+                        $extension =
+                            $allowedTypes[$mimeType];
+
+
+                        /*
+                         * Random filename
+                         */
+
+                        $filename =
+                            bin2hex(
+                                random_bytes(16)
+                            )
+                            . "."
+                            . $extension;
+
+
+                        $uploadDirectory =
+                            $_SERVER['DOCUMENT_ROOT']
+                            . "/uploads/avatars/";
+
+
+                        if (
+                            !is_dir(
+                                $uploadDirectory
+                            )
+                        ) {
+
+                            mkdir(
+                                $uploadDirectory,
+                                0755,
+                                true
+                            );
+                        }
+
+
+                        $destination =
+                            $uploadDirectory
+                            . $filename;
+
+
+                        if (
+                            move_uploaded_file(
+                                $file['tmp_name'],
+                                $destination
+                            )
+                        ) {
+
+                            $avatar =
+                                "uploads/avatars/"
+                                . $filename;
+                        }
+                    }
+                }
+            }
+
+
+
+            /*
+             * =========================================
+             * OLD AVATAR FALLBACK
+             * =========================================
+             *
+             * If nothing selected:
+             * use the old class image.
+             */
+
+            if (empty($avatar)) {
+
+                $avatar =
+                    "images/"
+                    . $class
+                    . ".jpg";
+            }
+
             if (strlen($name) > 1) {
-                addCharacter($name, $race, $class, $notes, $level, $hp, $hpmax, $mp, $mpmax, $str, $con, $dex, $int, $chr, $creator);
+                addCharacter($name, $race, $class, $notes, $level, $hp, $hpmax, $mp, $mpmax, $str, $con, $dex, $int, $chr, $creator, $avatar);
                 $_SESSION["message"] = "Character has been created!";
                 header("Location: /my-characters");
                 exit;
@@ -270,6 +487,183 @@ function updateCharacterController()
 
         ];
 
+        /*
+ * =========================================
+ * AVATAR
+ * =========================================
+ */
+
+        $avatar =
+            $character["Avatar"] ?? "";
+
+
+        /*
+* Portrait library
+*/
+
+        if (
+            isset($_POST["avatar_type"]) &&
+            $_POST["avatar_type"] === "library" &&
+            !empty($_POST["avatar"])
+        ) {
+
+            $selectedAvatar =
+                str_replace(
+                    "\\",
+                    "/",
+                    $_POST["avatar"]
+                );
+
+            $selectedAvatar =
+                ltrim(
+                    $selectedAvatar,
+                    "/"
+                );
+
+
+            $allowedLibraryAvatars = [
+
+                "images/fighter.jpg",
+                "images/villain.jpg",
+                "images/mage.jpg",
+                "images/paladin.jpg",
+                "images/bard.jpg",
+                "images/priest.jpg",
+                "images/ranger.jpg",
+                "images/orc.jpg",
+                "images/dwarf.jpg",
+                "images/gnome.jpg"
+
+            ];
+
+
+            if (
+                in_array(
+                    $selectedAvatar,
+                    $allowedLibraryAvatars,
+                    true
+                )
+            ) {
+
+                $fullPath =
+                    realpath(
+                        $_SERVER["DOCUMENT_ROOT"]
+                            . "/"
+                            . $selectedAvatar
+                    );
+
+
+                if (
+                    $fullPath !== false &&
+                    is_file($fullPath)
+                ) {
+
+                    $avatar =
+                        $selectedAvatar;
+                }
+            }
+        }
+
+
+        /*
+* Custom upload
+*/
+
+        if (
+            isset($_POST["avatar_type"]) &&
+            $_POST["avatar_type"] === "upload" &&
+            isset($_FILES["custom_avatar"]) &&
+            $_FILES["custom_avatar"]["error"]
+            === UPLOAD_ERR_OK
+        ) {
+
+            $file =
+                $_FILES["custom_avatar"];
+
+
+            $allowedTypes = [
+
+                "image/jpeg" => "jpg",
+                "image/png" => "png",
+                "image/webp" => "webp"
+
+            ];
+
+
+            $finfo =
+                finfo_open(
+                    FILEINFO_MIME_TYPE
+                );
+
+
+            $mimeType =
+                finfo_file(
+                    $finfo,
+                    $file["tmp_name"]
+                );
+
+
+            finfo_close($finfo);
+
+
+            if (
+                isset(
+                    $allowedTypes[$mimeType]
+                ) &&
+                $file["size"] <= 5 * 1024 * 1024
+            ) {
+
+                $extension =
+                    $allowedTypes[$mimeType];
+
+
+                $filename =
+                    bin2hex(
+                        random_bytes(16)
+                    )
+                    . "."
+                    . $extension;
+
+
+                $uploadDirectory =
+                    $_SERVER["DOCUMENT_ROOT"]
+                    . "/uploads/avatars/";
+
+
+                if (
+                    !is_dir(
+                        $uploadDirectory
+                    )
+                ) {
+
+                    mkdir(
+                        $uploadDirectory,
+                        0755,
+                        true
+                    );
+                }
+
+
+                $destination =
+                    $uploadDirectory
+                    . $filename;
+
+
+                if (
+                    move_uploaded_file(
+                        $file["tmp_name"],
+                        $destination
+                    )
+                ) {
+
+                    $avatar =
+                        "uploads/avatars/"
+                        . $filename;
+                }
+            }
+        }
+
+
         foreach ($stats as $statName => $stat) {
 
             $maxValue = ($statName === 'health' || $statName === 'mana')
@@ -342,7 +736,8 @@ function updateCharacterController()
             $newCon,
             $newDex,
             $newInt,
-            $newChr,
+            $newChr, 
+            $avatar,        
             $id
         );
 

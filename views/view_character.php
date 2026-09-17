@@ -6,7 +6,23 @@
 
             <div class="view-character-image">
 
-                <img src="/images/<?= htmlspecialchars($character["Hahmoluokka"]) ?>.jpg" alt="<?= htmlspecialchars($character["Nimi"]) ?>">
+                <?php
+
+                if (!empty($character["Avatar"])) {
+
+                    $characterAvatar =
+                        $character["Avatar"];
+                } else {
+
+                    $characterAvatar =
+                        "images/"
+                        . $character["Hahmoluokka"]
+                        . ".jpg";
+                }
+
+                ?>
+
+                <img src="/<?= htmlspecialchars($characterAvatar) ?>" alt="<?= htmlspecialchars($character["Nimi"]) ?>">
 
             </div>
 
@@ -62,9 +78,9 @@
                     </div>
 
                     <div class="stat-bar">
-                        <div class="stat-bar-fill hp-fill" style="width: <?= min(((int)$character["Elamapisteet"]/ 1000) * 100, 100) ?>%;"></div>
+                        <div class="stat-bar-fill hp-fill" style="width: <?= min(((int)$character["Elamapisteet"] / 1000) * 100, 100) ?>%;"></div>
                     </div>
- 
+
                 </div>
 
                 <div class="view-stat">
@@ -180,44 +196,44 @@
             </div>
 
 
-                <div class="view-character-section">
+            <div class="view-character-section">
 
-                    <h2>
-                        Character Notes
-                    </h2>
+                <h2>
+                    Character Notes
+                </h2>
 
-                    <div class="view-character-notes">
+                <div class="view-character-notes">
 
-                        <?php if (!empty($character["Muistiinpanot"])) : ?>
+                    <?php if (!empty($character["Muistiinpanot"])) : ?>
 
-                            <p>
-                                <?= nl2br(htmlspecialchars($character["Muistiinpanot"])) ?>
-                            </p>
+                        <p>
+                            <?= nl2br(htmlspecialchars($character["Muistiinpanot"])) ?>
+                        </p>
 
-                        <?php else : ?>
+                    <?php else : ?>
 
-                            <p class="empty-notes">
-                                This character has no notes.
-                            </p>
+                        <p class="empty-notes">
+                            This character has no notes.
+                        </p>
 
-                        <?php endif; ?>
-
-                    </div>
+                    <?php endif; ?>
 
                 </div>
 
+            </div>
 
-                <div class="view-character-actions">
 
-                    <a href="/my-characters" class="button button-secondary">
-                        Back to My Characters
-                    </a>
+            <div class="view-character-actions">
 
-                    <a href="/edit-character?id=<?= (int)$character["ID"] ?>" class="button button-primary">
-                        Edit Character
-                    </a>
+                <a href="/my-characters" class="button button-secondary">
+                    Back to My Characters
+                </a>
 
-                </div>
+                <a href="/edit-character?id=<?= (int)$character["ID"] ?>" class="button button-primary">
+                    Edit Character
+                </a>
+
+            </div>
 
     </section>
 

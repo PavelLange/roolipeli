@@ -52,7 +52,23 @@
 
                     <div class="my-character-image">
 
-                        <img src="/images/<?= htmlspecialchars($character["Hahmoluokka"]) ?>.jpg" alt="<?= htmlspecialchars($character["Nimi"]) ?>">
+                        <?php
+
+                        if (!empty($character["Avatar"])) {
+
+                            $characterAvatar =
+                                $character["Avatar"];
+                        } else {
+
+                            $characterAvatar =
+                                "images/"
+                                . $character["Hahmoluokka"]
+                                . ".jpg";
+                        }
+
+                        ?>
+
+                        <img src="/<?= htmlspecialchars($characterAvatar) ?>" alt="<?= htmlspecialchars($character["Nimi"]) ?>">
 
                     </div>
 
