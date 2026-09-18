@@ -364,7 +364,7 @@
 
                         <div class="portrait-grid" id="portrait-grid">
 
-                            <?php                          
+                            <?php
 
                             $libraryAvatars = [
                                 "images/fighter.jpg",
@@ -1110,12 +1110,19 @@
 
                 // Single click
                 button.addEventListener("click", function() {
+                    if (event.button !== 0) {
+                        return;
+                    }
                     decreaseStat();
                 });
 
 
                 // Start holding the button
                 button.addEventListener("mousedown", function() {
+
+                    if (event.button !== 0) {
+                        return;
+                    }
 
                     // Wait briefly before starting
                     interval = setTimeout(function() {
@@ -1197,12 +1204,19 @@
 
                 // Single click
                 button.addEventListener("click", function() {
+                    if (event.button !== 0) {
+                        return;
+                    }
                     increaseStat();
                 });
 
 
                 // Start holding the button
                 button.addEventListener("mousedown", function() {
+
+                    if (event.button !== 0) {
+                        return;
+                    }
 
                     // Wait briefly before starting
                     interval = setTimeout(function() {
@@ -1262,12 +1276,21 @@
 
         // Single click
         levelPlus.addEventListener("click", function() {
+            if (event.button !== 0) {
+                return;
+            }
+
             increaseLevel();
         });
 
 
         // Start holding
         levelPlus.addEventListener("mousedown", function() {
+
+            if (event.button !== 0) {
+                return;
+            }
+
 
             levelPlusInterval = setTimeout(function() {
 
@@ -1322,12 +1345,21 @@
 
         // Single click
         levelMinus.addEventListener("click", function() {
+
+            if (event.button !== 0) {
+                return;
+            }
+
             decreaseLevel();
         });
 
 
         // Start holding
         levelMinus.addEventListener("mousedown", function() {
+
+            if (event.button !== 0) {
+                return;
+            }
 
             levelMinusInterval = setTimeout(function() {
 
