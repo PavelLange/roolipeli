@@ -591,6 +591,7 @@ function addNPCController() {
     $int = (cleanUpInput($_POST["int"]) === '' ? 0 : (int)$_POST["int"]);
     $char = (cleanUpInput($_POST["char"]) === '' ? 0 : (int)$_POST["char"]);
     $type = cleanUpInput($_POST["type"]);
+    
     try {
         addNPC($id,$name,$desc,$lvl,$hp,$hpmax,$mp,$mpmax,$str,$const,$agility,$int,$char,$type);
         $_SESSION["message"] = "NPC has been created!";
@@ -661,4 +662,26 @@ function manageNPCController() {
         }
     }
     require "../views/manage_NPC.php";
+}
+
+function deleteNPCController()
+{
+    if (!isset($_GET["id"], $_GET["cid"])) {
+        exit;
+    }
+    try {
+        $id = cleanUpInput($_GET["id"]);
+        $cid = cleanUpInput($_GET["cid"]);
+        $user = $_SESSION["username"];
+        if (isInCampaign($cid, $user) == true) {
+            deleteNPC($id);
+            $_SESSION["message"] = "Item has been deleted!";
+            header("Location: /view-NPCs?id=$cid");
+            exit;
+        } else {
+            header("Location: /");
+        }
+    } catch (PDOException $e) {
+        echo "Virhe esinetta poistettaessa: " . $e->getMessage();
+    }
 }

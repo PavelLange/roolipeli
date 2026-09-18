@@ -223,3 +223,10 @@ function manageNPC($hp,$mp,$id) {
     $stm = $pdo->prepare($sql);
     return $stm->execute($data);
 }
+
+function deleteNPC($id){
+    $pdo = connectDB();
+    $sql = "DELETE FROM NPCS WHERE ID=?";
+    $stm=$pdo->prepare($sql);
+    return $stm->execute([$id]);
+}

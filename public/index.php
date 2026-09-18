@@ -351,6 +351,16 @@ switch ($uri) {
             require __DIR__ . '/../partials/footer.php';
             break;
     
+
+        case '/delete-NPC':
+            if(isLoggedIn()) {
+                deleteNPCController();
+            }
+            else {
+                require __DIR__ . '/../partials/header.php';
+                loginController();
+                require __DIR__ . '/../partials/footer.php';
+            }
     default:
         http_response_code(404);
 

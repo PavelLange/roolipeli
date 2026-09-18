@@ -82,6 +82,14 @@ foreach($allNPCs as $NPC): ?>
 <a href="manage-NPC?id=<?=$NPC["ID"]?>&cid=<?=$id?>">
 <button>MANAGE</button>
 </a>
+<a
+<?php $cid = $_GET["id"]?>
+href="/delete-NPC?id=<?= urlencode((string) $NPC["ID"]) ?>&cid=<?= urlencode($cid) ?>"
+class="button button-danger"
+onClick="return confirm('Are you sure you want to delete this NPC?');"
+>
+Delete
+</a>
 </div>
 <?php endforeach;?>
 <?php $id = $_GET["id"]?>
