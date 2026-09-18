@@ -334,8 +334,20 @@ switch ($uri) {
             break;
 
         case '/edit-NPC':
+            if(isLoggedIn()) {
+                if($method === "get") {
+                     require __DIR__ . '/../partials/header.php';
+                    editNPCController();
+                    require __DIR__ . '/../partials/footer.php'; 
+                } else {
+                    updateNPCController();
+                }
+            }
+            break;
+
+        case '/manage-NPC':
             require __DIR__ . '/../partials/header.php';
-            editNPCController();
+            manageNPCController();
             require __DIR__ . '/../partials/footer.php';
             break;
     

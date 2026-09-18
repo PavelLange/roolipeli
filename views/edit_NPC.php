@@ -10,8 +10,8 @@
             </h1>
 
             <p>
-                Create a new NPC that can be a hostile, neutral or a merchant.
-                NPC can be viewed in the campaign.
+                Edit a NPC that can be a hostile, neutral or a merchant.
+                NPCs can be viewed in the campaign.
             </p>
         </div>
 
@@ -51,7 +51,7 @@
                     id="NPC-level"
                     name="level"
                     placeholder="Enter level amount..."
-                    min=1
+                    min=0
                     max=100
                     value=<?=$npcinfo["LVL"]?>
                 ><p>Optional!</p>
@@ -65,7 +65,7 @@
                     id="NPC-health"
                     name="health"
                     placeholder="Enter health amount..."
-                    min=1
+                    min=0
                     value=<?=$npcinfo["HPMAX"]?>
                 ><p>Optional!</p>
             </div>
@@ -78,7 +78,7 @@
                     id="NPC-mana"
                     name="mana"
                     placeholder="Enter mana amount..."
-                    min=1
+                    min=0
                     value=<?=$npcinfo["MPMAX"]?>
                 ><p>Optional!</p>
             </div>
@@ -91,7 +91,7 @@
                     id="NPC-str"
                     name="str"
                     placeholder="Enter strength amount..."
-                    min=1
+                    min=0
                     max=100
                     value=<?=$npcinfo["STR"]?>
                 ><p>Optional!</p>
@@ -105,7 +105,7 @@
                     id="NPC-con"
                     name="const"
                     placeholder="Enter constitution amount..."
-                    min=1
+                    min=0
                     max=100
                     value=<?=$npcinfo["CONS"]?>
                 ><p>Optional!</p>
@@ -119,7 +119,7 @@
                     id="NPC-agi"
                     name="agility"
                     placeholder="Enter agility amount..."
-                    min=1
+                    min=0
                     max=100
                     value=<?=$npcinfo["AGI"]?>
                 ><p>Optional!</p>
@@ -133,7 +133,7 @@
                     id="NPC-int"
                     name="int"
                     placeholder="Enter intelligence amount..."
-                    min=1
+                    min=0
                     max=100
                     value=<?=$npcinfo["INTEL"]?>
                 ><p>Optional!</p>
@@ -147,7 +147,7 @@
                     id="NPC-char"
                     name="char"
                     placeholder="Enter charisma amount..."
-                    min=1
+                    min=0
                     max=100
                     value=<?=$npcinfo["CHA"]?>
                 ><p>Optional!</p>
@@ -167,8 +167,8 @@
             <div class="campaign-form-actions">
 
                 <a
-                <?php $id = $_GET["id"]?>
-                    href="/view-campaign?id=<?=$id?>"
+                <?php $id = $_GET["cid"]?>
+                    href="/view-NPCs?id=<?=$id?>"
                     class="button button-secondary"
                 >
                     Cancel
@@ -178,7 +178,7 @@
                     type="submit"
                     class="button button-primary"
                 >
-                    Create Item
+                    Edit NPC
                 </button>
 
             </div>

@@ -613,6 +613,52 @@ function editNPCController()
 {
 $id = $_GET["id"];
 $npcinfo = listAllNPCsID($id);
-var_dump($npcinfo);
 require "../views/edit_NPC.php";
+}
+
+function updateNPCController() {
+    if(isset($_POST["name"], $_POST["desc"], $_POST["level"], $_POST["health"], $_POST["mana"], $_POST["str"], $_POST["const"], $_POST["agility"], $_POST["int"], $_POST["char"],$_POST["type"])) {
+        $id = cleanUpInput($_GET["id"]);
+        $cid = cleanUPInput($_GET["cid"]);
+        $name = cleanUpInput($_POST["name"]);
+        $desc = cleanUpInput($_POST["desc"]);
+        $lvl = (cleanUpInput($_POST["level"]) === '' ? 0 : (int)$_POST["level"]);
+        $hp = (cleanUpInput($_POST["health"]) === '' ? 0 : (int)$_POST["health"]);
+        $hpmax = $hp;
+        $mp = (cleanUpInput($_POST["mana"]) === '' ? 0 : (int)$_POST["mana"]);
+        $mpmax = $mp;
+        $str = (cleanUpInput($_POST["str"]) === '' ? 0 : (int)$_POST["str"]);
+        $const = (cleanUpInput($_POST["const"]) === '' ? 0 : (int)$_POST["const"]);
+        $agility = (cleanUpInput($_POST["agility"]) === '' ? 0 : (int)$_POST["agility"]);
+        $int = (cleanUpInput($_POST["int"]) === '' ? 0 : (int)$_POST["int"]);
+        $char = (cleanUpInput($_POST["char"]) === '' ? 0 : (int)$_POST["char"]);
+        $type = cleanUpInput($_POST["type"]);
+        try {
+            updateNPC($name,$desc,$lvl,$hp,$hpmax,$mp,$mpmax,$str,$const,$agility,$int,$char,$type,$id);
+            $_SESSION["message"] = "NPC has been updated!";
+            header("Location: /view-NPCs?id=$cid");
+        } catch (PDOException $e) {
+            echo "Error updating NPC: " . $e->getMessage();
+            exit;
+        }
+    }
+}
+
+function manageNPCController() {
+    $id = $_GET["id"];
+    $cid = $_GET["cid"];
+    $npc = listAllNPCsID($id);
+    if (isset($_POST["hpamount"], $_POST["mpamount"])) {
+        $hp = cleanUpInput($_POST["hpamount"]);
+        $mp = cleanUpInput($_POST["mpamount"]);
+        try {
+            manageNPC($hp, $mp, $id);
+            $_SESSION["message"] = "NPC has been updated!";
+            header("Location: /view-NPCs?id=$cid");
+        } catch (PDOException $e) {
+            echo "Error updating NPC: " . $e->getMessage();
+            exit;
+        }
+    }
+    require "../views/manage_NPC.php";
 }

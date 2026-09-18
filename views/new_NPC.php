@@ -11,7 +11,7 @@
 
             <p>
                 Create a new NPC that can be a hostile, neutral or a merchant.
-                NPC can be viewed in the campaign.
+                NPCs can be viewed in the campaign.
             </p>
         </div>
 
@@ -50,7 +50,7 @@
                     id="NPC-level"
                     name="level"
                     placeholder="Enter level amount..."
-                    min=1
+                    min=0
                     max=100
                 ><p>Optional!</p>
             </div>
@@ -63,7 +63,7 @@
                     id="NPC-health"
                     name="health"
                     placeholder="Enter health amount..."
-                    min=1
+                    min=0
                 ><p>Optional!</p>
             </div>
 
@@ -75,7 +75,7 @@
                     id="NPC-mana"
                     name="mana"
                     placeholder="Enter mana amount..."
-                    min=1
+                    min=0
                 ><p>Optional!</p>
             </div>
 
@@ -87,7 +87,7 @@
                     id="NPC-str"
                     name="str"
                     placeholder="Enter strength amount..."
-                    min=1
+                    min=0
                     max=100
                 ><p>Optional!</p>
             </div>
@@ -100,7 +100,7 @@
                     id="NPC-con"
                     name="const"
                     placeholder="Enter constitution amount..."
-                    min=1
+                    min=0
                     max=100
                 ><p>Optional!</p>
             </div>
@@ -113,7 +113,7 @@
                     id="NPC-agi"
                     name="agility"
                     placeholder="Enter agility amount..."
-                    min=1
+                    min=0
                     max=100
                 ><p>Optional!</p>
             </div>
@@ -126,7 +126,7 @@
                     id="NPC-int"
                     name="int"
                     placeholder="Enter intelligence amount..."
-                    min=1
+                    min=0
                     max=100
                 ><p>Optional!</p>
             </div>
@@ -139,7 +139,7 @@
                     id="NPC-char"
                     name="char"
                     placeholder="Enter charisma amount..."
-                    min=1
+                    min=0
                     max=100
                 ><p>Optional!</p>
             </div>
@@ -169,7 +169,7 @@
                     type="submit"
                     class="button button-primary"
                 >
-                    Create Item
+                    Create NPC
                 </button>
 
             </div>

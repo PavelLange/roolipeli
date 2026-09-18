@@ -75,15 +75,17 @@ foreach($allNPCs as $NPC): ?>
 </p>
 
 <p>Type: <?=$NPC["Type"]?></p>
-
-<a href="edit-NPC?id=<?=$NPC["ID"]?>">
+<?php $id = $_GET["id"]?>
+<a href="edit-NPC?id=<?=$NPC["ID"]?>&cid=<?=$id?>">
 <button>EDIT</button>
 </a>
-
+<a href="manage-NPC?id=<?=$NPC["ID"]?>&cid=<?=$id?>">
+<button>MANAGE</button>
+</a>
 </div>
+<?php endforeach;?>
 <?php $id = $_GET["id"]?>
 <a href="view-campaign?id=<?=$id?>">
 <button>BACK</button>  
 </a>
-<?php endforeach;?>
 <?php endif;?>

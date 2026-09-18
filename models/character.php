@@ -208,3 +208,18 @@ function listAllNPCsID($id) {
     $user = $stm->fetch(PDO::FETCH_ASSOC);
     return $user;
 }
+function updateNPC($nimi,$desc, $lvl,$hp,$hpmax,$mp,$mpmax,$str,$cons,$agi,$intel,$cha,$type, $id){
+    $pdo = connectDB();
+    $data = [$nimi,$desc, $lvl,$hp,$hpmax,$mp,$mpmax,$str,$cons,$agi,$intel,$cha,$type, $id];
+    $sql = "UPDATE NPCS SET Nimi = ?, Muistiinpanot = ?, LVL = ?, HP = ?, HPMAX = ?, MP = ?, MPMAX = ?, STR = ?, CONS = ?, AGI = ?, INTEL = ?, CHA = ?, Type = ? WHERE ID = ?";
+    $stm = $pdo->prepare($sql);
+    return $stm->execute($data);
+}
+
+function manageNPC($hp,$mp,$id) {
+    $pdo = connectDB();
+    $data = [$hp,$mp,$id];
+    $sql = "UPDATE NPCS SET HP = ?, MP = ? WHERE ID = ?";
+    $stm = $pdo->prepare($sql);
+    return $stm->execute($data);
+}
