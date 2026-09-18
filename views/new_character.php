@@ -22,87 +22,185 @@
             </div>
 
 
-            <!-- Character presets -->
-            <div class="character-selection">
+            <!-- Race selection -->
+            <div class="form-group">
 
-                <h2>Choose your character</h2>
+                <label for="race-select">Choose Race</label>
 
-                <div class="character-grid">
+                <select id="race-select" name="race" required>
 
-                    <?php foreach ($characterTypes as $key => $character) : ?>
+                    <option value="">Select a race</option>
 
-                        <button type="button" class="character-card" data-character="<?= htmlspecialchars($key) ?>">
+                    <option value="Human">Human</option>
+                    <option value="Orc">Orc</option>
+                    <option value="Elf">Elf</option>
+                    <option value="Dwarf">Dwarf</option>
+                    <option value="Gnome">Gnome</option>
 
-                            <div class="character-card-content">
+                </select>
 
-                                <h3>
-                                    <?= htmlspecialchars($character['name']) ?>
-                                </h3>
-
-                                <p>
-                                    <?= htmlspecialchars($character['race']) ?>
-                                </p>
-
-                                <div class="character-card-stats">
-
-                                    <p>
-                                        <strong>HP:</strong>
-                                        <?= htmlspecialchars($character['health']) ?>
-                                    </p>
-
-                                    <p>
-                                        <strong>Mana:</strong>
-                                        <?= htmlspecialchars($character['mana']) ?>
-                                    </p>
-
-                                    <p>
-                                        <strong>Strength:</strong>
-                                        <?= htmlspecialchars($character['strength']) ?>
-                                    </p>
-
-                                    <p>
-                                        <strong>Constitution:</strong>
-                                        <?= htmlspecialchars($character['constitution']) ?>
-                                    </p>
-
-                                    <p>
-                                        <strong>Agility:</strong>
-                                        <?= htmlspecialchars($character['agility']) ?>
-                                    </p>
-
-                                    <p>
-                                        <strong>Intelligence:</strong>
-                                        <?= htmlspecialchars($character['intelligence']) ?>
-                                    </p>
-
-                                    <p>
-                                        <strong>Charisma:</strong>
-                                        <?= htmlspecialchars($character['charisma']) ?>
-                                    </p>
-
-                                </div>
-
-                            </div>
-
-                        </button>
-
-                    <?php endforeach; ?>
-
-                </div>
             </div>
 
-            <input type="hidden" name="race" id="selected-race">
-            <input type="hidden" name="class" id="selected-class">
 
-            <input type="hidden" name="level" id="selected-level">
-            <input type="hidden" name="health" id="selected-health">
-            <input type="hidden" name="mana" id="selected-mana">
+            <!-- Class selection -->
+            <div class="form-group">
 
-            <input type="hidden" name="strength" id="selected-strength">
-            <input type="hidden" name="constitution" id="selected-constitution">
-            <input type="hidden" name="agility" id="selected-agility">
-            <input type="hidden" name="intelligence" id="selected-intelligence">
-            <input type="hidden" name="charisma" id="selected-charisma">
+                <label for="class-select">Choose Class</label>
+
+                <select id="class-select" name="class" required>
+
+                    <option value="">Select a class</option>
+
+                    <option value="fighter">Fighter</option>
+                    <option value="villain">Villain</option>
+                    <option value="mage">Mage</option>
+                    <option value="paladin">Paladin</option>
+                    <option value="bard">Bard</option>
+                    <option value="priest">Priest</option>
+                    <option value="ranger">Ranger</option>
+
+                </select>
+
+            </div>
+
+
+            <input type="hidden" name="level" value="1">
+
+            <!-- Ability Points -->
+            <div class="ability-points-section">
+
+                <h2>Ability Points</h2>
+
+                <p>
+                    Available points:
+                    <strong id="remaining-points">30</strong>
+                </p>
+
+
+                <div class="ability-list">
+
+                    <div class="ability-row">
+
+                        <label for="health">Health</label>
+
+                        <input type="number" id="health" name="health" value="10" min="10" max="40" readonly>
+
+                        <button type="button" class="ability-minus" data-stat="health">
+                            -
+                        </button>
+
+                        <button type="button" class="ability-plus" data-stat="health">
+                            +
+                        </button>
+
+                    </div>
+
+
+                    <div class="ability-row">
+
+                        <label for="mana">Mana</label>
+
+                        <input type="number" id="mana" name="mana" value="10" min="10" max="40" readonly>
+
+                        <button type="button" class="ability-minus" data-stat="mana">
+                            -
+                        </button>
+
+                        <button type="button" class="ability-plus" data-stat="mana">
+                            +
+                        </button>
+
+                    </div>
+
+
+                    <div class="ability-row">
+
+                        <label for="strength">Strength</label>
+
+                        <input type="number" id="strength" name="strength" value="10" min="10" max="40" readonly>
+
+                        <button type="button" class="ability-minus" data-stat="strength">
+                            -
+                        </button>
+
+                        <button type="button" class="ability-plus" data-stat="strength">
+                            +
+                        </button>
+
+                    </div>
+
+
+                    <div class="ability-row">
+
+                        <label for="constitution">Constitution</label>
+
+                        <input type="number" id="constitution" name="constitution" value="10" min="10" max="40" readonly>
+
+                        <button type="button" class="ability-minus" data-stat="constitution">
+                            -
+                        </button>
+
+                        <button type="button" class="ability-plus" data-stat="constitution">
+                            +
+                        </button>
+
+                    </div>
+
+
+                    <div class="ability-row">
+
+                        <label for="agility">Agility</label>
+
+                        <input type="number" id="agility" name="agility" value="10" min="10" max="40" readonly>
+
+                        <button type="button" class="ability-minus" data-stat="agility">
+                            -
+                        </button>
+
+                        <button type="button" class="ability-plus" data-stat="agility">
+                            +
+                        </button>
+
+                    </div>
+
+
+                    <div class="ability-row">
+
+                        <label for="intelligence">Intelligence</label>
+
+                        <input type="number" id="intelligence" name="intelligence" value="10" min="10" max="40" readonly>
+
+                        <button type="button" class="ability-minus" data-stat="intelligence">
+                            -
+                        </button>
+
+                        <button type="button" class="ability-plus" data-stat="intelligence">
+                            +
+                        </button>
+
+                    </div>
+
+
+                    <div class="ability-row">
+
+                        <label for="charisma">Charisma</label>
+
+                        <input type="number" id="charisma" name="charisma" value="10" min="10" max="40" readonly>
+
+                        <button type="button" class="ability-minus" data-stat="charisma">
+                            -
+                        </button>
+
+                        <button type="button" class="ability-plus" data-stat="charisma">
+                            +
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
 
 
             <div class="avatar-selection">
@@ -268,13 +366,109 @@
          * =========================================
          */
 
-        const characterTypes = <?= json_encode($characterTypes) ?>;
+        const raceSelect =
+            document.getElementById("race-select");
 
-        const characterCards =
-            document.querySelectorAll(".character-card");
+        const classSelect =
+            document.getElementById("class-select");
+
+        const abilityPoints = 30;
+
+        let remainingPoints = abilityPoints;
+
+        const remainingPointsElement =
+            document.getElementById("remaining-points");
+
+        const abilityPlusButtons =
+            document.querySelectorAll(".ability-plus");
+
+        const abilityMinusButtons =
+            document.querySelectorAll(".ability-minus");
 
         const createButton =
             document.getElementById("create-character-button");
+
+        /*
+         * =========================================
+         * ABILITY
+         * =========================================
+         */
+
+        function updateRemainingPoints() {
+
+            remainingPointsElement.textContent =
+                remainingPoints;
+
+            abilityPlusButtons.forEach(function(button) {
+
+                button.disabled =
+                    remainingPoints <= 0;
+
+            });
+
+        }
+
+        abilityPlusButtons.forEach(function(button) {
+
+            button.addEventListener("click", function() {
+
+                if (remainingPoints <= 0) {
+                    return;
+                }
+
+                const statName =
+                    this.dataset.stat;
+
+                const input =
+                    document.getElementById(statName);
+
+                const currentValue =
+                    parseInt(input.value);
+
+                if (currentValue >= 40) {
+                    return;
+                }
+
+                input.value =
+                    currentValue + 1;
+
+                remainingPoints--;
+
+                updateRemainingPoints();
+
+            });
+
+        });
+
+        abilityMinusButtons.forEach(function(button) {
+
+            button.addEventListener("click", function() {
+
+                const statName =
+                    this.dataset.stat;
+
+                const input =
+                    document.getElementById(statName);
+
+                const currentValue =
+                    parseInt(input.value);
+
+                if (currentValue <= 10) {
+                    return;
+                }
+
+                input.value =
+                    currentValue - 1;
+
+                remainingPoints++;
+
+                updateRemainingPoints();
+
+            });
+
+        });
+
+        updateRemainingPoints();
 
 
         /*
@@ -438,87 +632,6 @@
                  */
 
                 portraitModal.classList.remove("active");
-
-
-                /*
-                 * Update create button
-                 */
-
-                updateCreateButton();
-
-            });
-
-        });
-
-
-        /*
-         * =========================================
-         * CHARACTER SELECTION
-         * =========================================
-         */
-
-        characterCards.forEach(function(card) {
-
-            card.addEventListener("click", function() {
-
-                /*
-                 * Remove old selection
-                 */
-
-                characterCards.forEach(function(item) {
-
-                    item.classList.remove("selected");
-
-                });
-
-
-                /*
-                 * Select character
-                 */
-
-                this.classList.add("selected");
-
-
-                const characterKey =
-                    this.dataset.character;
-
-                const character =
-                    characterTypes[characterKey];
-
-
-                /*
-                 * Fill hidden character inputs
-                 */
-
-                document.getElementById("selected-race").value =
-                    character.race;
-
-                document.getElementById("selected-class").value =
-                    characterKey;
-
-                document.getElementById("selected-level").value =
-                    1;
-
-                document.getElementById("selected-health").value =
-                    character.health;
-
-                document.getElementById("selected-mana").value =
-                    character.mana;
-
-                document.getElementById("selected-strength").value =
-                    character.strength;
-
-                document.getElementById("selected-constitution").value =
-                    character.constitution;
-
-                document.getElementById("selected-agility").value =
-                    character.agility;
-
-                document.getElementById("selected-intelligence").value =
-                    character.intelligence;
-
-                document.getElementById("selected-charisma").value =
-                    character.charisma;
 
 
                 /*
@@ -809,18 +922,14 @@
 
         function updateCreateButton() {
 
-            const characterSelected =
-                document.querySelector(
-                    ".character-card.selected"
-                );
+            const raceSelected =
+                raceSelect.value !== "";
 
+            const classSelected =
+                classSelect.value !== "";
 
             let avatarSelected = false;
 
-
-            /*
-             * Library avatar
-             */
 
             if (
                 avatarType.value === "library" &&
@@ -832,10 +941,6 @@
             }
 
 
-            /*
-             * Custom upload
-             */
-
             if (
                 avatarType.value === "upload" &&
                 customAvatar.files.length > 0
@@ -846,15 +951,13 @@
             }
 
 
-            /*
-             * Enable only when BOTH
-             * character and avatar exist.
-             */
-
-            createButton.disabled = !characterSelected ||
-                !avatarSelected;
+            createButton.disabled = !raceSelected ||
+                !classSelected ||
+                !avatarSelected ||
+                remainingPoints !== 0;
 
         }
+
 
 
         /*
@@ -868,6 +971,26 @@
         selectedAvatar.value = "";
 
         avatarType.value = "library";
+
+        /*
+         * =========================================
+         * RACE AND CLASS BUTTON
+         * =========================================
+         */
+
+        raceSelect.addEventListener("change", function() {
+
+            updateCreateButton();
+
+        });
+
+
+        classSelect.addEventListener("change", function() {
+
+            updateCreateButton();
+
+        });
+
 
     });
 </script>

@@ -4,94 +4,46 @@ require_once "../models/campaigns.php";
 require_once "../libraries/cleaners.php";
 require_once "../libraries/cleaners.php";
 require_once "../libraries/auth.php";
+
 $characterTypes = [
 
     'fighter' => [
         'name' => 'Fighter',
-        'race' => 'Orc',
-        'health' => 90,
-        'mana' => 10,
-        'strength' => 45,
-        'constitution' => 35,
-        'agility' => 10,
-        'intelligence' => 5,
-        'charisma' => 5
+        'race' => 'Orc'
     ],
 
     'villain' => [
         'name' => 'Villain',
-        'race' => 'Gnome',
-        'health' => 50,
-        'mana' => 50,
-        'strength' => 15,
-        'constitution' => 5,
-        'agility' => 20,
-        'intelligence' => 30,
-        'charisma' => 30
+        'race' => 'Gnome'
     ],
 
     'mage' => [
         'name' => 'Mage',
-        'race' => 'Human',
-        'health' => 35,
-        'mana' => 65,
-        'strength' => 5,
-        'constitution' => 10,
-        'agility' => 10,
-        'intelligence' => 40,
-        'charisma' => 35
+        'race' => 'Human'
     ],
 
     'paladin' => [
         'name' => 'Paladin',
-        'race' => 'Human',
-        'health' => 60,
-        'mana' => 40,
-        'strength' => 30,
-        'constitution' => 30,
-        'agility' => 10,
-        'intelligence' => 10,
-        'charisma' => 20
+        'race' => 'Human'
     ],
 
     'bard' => [
         'name' => 'Bard',
-        'race' => 'Dwarf',
-        'health' => 50,
-        'mana' => 50,
-
-        'strength' => 15,
-        'constitution' => 15,
-        'agility' => 20,
-        'intelligence' => 20,
-        'charisma' => 30
+        'race' => 'Dwarf'
     ],
 
     'priest' => [
         'name' => 'Priest',
-        'race' => 'Human',
-        'health' => 30,
-        'mana' => 70,
-        'strength' => 10,
-        'constitution' => 10,
-        'agility' => 10,
-        'intelligence' => 40,
-        'charisma' => 30
+        'race' => 'Human'
     ],
 
     'ranger' => [
         'name' => 'Ranger',
-        'race' => 'Elf',
-        'health' => 60,
-        'mana' => 40,
-        'strength' => 20,
-        'constitution' => 15,
-        'agility' => 43,
-        'intelligence' => 15,
-        'charisma' => 7
+        'race' => 'Elf'
     ]
 
 ];
+
 
 function addCharacterController()
 {
@@ -99,31 +51,99 @@ function addCharacterController()
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-        if (isset($_POST['name'], $_POST['class'], $_POST['notes'])) {
+        if (isset($_POST['name'], $_POST['class'], $_POST['race'], $_POST['notes'])) {
+
             $name = cleanUpInput($_POST['name']);
+            $race = cleanUpInput($_POST['race']);
             $class = cleanUpInput($_POST['class']);
             $notes = cleanUpInput($_POST['notes']);
 
-            if (!isset($characterTypes[$class])) {
-                echo '<h1 class="centered">Invalid character class.</h1>';
+            $allowedRaces = [
+                'Human',
+                'Orc',
+                'Elf',
+                'Dwarf',
+                'Gnome'
+            ];
+
+            $allowedClasses = [
+                'fighter',
+                'villain',
+                'mage',
+                'paladin',
+                'bard',
+                'priest',
+                'ranger'
+            ];
+
+            if (!in_array($race, $allowedRaces, true)) {
+                echo '<h1 class="centered">Invalid race.</h1>';
                 return;
             }
 
-            $character = $characterTypes[$class];
+            if (!in_array($class, $allowedClasses, true)) {
+                echo '<h1 class="centered">Invalid class.</h1>';
+                return;
+            }
 
-            $race = $character['race'];
             $level = 1;
 
-            $hp = $character['health'];
+            $hp = (int)$_POST['health'];
             $hpmax = $hp;
-            $mp = $character['mana'];
+
+            $mp = (int)$_POST['mana'];
             $mpmax = $mp;
-            $str = $character['strength'];
-            $con = $character['constitution'];
-            $dex = $character['agility'];
-            $int = $character['intelligence'];
-            $chr = $character['charisma'];
+
+            $str = (int)$_POST['strength'];
+            $con = (int)$_POST['constitution'];
+            $dex = (int)$_POST['agility'];
+            $int = (int)$_POST['intelligence'];
+            $chr = (int)$_POST['charisma'];
+
             $creator = $_SESSION["username"];
+
+            $stats = [
+                $hp,
+                $mp,
+                $str,
+                $con,
+                $dex,
+                $int,
+                $chr
+            ];
+            
+            foreach ($stats as $stat) {
+            
+                if ($stat < 10 || $stat > 40) {
+            
+                    echo '<h1 class="centered">
+                            Invalid ability value.
+                          </h1>';
+            
+                    return;
+                }
+            }
+            
+            
+            $totalAbilityPoints =
+                ($hp - 10) +
+                ($mp - 10) +
+                ($str - 10) +
+                ($con - 10) +
+                ($dex - 10) +
+                ($int - 10) +
+                ($chr - 10);
+            
+            
+            if ($totalAbilityPoints !== 30) {
+            
+                echo '<h1 class="centered">
+                        You must spend exactly 30 ability points.
+                      </h1>';
+            
+                return;
+            }
+            
 
             $avatar = "";
 
@@ -736,8 +756,8 @@ function updateCharacterController()
             $newCon,
             $newDex,
             $newInt,
-            $newChr, 
-            $avatar,        
+            $newChr,
+            $avatar,
             $id
         );
 
@@ -863,22 +883,22 @@ function viewCharacterController()
     }
 }
 
-function addItemController() {
-if(isset($_POST["name"], $_POST["desc"], $_POST["amount"])) {
-    $campaignid = cleanUpInput($_GET["id"]);
-    $name = cleanUpInput($_POST["name"]);
-    $desc = cleanUpInput($_POST["desc"]);
-    $amount = cleanUpInput($_POST["amount"]);
-    $ownerid = cleanUpInput($_POST["owner"]);
-    try {
-        addItem($ownerid,$campaignid,$name,$amount,$desc);
-        $_SESSION["message"] = "Item has been added!";
-        header("Location:view-campaign?id=$campaignid");
-    }
-    catch (PDOException $e){
-        echo "Error adding item: " . $e->getMessage();
-        exit;
-    }
+function addItemController()
+{
+    if (isset($_POST["name"], $_POST["desc"], $_POST["amount"])) {
+        $campaignid = cleanUpInput($_GET["id"]);
+        $name = cleanUpInput($_POST["name"]);
+        $desc = cleanUpInput($_POST["desc"]);
+        $amount = cleanUpInput($_POST["amount"]);
+        $ownerid = cleanUpInput($_POST["owner"]);
+        try {
+            addItem($ownerid, $campaignid, $name, $amount, $desc);
+            $_SESSION["message"] = "Item has been added!";
+            header("Location:view-campaign?id=$campaignid");
+        } catch (PDOException $e) {
+            echo "Error adding item: " . $e->getMessage();
+            exit;
+        }
     }
     require "../views/new_item.php";
 }
@@ -906,16 +926,17 @@ function editItemController()
         header("Location:/login");
     }
 }
-function updateItemController() {
-if(isset($_POST["name"], $_POST["desc"], $_POST["amount"])) {
-    $name = cleanUpInput($_POST["name"]);
-    $desc = cleanUpInput($_POST["desc"]);
-    $amount = cleanUpInput($_POST["amount"]);
-    $ownerid = cleanUpInput($_POST["owner"]);
-    $id = $_GET["id"];
-    $cid = $_GET["cid"];
+function updateItemController()
+{
+    if (isset($_POST["name"], $_POST["desc"], $_POST["amount"])) {
+        $name = cleanUpInput($_POST["name"]);
+        $desc = cleanUpInput($_POST["desc"]);
+        $amount = cleanUpInput($_POST["amount"]);
+        $ownerid = cleanUpInput($_POST["owner"]);
+        $id = $_GET["id"];
+        $cid = $_GET["cid"];
         try {
-            updateItem($ownerid,$name, $amount, $desc,$id);
+            updateItem($ownerid, $name, $amount, $desc, $id);
             $_SESSION["message"] = "Item has been updated!";
             header("Location: /view-items?id=$cid");
         } catch (PDOException $e) {
@@ -970,34 +991,35 @@ function manageCharacterController()
     require "../views/manage_character.php";
 }
 
-function addNPCController() {
-    if(isset($_POST["name"], $_POST["desc"], $_POST["level"], $_POST["health"], $_POST["mana"], $_POST["str"], $_POST["const"], $_POST["agility"], $_POST["int"], $_POST["char"],$_POST["type"])) {
-    $id = cleanUpInput($_GET["id"]);
-    $name = cleanUpInput($_POST["name"]);
-    $desc = cleanUpInput($_POST["desc"]);
-    $lvl = (cleanUpInput($_POST["level"]) === '' ? 0 : (int)$_POST["level"]);
-    $hp = (cleanUpInput($_POST["health"]) === '' ? 0 : (int)$_POST["health"]);
-    $hpmax = $hp;
-    $mp = (cleanUpInput($_POST["mana"]) === '' ? 0 : (int)$_POST["mana"]);
-    $mpmax = $mp;
-    $str = (cleanUpInput($_POST["str"]) === '' ? 0 : (int)$_POST["str"]);
-    $const = (cleanUpInput($_POST["const"]) === '' ? 0 : (int)$_POST["const"]);
-    $agility = (cleanUpInput($_POST["agility"]) === '' ? 0 : (int)$_POST["agility"]);
-    $int = (cleanUpInput($_POST["int"]) === '' ? 0 : (int)$_POST["int"]);
-    $char = (cleanUpInput($_POST["char"]) === '' ? 0 : (int)$_POST["char"]);
-    $type = cleanUpInput($_POST["type"]);
-    
-    try {
-        addNPC($id,$name,$desc,$lvl,$hp,$hpmax,$mp,$mpmax,$str,$const,$agility,$int,$char,$type);
-        $_SESSION["message"] = "NPC has been created!";
-        header("Location: /view-campaign?id=$id");
-    } catch (PDOException $e){
-        echo "Error adding NPC: " . $e->getMessage();
-        exit;
+function addNPCController()
+{
+    if (isset($_POST["name"], $_POST["desc"], $_POST["level"], $_POST["health"], $_POST["mana"], $_POST["str"], $_POST["const"], $_POST["agility"], $_POST["int"], $_POST["char"], $_POST["type"])) {
+        $id = cleanUpInput($_GET["id"]);
+        $name = cleanUpInput($_POST["name"]);
+        $desc = cleanUpInput($_POST["desc"]);
+        $lvl = (cleanUpInput($_POST["level"]) === '' ? 0 : (int)$_POST["level"]);
+        $hp = (cleanUpInput($_POST["health"]) === '' ? 0 : (int)$_POST["health"]);
+        $hpmax = $hp;
+        $mp = (cleanUpInput($_POST["mana"]) === '' ? 0 : (int)$_POST["mana"]);
+        $mpmax = $mp;
+        $str = (cleanUpInput($_POST["str"]) === '' ? 0 : (int)$_POST["str"]);
+        $const = (cleanUpInput($_POST["const"]) === '' ? 0 : (int)$_POST["const"]);
+        $agility = (cleanUpInput($_POST["agility"]) === '' ? 0 : (int)$_POST["agility"]);
+        $int = (cleanUpInput($_POST["int"]) === '' ? 0 : (int)$_POST["int"]);
+        $char = (cleanUpInput($_POST["char"]) === '' ? 0 : (int)$_POST["char"]);
+        $type = cleanUpInput($_POST["type"]);
+
+        try {
+            addNPC($id, $name, $desc, $lvl, $hp, $hpmax, $mp, $mpmax, $str, $const, $agility, $int, $char, $type);
+            $_SESSION["message"] = "NPC has been created!";
+            header("Location: /view-campaign?id=$id");
+        } catch (PDOException $e) {
+            echo "Error adding NPC: " . $e->getMessage();
+            exit;
+        }
     }
-    }
-    require "../views/new_NPC.php";    
-} 
+    require "../views/new_NPC.php";
+}
 
 function viewNPCController()
 {
@@ -1007,13 +1029,14 @@ function viewNPCController()
 }
 function editNPCController()
 {
-$id = $_GET["id"];
-$npcinfo = listAllNPCsID($id);
-require "../views/edit_NPC.php";
+    $id = $_GET["id"];
+    $npcinfo = listAllNPCsID($id);
+    require "../views/edit_NPC.php";
 }
 
-function updateNPCController() {
-    if(isset($_POST["name"], $_POST["desc"], $_POST["level"], $_POST["health"], $_POST["mana"], $_POST["str"], $_POST["const"], $_POST["agility"], $_POST["int"], $_POST["char"],$_POST["type"])) {
+function updateNPCController()
+{
+    if (isset($_POST["name"], $_POST["desc"], $_POST["level"], $_POST["health"], $_POST["mana"], $_POST["str"], $_POST["const"], $_POST["agility"], $_POST["int"], $_POST["char"], $_POST["type"])) {
         $id = cleanUpInput($_GET["id"]);
         $cid = cleanUPInput($_GET["cid"]);
         $name = cleanUpInput($_POST["name"]);
@@ -1030,7 +1053,7 @@ function updateNPCController() {
         $char = (cleanUpInput($_POST["char"]) === '' ? 0 : (int)$_POST["char"]);
         $type = cleanUpInput($_POST["type"]);
         try {
-            updateNPC($name,$desc,$lvl,$hp,$hpmax,$mp,$mpmax,$str,$const,$agility,$int,$char,$type,$id);
+            updateNPC($name, $desc, $lvl, $hp, $hpmax, $mp, $mpmax, $str, $const, $agility, $int, $char, $type, $id);
             $_SESSION["message"] = "NPC has been updated!";
             header("Location: /view-NPCs?id=$cid");
         } catch (PDOException $e) {
@@ -1040,7 +1063,8 @@ function updateNPCController() {
     }
 }
 
-function manageNPCController() {
+function manageNPCController()
+{
     $id = $_GET["id"];
     $cid = $_GET["cid"];
     $npc = listAllNPCsID($id);
