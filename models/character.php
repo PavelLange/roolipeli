@@ -184,3 +184,51 @@ function manageCharacter($hp,$mp,$id) {
     $stm = $pdo->prepare($sql);
     return $stm->execute($data);
 }
+
+function addNPC($id, $name,$desc,$lvl,$hp,$hpmax,$mp,$mpmax,$str,$cons,$agi,$int,$cha,$type){
+    $pdo = connectDB();
+    $data = [$id, $name,$desc,$lvl,$hp,$hpmax,$mp,$mpmax,$str,$cons,$agi,$int,$cha,$type];
+    $sql = "INSERT INTO NPCS (CampaignID,Nimi, Muistiinpanot,LVL,HP,HPMAX,MP,MPMAX,STR,CONS,AGI,INTEL,CHA,Type) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    $stm = $pdo->prepare($sql);
+    $stm=$pdo->prepare($sql);
+    return $stm->execute($data);
+}
+
+function listAllNPCs($id) {
+    $pdo = connectDB();
+    $sql = "SELECT * FROM NPCS WHERE CampaignID = ?";
+    $stm = $pdo->prepare($sql);
+    $stm->execute([$id]);
+    $user = $stm->fetchAll(PDO::FETCH_ASSOC);
+    return $user;
+}
+function listAllNPCsID($id) {
+    $pdo = connectDB();
+    $sql = "SELECT * FROM NPCS WHERE ID = ?";
+    $stm = $pdo->prepare($sql);
+    $stm->execute([$id]);
+    $user = $stm->fetch(PDO::FETCH_ASSOC);
+    return $user;
+}
+function updateNPC($nimi,$desc, $lvl,$hp,$hpmax,$mp,$mpmax,$str,$cons,$agi,$intel,$cha,$type, $id){
+    $pdo = connectDB();
+    $data = [$nimi,$desc, $lvl,$hp,$hpmax,$mp,$mpmax,$str,$cons,$agi,$intel,$cha,$type, $id];
+    $sql = "UPDATE NPCS SET Nimi = ?, Muistiinpanot = ?, LVL = ?, HP = ?, HPMAX = ?, MP = ?, MPMAX = ?, STR = ?, CONS = ?, AGI = ?, INTEL = ?, CHA = ?, Type = ? WHERE ID = ?";
+    $stm = $pdo->prepare($sql);
+    return $stm->execute($data);
+}
+
+function manageNPC($hp,$mp,$id) {
+    $pdo = connectDB();
+    $data = [$hp,$mp,$id];
+    $sql = "UPDATE NPCS SET HP = ?, MP = ? WHERE ID = ?";
+    $stm = $pdo->prepare($sql);
+    return $stm->execute($data);
+}
+
+function deleteNPC($id){
+    $pdo = connectDB();
+    $sql = "DELETE FROM NPCS WHERE ID=?";
+    $stm=$pdo->prepare($sql);
+    return $stm->execute([$id]);
+}
