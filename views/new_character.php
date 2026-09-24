@@ -408,44 +408,19 @@
 
         }
 
-        abilityPlusButtons.forEach(function(button) {
-
-            button.addEventListener("click", function() {
-
-                if (remainingPoints <= 0) {
-                    return;
-                }
-
-                const statName =
-                    this.dataset.stat;
-
-                const input =
-                    document.getElementById(statName);
-
-                const currentValue =
-                    parseInt(input.value);
-
-                if (currentValue >= 40) {
-                    return;
-                }
-
-                input.value =
-                    currentValue + 1;
-
-                remainingPoints--;
-
-                updateRemainingPoints();
-
-            });
-
-        });
+        /* =========================
+   ABILITY MINUS
+   ========================= */
 
         abilityMinusButtons.forEach(function(button) {
 
-            button.addEventListener("click", function() {
+            let interval;
+            let timeout;
+
+            function decreaseAbility() {
 
                 const statName =
-                    this.dataset.stat;
+                    button.dataset.stat;
 
                 const input =
                     document.getElementById(statName);
@@ -463,6 +438,138 @@
                 remainingPoints++;
 
                 updateRemainingPoints();
+                updateCreateButton();
+            }
+
+
+            // Single click
+            button.addEventListener("click", function() {
+
+                decreaseAbility();
+
+            });
+
+
+            // Start holding
+            button.addEventListener("mousedown", function(event) {
+
+                if (event.button !== 0) {
+                    return;
+                }
+
+                timeout = setTimeout(function() {
+
+                    interval = setInterval(function() {
+
+                        decreaseAbility();
+
+                    }, 100);
+
+                }, 300);
+
+            });
+
+
+            // Stop holding
+            button.addEventListener("mouseup", function() {
+
+                clearTimeout(timeout);
+                clearInterval(interval);
+
+            });
+
+
+            // Stop when mouse leaves
+            button.addEventListener("mouseleave", function() {
+
+                clearTimeout(timeout);
+                clearInterval(interval);
+
+            });
+
+        });
+
+
+        /* =========================
+        ABILITY PLUS
+        ========================= */
+
+        abilityPlusButtons.forEach(function(button) {
+
+            let interval;
+            let timeout;
+
+            function increaseAbility() {
+
+                if (remainingPoints <= 0) {
+                    return;
+                }
+
+                const statName =
+                    button.dataset.stat;
+
+                const input =
+                    document.getElementById(statName);
+
+                const currentValue =
+                    parseInt(input.value);
+
+                if (currentValue >= 40) {
+                    return;
+                }
+
+                input.value =
+                    currentValue + 1;
+
+                remainingPoints--;
+
+                updateRemainingPoints();
+                updateCreateButton();
+            }
+
+
+            // Single click
+            button.addEventListener("click", function() {
+
+                increaseAbility();
+
+            });
+
+
+            // Start holding
+            button.addEventListener("mousedown", function(event) {
+
+                if (event.button !== 0) {
+                    return;
+                }
+
+                timeout = setTimeout(function() {
+
+                    interval = setInterval(function() {
+
+                        increaseAbility();
+
+                    }, 100);
+
+                }, 300);
+
+            });
+
+
+            // Stop holding
+            button.addEventListener("mouseup", function() {
+
+                clearTimeout(timeout);
+                clearInterval(interval);
+
+            });
+
+
+            // Stop when mouse leaves
+            button.addEventListener("mouseleave", function() {
+
+                clearTimeout(timeout);
+                clearInterval(interval);
 
             });
 
@@ -515,27 +622,6 @@
 
         const portraitCards =
             document.querySelectorAll(".portrait-card");
-
-
-
-        /*
-         * =========================================
-         * AVATAR LIBRARY
-         * =========================================
-         */
-
-        const libraryAvatars = [
-            "images/fighter.jpg",
-            "images/villain.jpg",
-            "images/mage.jpg",
-            "images/paladin.jpg",
-            "images/bard.jpg",
-            "images/priest.jpg",
-            "images/ranger.jpg",
-            "images/orc.jpg",
-            "images/dwarf.jpg",
-            "images/gnome.jpg"
-        ];
 
         /*
          * =========================================

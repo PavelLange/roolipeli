@@ -47,8 +47,6 @@ $characterTypes = [
 
 function addCharacterController()
 {
-    global $characterTypes;
-
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (isset($_POST['name'], $_POST['class'], $_POST['race'], $_POST['notes'])) {
@@ -87,6 +85,24 @@ function addCharacterController()
             }
 
             $level = 1;
+
+            $requiredStats = [
+                'health',
+                'mana',
+                'strength',
+                'constitution',
+                'agility',
+                'intelligence',
+                'charisma'
+            ];
+            
+            foreach ($requiredStats as $stat) {
+            
+                if (!isset($_POST[$stat])) {
+                    echo '<h1 class="centered">Missing ability value.</h1>';
+                    return;
+                }
+            }            
 
             $hp = (int)$_POST['health'];
             $hpmax = $hp;
@@ -155,8 +171,11 @@ function addCharacterController()
                 "images/paladin.jpg",
                 "images/bard.jpg",
                 "images/priest.jpg",
-                "images/ranger.jpg"
-
+                "images/ranger.jpg",
+                "images/orc.jpg",
+                "images/dwarf.jpg",
+                "images/gnome.jpg"
+            
             ];
 
 
@@ -165,13 +184,7 @@ function addCharacterController()
              * PORTRAIT LIBRARY
              * =========================================
              */
-
-            /*
- * =========================================
- * PORTRAIT LIBRARY
- * =========================================
- */
-
+            
             if (
                 isset($_POST['avatar_type']) &&
                 $_POST['avatar_type'] === 'library' &&

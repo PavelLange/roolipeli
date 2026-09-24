@@ -4218,3 +4218,517 @@ a {
     }
 
 }
+
+/* =========================================
+   ABILITY POINTS
+   ========================================= */
+
+   .ability-points-section {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(35, 38, 55, 0.96),
+            rgba(20, 22, 34, 0.98)
+        );
+
+    box-shadow:
+        0 15px 40px rgba(0, 0, 0, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.ability-points-section h2 {
+    margin: 0 0 0.35rem;
+    color: #f5f3ff;
+
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.ability-points-section > p {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin: 0 0 1.25rem;
+    padding: 0.75rem 1rem;
+
+    border-radius: 12px;
+
+    color: #aaaec0;
+    background: rgba(255, 255, 255, 0.04);
+
+    font-size: 0.9rem;
+}
+
+.ability-points-section > p strong {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 42px;
+    height: 30px;
+    padding: 0 0.6rem;
+
+    border-radius: 8px;
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #7c5cff,
+            #9d7cff
+        );
+
+    box-shadow:
+        0 4px 15px rgba(124, 92, 255, 0.35);
+
+    font-size: 0.95rem;
+}
+
+
+/* =========================================
+   ABILITY LIST
+   ========================================= */
+
+.ability-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+}
+
+
+/* =========================================
+   ABILITY ROW
+   ========================================= */
+
+.ability-row {
+    display: grid;
+    grid-template-columns: 1fr 70px 42px 42px;
+    align-items: center;
+    gap: 0.55rem;
+
+    padding: 0.7rem;
+
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 13px;
+
+    background: rgba(255, 255, 255, 0.025);
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.ability-row:hover {
+    background: rgba(124, 92, 255, 0.07);
+    border-color: rgba(124, 92, 255, 0.25);
+
+    transform: translateX(2px);
+}
+
+
+/* =========================================
+   ABILITY NAME
+   ========================================= */
+
+.ability-row label {
+    color: #e8e7ef;
+
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+
+/* =========================================
+   STAT VALUE
+   ========================================= */
+
+.ability-row input[type="number"] {
+    width: 100%;
+    height: 40px;
+
+    box-sizing: border-box;
+
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 9px;
+
+    outline: none;
+
+    color: #ffffff;
+    background: rgba(0, 0, 0, 0.25);
+
+    text-align: center;
+
+    font-size: 0.95rem;
+    font-weight: 700;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.ability-row input[type="number"]:focus {
+    border-color: #7c5cff;
+
+    box-shadow:
+        0 0 0 3px rgba(124, 92, 255, 0.15);
+}
+
+
+/* =========================================
+   PLUS / MINUS BUTTONS
+   ========================================= */
+
+.ability-row button {
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 9px;
+
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.06);
+
+    cursor: pointer;
+
+    font-size: 1.25rem;
+    font-weight: 700;
+
+    transition:
+        background 0.15s ease,
+        border-color 0.15s ease,
+        transform 0.1s ease,
+        box-shadow 0.15s ease;
+}
+
+
+/* Minus */
+
+.ability-minus {
+    color: #ff8585 !important;
+}
+
+.ability-minus:hover {
+    background: rgba(255, 85, 85, 0.14) !important;
+    border-color: rgba(255, 85, 85, 0.4) !important;
+
+    box-shadow:
+        0 0 12px rgba(255, 85, 85, 0.12);
+}
+
+
+/* Plus */
+
+.ability-plus {
+    color: #8dffbd !important;
+}
+
+.ability-plus:hover {
+    background: rgba(70, 220, 130, 0.14) !important;
+    border-color: rgba(70, 220, 130, 0.4) !important;
+
+    box-shadow:
+        0 0 12px rgba(70, 220, 130, 0.12);
+}
+
+
+/* Click animation */
+
+.ability-row button:active {
+    transform: scale(0.9);
+}
+
+
+/* Disabled */
+
+.ability-row button:disabled {
+    opacity: 0.25;
+    cursor: not-allowed;
+
+    transform: none;
+    box-shadow: none;
+}
+
+
+/* =========================================
+   POINT GLOW
+   ========================================= */
+
+.ability-points-section > p strong {
+    animation: pointsGlow 2s ease-in-out infinite;
+}
+
+@keyframes pointsGlow {
+    0%, 100% {
+        box-shadow:
+            0 4px 15px rgba(124, 92, 255, 0.25);
+    }
+
+    50% {
+        box-shadow:
+            0 4px 22px rgba(124, 92, 255, 0.55);
+    }
+}
+
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 600px) {
+
+    .ability-points-section {
+        padding: 1rem;
+        border-radius: 15px;
+    }
+
+    .ability-row {
+        grid-template-columns: 1fr 60px 38px 38px;
+        gap: 0.4rem;
+        padding: 0.55rem;
+    }
+
+    .ability-row button {
+        width: 36px;
+        height: 36px;
+    }
+
+    .ability-row input[type="number"] {
+        height: 36px;
+    }
+
+    .ability-row label {
+        font-size: 0.85rem;
+    }
+}
+
+/* =========================================
+   CHARACTER FORM FIELDS
+   ========================================= */
+
+   .character-form > .form-group {
+    margin-bottom: 1.2rem;
+}
+
+
+/* =========================================
+   LABELS
+   ========================================= */
+
+.character-form > .form-group > label {
+    display: block;
+
+    margin-bottom: 0.55rem;
+
+    color: #e8e7ef;
+
+    font-size: 0.92rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+}
+
+
+/* =========================================
+   TEXT INPUT
+   ========================================= */
+
+#character-name {
+    width: 100%;
+    height: 48px;
+
+    box-sizing: border-box;
+
+    padding: 0 1rem;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+
+    outline: none;
+
+    color: #ffffff;
+    background:
+        linear-gradient(
+            145deg,
+            rgba(35, 38, 55, 0.96),
+            rgba(20, 22, 34, 0.98)
+        );
+
+    font-size: 0.95rem;
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.03),
+        0 8px 20px rgba(0, 0, 0, 0.12);
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+
+/* Placeholder */
+
+#character-name::placeholder {
+    color: #707386;
+}
+
+
+/* Focus */
+
+#character-name:focus {
+    border-color: rgba(124, 92, 255, 0.75);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(39, 41, 62, 1),
+            rgba(22, 24, 38, 1)
+        );
+
+    box-shadow:
+        0 0 0 3px rgba(124, 92, 255, 0.12),
+        0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+
+/* =========================================
+   SELECT FIELDS
+   ========================================= */
+
+#race-select,
+#class-select {
+    width: 100%;
+    height: 48px;
+
+    box-sizing: border-box;
+
+    padding: 0 2.8rem 0 1rem;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+
+    outline: none;
+
+    color: #ffffff;
+
+    background-color: #202232;
+
+    font-size: 0.95rem;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    appearance: none;
+    -webkit-appearance: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background-color 0.2s ease;
+}
+
+
+/* Custom arrow */
+
+#race-select,
+#class-select {
+    background-image:
+        linear-gradient(
+            45deg,
+            transparent 50%,
+            #8e91a5 50%
+        ),
+        linear-gradient(
+            135deg,
+            #8e91a5 50%,
+            transparent 50%
+        );
+
+    background-position:
+        calc(100% - 18px) 20px,
+        calc(100% - 13px) 20px;
+
+    background-size:
+        5px 5px,
+        5px 5px;
+
+    background-repeat: no-repeat;
+}
+
+
+/* Select focus */
+
+#race-select:focus,
+#class-select:focus {
+    border-color: rgba(124, 92, 255, 0.75);
+
+    box-shadow:
+        0 0 0 3px rgba(124, 92, 255, 0.12),
+        0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+
+/* Hover */
+
+#race-select:hover,
+#class-select:hover {
+    border-color: rgba(124, 92, 255, 0.35);
+
+    background-color: #25283a;
+}
+
+
+/* Select options */
+
+#race-select option,
+#class-select option {
+    color: #ffffff;
+    background: #202232;
+}
+
+
+/* Placeholder option */
+
+#race-select option[value=""],
+#class-select option[value=""] {
+    color: #707386;
+}
+
+
+/* =========================================
+   FORM FIELD HOVER
+   ========================================= */
+
+.character-form > .form-group:hover > label {
+    color: #f1efff;
+}
+
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 600px) {
+
+    #character-name,
+    #race-select,
+    #class-select {
+        height: 46px;
+    }
+
+    .character-form > .form-group > label {
+        font-size: 0.88rem;
+    }
+}
