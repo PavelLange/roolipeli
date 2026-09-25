@@ -14,6 +14,9 @@
 
         <form class="character-form" action="/new-character" method="post" enctype="multipart/form-data">
 
+            <div id="character-form-errors" class="character-form-errors" role="alert" aria-live="polite" style="display:none;">
+            </div>
+
             <!-- Character name -->
             <div class="form-group">
                 <label for="character-name">Character name</label>
@@ -344,7 +347,7 @@
                     Cancel
                 </a>
 
-                <button type="submit" class="button button-primary" id="create-character-button" disabled>
+                <button type="submit" class="button button-primary" id="create-character-button">
                     Create Character
                 </button>
 
@@ -358,296 +361,365 @@
 
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
+
+    /*
+     * =========================================
+     * ELEMENTS
+     * =========================================
+     */
+
+    const form =
+        document.querySelector(".character-form");
+
+    const nameInput =
+        document.getElementById("character-name");
+
+    const raceSelect =
+        document.getElementById("race-select");
+
+    const classSelect =
+        document.getElementById("class-select");
+
+    const createButton =
+        document.getElementById("create-character-button");
+
+    const remainingPointsElement =
+        document.getElementById("remaining-points");
+
+    const errorBox =
+        document.getElementById("character-form-errors");
+
+    const abilityPlusButtons =
+        document.querySelectorAll(".ability-plus");
+
+    const abilityMinusButtons =
+        document.querySelectorAll(".ability-minus");
+
+    const portraitModal =
+        document.getElementById("portrait-modal");
+
+    const openPortraitLibrary =
+        document.getElementById("open-portrait-library");
+
+    const closePortraitLibrary =
+        document.getElementById("close-portrait-library");
+
+    const portraitCards =
+        document.querySelectorAll(".portrait-card");
+
+    const selectedAvatar =
+        document.getElementById("selected-avatar");
+
+    const selectedPreview =
+        document.getElementById("selected-avatar-preview");
+
+    const avatarType =
+        document.getElementById("avatar-type");
+
+    const customAvatar =
+        document.getElementById("custom-avatar");
+
+    const customPreview =
+        document.getElementById("custom-avatar-preview");
+
+    const libraryPanel =
+        document.getElementById("avatar-library-panel");
+
+    const uploadPanel =
+        document.getElementById("avatar-upload-panel");
+
+    const avatarTabs =
+        document.querySelectorAll(".avatar-tab");
+
+
+    /*
+     * =========================================
+     * ABILITY POINTS
+     * =========================================
+     */
+
+    const MAX_ABILITY_POINTS = 30;
+    const MIN_STAT_VALUE = 10;
+    const MAX_STAT_VALUE = 40;
+
+    let remainingPoints =
+        MAX_ABILITY_POINTS;
+
+
+    function updateRemainingPoints() {
+
+        remainingPointsElement.textContent =
+            remainingPoints;
+
+
+        abilityPlusButtons.forEach(function (button) {
+
+            button.disabled =
+                remainingPoints <= 0;
+
+        });
+
+
+        abilityMinusButtons.forEach(function (button) {
+
+            const statName =
+                button.dataset.stat;
+
+            const input =
+                document.getElementById(statName);
+
+            button.disabled =
+                parseInt(input.value, 10) <= MIN_STAT_VALUE;
+
+        });
+
+    }
+
+
+    function changeAbility(button, amount) {
+
+        const statName =
+            button.dataset.stat;
+
+        const input =
+            document.getElementById(statName);
+
+        const currentValue =
+            parseInt(input.value, 10);
+
 
         /*
-         * =========================================
-         * CHARACTER DATA
-         * =========================================
+         * Increase
          */
 
-        const raceSelect =
-            document.getElementById("race-select");
+        if (amount > 0) {
 
-        const classSelect =
-            document.getElementById("class-select");
+            if (remainingPoints <= 0) {
+                return;
+            }
 
-        const abilityPoints = 30;
+            if (currentValue >= MAX_STAT_VALUE) {
+                return;
+            }
 
-        let remainingPoints = abilityPoints;
+            input.value =
+                currentValue + 1;
 
-        const remainingPointsElement =
-            document.getElementById("remaining-points");
-
-        const abilityPlusButtons =
-            document.querySelectorAll(".ability-plus");
-
-        const abilityMinusButtons =
-            document.querySelectorAll(".ability-minus");
-
-        const createButton =
-            document.getElementById("create-character-button");
-
-        /*
-         * =========================================
-         * ABILITY
-         * =========================================
-         */
-
-        function updateRemainingPoints() {
-
-            remainingPointsElement.textContent =
-                remainingPoints;
-
-            abilityPlusButtons.forEach(function(button) {
-
-                button.disabled =
-                    remainingPoints <= 0;
-
-            });
+            remainingPoints--;
 
         }
 
-        /* =========================
-   ABILITY MINUS
-   ========================= */
 
-        abilityMinusButtons.forEach(function(button) {
+        /*
+         * Decrease
+         */
 
-            let interval;
-            let timeout;
+        else {
 
-            function decreaseAbility() {
-
-                const statName =
-                    button.dataset.stat;
-
-                const input =
-                    document.getElementById(statName);
-
-                const currentValue =
-                    parseInt(input.value);
-
-                if (currentValue <= 10) {
-                    return;
-                }
-
-                input.value =
-                    currentValue - 1;
-
-                remainingPoints++;
-
-                updateRemainingPoints();
-                updateCreateButton();
+            if (currentValue <= MIN_STAT_VALUE) {
+                return;
             }
 
+            input.value =
+                currentValue - 1;
 
-            // Single click
-            button.addEventListener("click", function() {
+            remainingPoints++;
 
-                decreaseAbility();
+        }
 
-            });
-
-
-            // Start holding
-            button.addEventListener("mousedown", function(event) {
-
-                if (event.button !== 0) {
-                    return;
-                }
-
-                timeout = setTimeout(function() {
-
-                    interval = setInterval(function() {
-
-                        decreaseAbility();
-
-                    }, 100);
-
-                }, 300);
-
-            });
-
-
-            // Stop holding
-            button.addEventListener("mouseup", function() {
-
-                clearTimeout(timeout);
-                clearInterval(interval);
-
-            });
-
-
-            // Stop when mouse leaves
-            button.addEventListener("mouseleave", function() {
-
-                clearTimeout(timeout);
-                clearInterval(interval);
-
-            });
-
-        });
-
-
-        /* =========================
-        ABILITY PLUS
-        ========================= */
-
-        abilityPlusButtons.forEach(function(button) {
-
-            let interval;
-            let timeout;
-
-            function increaseAbility() {
-
-                if (remainingPoints <= 0) {
-                    return;
-                }
-
-                const statName =
-                    button.dataset.stat;
-
-                const input =
-                    document.getElementById(statName);
-
-                const currentValue =
-                    parseInt(input.value);
-
-                if (currentValue >= 40) {
-                    return;
-                }
-
-                input.value =
-                    currentValue + 1;
-
-                remainingPoints--;
-
-                updateRemainingPoints();
-                updateCreateButton();
-            }
-
-
-            // Single click
-            button.addEventListener("click", function() {
-
-                increaseAbility();
-
-            });
-
-
-            // Start holding
-            button.addEventListener("mousedown", function(event) {
-
-                if (event.button !== 0) {
-                    return;
-                }
-
-                timeout = setTimeout(function() {
-
-                    interval = setInterval(function() {
-
-                        increaseAbility();
-
-                    }, 100);
-
-                }, 300);
-
-            });
-
-
-            // Stop holding
-            button.addEventListener("mouseup", function() {
-
-                clearTimeout(timeout);
-                clearInterval(interval);
-
-            });
-
-
-            // Stop when mouse leaves
-            button.addEventListener("mouseleave", function() {
-
-                clearTimeout(timeout);
-                clearInterval(interval);
-
-            });
-
-        });
 
         updateRemainingPoints();
 
+    }
+
+
+    /*
+     * =========================================
+     * PLUS BUTTONS
+     * =========================================
+     */
+
+    abilityPlusButtons.forEach(function (button) {
+
+        let interval = null;
+        let timeout = null;
+
 
         /*
-         * =========================================
-         * AVATAR ELEMENTS
-         * =========================================
+         * Normal click
          */
 
-        const portraitGrid =
-            document.getElementById("portrait-grid");
+        button.addEventListener("click", function () {
 
-        const selectedAvatar =
-            document.getElementById("selected-avatar");
+            changeAbility(button, 1);
 
-        const selectedPreview =
-            document.getElementById("selected-avatar-preview");
+        });
 
-        const avatarType =
-            document.getElementById("avatar-type");
-
-        const customAvatar =
-            document.getElementById("custom-avatar");
-
-        const customPreview =
-            document.getElementById("custom-avatar-preview");
-
-        const libraryPanel =
-            document.getElementById("avatar-library-panel");
-
-        const uploadPanel =
-            document.getElementById("avatar-upload-panel");
-
-        const avatarTabs =
-            document.querySelectorAll(".avatar-tab");
-
-        const portraitModal =
-            document.getElementById("portrait-modal");
-
-        const openPortraitLibrary =
-            document.getElementById("open-portrait-library");
-
-        const closePortraitLibrary =
-            document.getElementById("close-portrait-library");
-
-        const portraitCards =
-            document.querySelectorAll(".portrait-card");
 
         /*
-         * =========================================
-         * PORTRAIT LIBRARY MODAL
-         * =========================================
+         * Hold button
          */
 
-        openPortraitLibrary.addEventListener("click", function() {
+        button.addEventListener("mousedown", function (event) {
+
+            if (event.button !== 0) {
+                return;
+            }
+
+
+            timeout = setTimeout(function () {
+
+                interval = setInterval(function () {
+
+                    changeAbility(button, 1);
+
+                }, 100);
+
+            }, 300);
+
+        });
+
+
+        /*
+         * Stop holding
+         */
+
+        function stopIncreasing() {
+
+            clearTimeout(timeout);
+            clearInterval(interval);
+
+            timeout = null;
+            interval = null;
+
+        }
+
+
+        button.addEventListener(
+            "mouseup",
+            stopIncreasing
+        );
+
+        button.addEventListener(
+            "mouseleave",
+            stopIncreasing
+        );
+
+    });
+
+
+    /*
+     * =========================================
+     * MINUS BUTTONS
+     * =========================================
+     */
+
+    abilityMinusButtons.forEach(function (button) {
+
+        let interval = null;
+        let timeout = null;
+
+
+        /*
+         * Normal click
+         */
+
+        button.addEventListener("click", function () {
+
+            changeAbility(button, -1);
+
+        });
+
+
+        /*
+         * Hold button
+         */
+
+        button.addEventListener("mousedown", function (event) {
+
+            if (event.button !== 0) {
+                return;
+            }
+
+
+            timeout = setTimeout(function () {
+
+                interval = setInterval(function () {
+
+                    changeAbility(button, -1);
+
+                }, 100);
+
+            }, 300);
+
+        });
+
+
+        /*
+         * Stop holding
+         */
+
+        function stopDecreasing() {
+
+            clearTimeout(timeout);
+            clearInterval(interval);
+
+            timeout = null;
+            interval = null;
+
+        }
+
+
+        button.addEventListener(
+            "mouseup",
+            stopDecreasing
+        );
+
+        button.addEventListener(
+            "mouseleave",
+            stopDecreasing
+        );
+
+    });
+
+
+    updateRemainingPoints();
+
+
+    /*
+     * =========================================
+     * PORTRAIT MODAL
+     * =========================================
+     */
+
+    openPortraitLibrary.addEventListener(
+        "click",
+        function () {
 
             portraitModal.classList.add("active");
 
-        });
+        }
+    );
 
 
-        closePortraitLibrary.addEventListener("click", function() {
+    closePortraitLibrary.addEventListener(
+        "click",
+        function () {
 
             portraitModal.classList.remove("active");
 
-        });
+        }
+    );
 
 
-        /*
-         * Close modal when clicking outside
-         */
+    /*
+     * Close modal when clicking outside
+     */
 
-        portraitModal.addEventListener("click", function(event) {
+    portraitModal.addEventListener(
+        "click",
+        function (event) {
 
             if (event.target === portraitModal) {
 
@@ -655,23 +727,28 @@
 
             }
 
-        });
+        }
+    );
 
-        /*
-         * =========================================
-         * PORTRAIT SELECTION
-         * =========================================
-         */
 
-        portraitCards.forEach(function(card) {
+    /*
+     * =========================================
+     * PORTRAIT SELECTION
+     * =========================================
+     */
 
-            card.addEventListener("click", function() {
+    portraitCards.forEach(function (card) {
+
+        card.addEventListener(
+            "click",
+            function () {
+
 
                 /*
-                 * Remove old selection
+                 * Remove previous selection
                  */
 
-                portraitCards.forEach(function(item) {
+                portraitCards.forEach(function (item) {
 
                     item.classList.remove("selected");
 
@@ -682,29 +759,30 @@
                  * Select current portrait
                  */
 
-                this.classList.add("selected");
+                card.classList.add("selected");
 
 
                 /*
-                 * Get selected avatar
+                 * Get avatar
                  */
 
                 const avatar =
-                    this.dataset.avatar;
+                    card.dataset.avatar;
 
 
                 /*
-                 * Save avatar to hidden input
+                 * Save avatar
                  */
 
-                selectedAvatar.value = avatar;
+                selectedAvatar.value =
+                    avatar;
 
-                avatarType.value = "library";
+                avatarType.value =
+                    "library";
 
 
                 /*
-                 * Show selected avatar
-                 * in preview
+                 * Show preview
                  */
 
                 selectedPreview.innerHTML =
@@ -719,34 +797,30 @@
 
                 portraitModal.classList.remove("active");
 
+            }
+        );
+
+    });
+
+
+    /*
+     * =========================================
+     * AVATAR TABS
+     * =========================================
+     */
+
+    avatarTabs.forEach(function (tab) {
+
+        tab.addEventListener(
+            "click",
+            function () {
+
 
                 /*
-                 * Update create button
+                 * Remove active tab
                  */
 
-                updateCreateButton();
-
-            });
-
-        });
-
-
-
-        /*
-         * =========================================
-         * AVATAR TABS
-         * =========================================
-         */
-
-        avatarTabs.forEach(function(tab) {
-
-            tab.addEventListener("click", function() {
-
-                /*
-                 * Remove active from all tabs
-                 */
-
-                avatarTabs.forEach(function(item) {
+                avatarTabs.forEach(function (item) {
 
                     item.classList.remove("active");
 
@@ -757,11 +831,11 @@
                  * Activate current tab
                  */
 
-                this.classList.add("active");
+                tab.classList.add("active");
 
 
                 const type =
-                    this.dataset.avatarTab;
+                    tab.dataset.avatarTab;
 
 
                 /*
@@ -772,92 +846,94 @@
 
                 if (type === "library") {
 
-                    libraryPanel.style.display = "block";
+                    libraryPanel.style.display =
+                        "block";
 
-                    uploadPanel.style.display = "none";
+                    uploadPanel.style.display =
+                        "none";
 
-                    avatarType.value = "library";
 
-
-                    /*
-                     * Clear custom upload
-                     */
-
-                    customAvatar.value = "";
-
-                    customPreview.innerHTML = "";
+                    avatarType.value =
+                        "library";
 
 
                     /*
-                     * Do NOT automatically select
-                     * an avatar.
-                     *
-                     * User must click one.
+                     * Clear upload
                      */
 
-                    selectedAvatar.value = "";
+                    customAvatar.value =
+                        "";
 
+                    customPreview.innerHTML =
+                        "";
+
+
+                    /*
+                     * Clear selected avatar
+                     */
+
+                    selectedAvatar.value =
+                        "";
 
                     selectedPreview.innerHTML =
                         "<span>No avatar selected</span>";
-
-
-                    updateCreateButton();
 
                 }
 
 
                 /*
                  * =================================
-                 * CUSTOM UPLOAD
+                 * UPLOAD
                  * =================================
                  */
 
                 if (type === "upload") {
 
-                    libraryPanel.style.display = "none";
+                    libraryPanel.style.display =
+                        "none";
 
-                    uploadPanel.style.display = "block";
+                    uploadPanel.style.display =
+                        "block";
 
-                    avatarType.value = "upload";
+
+                    avatarType.value =
+                        "upload";
 
 
                     /*
                      * Clear library selection
                      */
 
-                    selectedAvatar.value = "";
+                    selectedAvatar.value =
+                        "";
 
+                    portraitCards.forEach(function (card) {
 
-                    document
-                        .querySelectorAll(".portrait-card")
-                        .forEach(function(card) {
+                        card.classList.remove("selected");
 
-                            card.classList.remove("selected");
-
-                        });
+                    });
 
 
                     selectedPreview.innerHTML =
                         "<span>No avatar selected</span>";
 
-
-                    updateCreateButton();
-
                 }
 
-            });
+            }
+        );
 
-        });
+    });
 
 
-        /*
-         * =========================================
-         * CUSTOM AVATAR UPLOAD
-         * =========================================
-         */
+    /*
+     * =========================================
+     * CUSTOM AVATAR
+     * =========================================
+     */
 
-        customAvatar.addEventListener("change", function() {
+    customAvatar.addEventListener(
+        "change",
+        function () {
 
             const file =
                 this.files[0];
@@ -869,43 +945,20 @@
 
             if (!file) {
 
-                customPreview.innerHTML = "";
+                customPreview.innerHTML =
+                    "";
 
                 selectedPreview.innerHTML =
                     "<span>No avatar selected</span>";
-
-                updateCreateButton();
 
                 return;
 
             }
 
 
-            /*
-             * Maximum 5 MB
-             */
+            const MAX_FILE_SIZE =
+                5 * 1024 * 1024;
 
-            if (file.size > 5 * 1024 * 1024) {
-
-                alert("Image must be smaller than 5 MB.");
-
-                this.value = "";
-
-                customPreview.innerHTML = "";
-
-                selectedPreview.innerHTML =
-                    "<span>No avatar selected</span>";
-
-                updateCreateButton();
-
-                return;
-
-            }
-
-
-            /*
-             * Check image type
-             */
 
             const allowedTypes = [
                 "image/jpeg",
@@ -914,18 +967,48 @@
             ];
 
 
-            if (!allowedTypes.includes(file.type)) {
+            /*
+             * Check file size
+             */
 
-                alert("Please upload a JPG, PNG or WEBP image.");
+            if (file.size > MAX_FILE_SIZE) {
 
-                this.value = "";
+                alert(
+                    "Image must be smaller than 5 MB."
+                );
 
-                customPreview.innerHTML = "";
+                this.value =
+                    "";
+
+                customPreview.innerHTML =
+                    "";
 
                 selectedPreview.innerHTML =
                     "<span>No avatar selected</span>";
 
-                updateCreateButton();
+                return;
+
+            }
+
+
+            /*
+             * Check file type
+             */
+
+            if (!allowedTypes.includes(file.type)) {
+
+                alert(
+                    "Please upload a JPG, PNG or WEBP image."
+                );
+
+                this.value =
+                    "";
+
+                customPreview.innerHTML =
+                    "";
+
+                selectedPreview.innerHTML =
+                    "<span>No avatar selected</span>";
 
                 return;
 
@@ -936,15 +1019,14 @@
              * Clear library selection
              */
 
-            selectedAvatar.value = "";
+            selectedAvatar.value =
+                "";
 
-            document
-                .querySelectorAll(".portrait-card")
-                .forEach(function(card) {
+            portraitCards.forEach(function (card) {
 
-                    card.classList.remove("selected");
+                card.classList.remove("selected");
 
-                });
+            });
 
 
             /*
@@ -955,128 +1037,298 @@
                 new FileReader();
 
 
-            reader.onload = function(event) {
+            reader.onload =
+                function (event) {
 
-                const imageURL =
-                    event.target.result;
-
-
-                /*
-                 * Upload preview
-                 */
-
-                customPreview.innerHTML =
-                    '<img src="' +
-                    imageURL +
-                    '" alt="Custom avatar preview">';
+                    const imageURL =
+                        event.target.result;
 
 
-                /*
-                 * Selected avatar preview
-                 */
+                    /*
+                     * Upload preview
+                     */
 
-                selectedPreview.innerHTML =
-                    '<img src="' +
-                    imageURL +
-                    '" alt="Selected avatar">';
-
-
-                /*
-                 * Mark avatar as selected
-                 */
-
-                avatarType.value = "upload";
+                    customPreview.innerHTML =
+                        '<img src="' +
+                        imageURL +
+                        '" alt="Custom avatar preview">';
 
 
-                updateCreateButton();
+                    /*
+                     * Selected avatar preview
+                     */
 
-            };
+                    selectedPreview.innerHTML =
+                        '<img src="' +
+                        imageURL +
+                        '" alt="Selected avatar">';
+
+
+                    avatarType.value =
+                        "upload";
+
+                };
 
 
             reader.readAsDataURL(file);
 
-        });
+        }
+    );
+
+
+    /*
+     * =========================================
+     * FORM VALIDATION
+     * =========================================
+     */
+
+    function validateForm() {
+
+        const errors = [];
 
 
         /*
-         * =========================================
-         * CREATE BUTTON
-         * =========================================
-         *
-         * Character + avatar are both required.
+         * Name
          */
 
-        function updateCreateButton() {
-
-            const raceSelected =
-                raceSelect.value !== "";
-
-            const classSelected =
-                classSelect.value !== "";
-
-            let avatarSelected = false;
+        const name =
+            nameInput.value.trim();
 
 
-            if (
-                avatarType.value === "library" &&
-                selectedAvatar.value !== ""
-            ) {
+        if (name.length === 0) {
 
-                avatarSelected = true;
+            errors.push(
+                "Character name is required."
+            );
 
-            }
+        }
 
+        else if (name.length < 2) {
 
-            if (
-                avatarType.value === "upload" &&
-                customAvatar.files.length > 0
-            ) {
-
-                avatarSelected = true;
-
-            }
-
-
-            createButton.disabled = !raceSelected ||
-                !classSelected ||
-                !avatarSelected ||
-                remainingPoints !== 0;
+            errors.push(
+                "Character name must be at least 2 characters."
+            );
 
         }
 
 
-
         /*
-         * =========================================
-         * INITIAL STATE
-         * =========================================
+         * Race
          */
 
-        createButton.disabled = true;
+        if (raceSelect.value === "") {
 
-        selectedAvatar.value = "";
+            errors.push(
+                "Please choose a race."
+            );
 
-        avatarType.value = "library";
+        }
+
 
         /*
-         * =========================================
-         * RACE AND CLASS BUTTON
-         * =========================================
+         * Class
          */
 
-        raceSelect.addEventListener("change", function() {
+        if (classSelect.value === "") {
 
-            updateCreateButton();
+            errors.push(
+                "Please choose a class."
+            );
 
+        }
+
+
+        /*
+         * Ability points
+         */
+
+        if (remainingPoints !== 0) {
+
+            errors.push(
+                "You must spend exactly 30 ability points. " +
+                "Remaining points: " +
+                remainingPoints +
+                "."
+            );
+
+        }
+
+
+        /*
+         * Avatar
+         */
+
+        let avatarSelected =
+            false;
+
+
+        if (
+            avatarType.value === "library" &&
+            selectedAvatar.value !== ""
+        ) {
+
+            avatarSelected =
+                true;
+
+        }
+
+
+        if (
+            avatarType.value === "upload" &&
+            customAvatar.files.length > 0
+        ) {
+
+            avatarSelected =
+                true;
+
+        }
+
+
+        if (!avatarSelected) {
+
+            errors.push(
+                "Please select an avatar."
+            );
+
+        }
+
+
+        return errors;
+
+    }
+
+
+    /*
+     * =========================================
+     * SHOW ERRORS
+     * =========================================
+     */
+
+    function showErrors(errors) {
+
+        if (errors.length === 0) {
+
+            errorBox.style.display =
+                "none";
+
+            errorBox.innerHTML =
+                "";
+
+            return;
+
+        }
+
+
+        errorBox.innerHTML =
+            "<strong>Please complete the following:</strong>" +
+            "<ul>" +
+            errors
+                .map(function (error) {
+
+                    return "<li>" +
+                        error +
+                        "</li>";
+
+                })
+                .join("") +
+            "</ul>";
+
+
+        errorBox.style.display =
+            "block";
+
+
+        errorBox.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
         });
 
+    }
 
-        classSelect.addEventListener("change", function() {
 
-            updateCreateButton();
+    /*
+     * =========================================
+     * FORM SUBMIT
+     * =========================================
+     */
 
-        });
+    form.addEventListener(
+        "submit",
+        function (event) {
 
+            const errors =
+                validateForm();
+
+
+            if (errors.length > 0) {
+
+                event.preventDefault();
+
+                showErrors(errors);
+
+                return;
+
+            }
+
+
+            errorBox.style.display =
+                "none";
+
+        }
+    );
+
+
+    /*
+     * =========================================
+     * UPDATE ERRORS WHEN FORM CHANGES
+     * =========================================
+     */
+
+    [
+        nameInput,
+        raceSelect,
+        classSelect
+    ].forEach(function (element) {
+
+
+        element.addEventListener(
+            "input",
+            function () {
+
+                if (
+                    errorBox.style.display !==
+                    "none"
+                ) {
+
+                    showErrors(
+                        validateForm()
+                    );
+
+                }
+
+            }
+        );
+
+
+        element.addEventListener(
+            "change",
+            function () {
+
+                if (
+                    errorBox.style.display !==
+                    "none"
+                ) {
+
+                    showErrors(
+                        validateForm()
+                    );
+
+                }
+
+            }
+        );
 
     });
+
+});
 </script>

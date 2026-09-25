@@ -44,351 +44,737 @@ $characterTypes = [
 
 ];
 
-
 function addCharacterController()
 {
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    /*
+     * =========================================
+     * ONLY POST REQUESTS
+     * =========================================
+     */
 
-        if (isset($_POST['name'], $_POST['class'], $_POST['race'], $_POST['notes'])) {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
-            $name = cleanUpInput($_POST['name']);
-            $race = cleanUpInput($_POST['race']);
-            $class = cleanUpInput($_POST['class']);
-            $notes = cleanUpInput($_POST['notes']);
+        require "../views/new_character.php";
+        return;
+    }
 
-            $allowedRaces = [
-                'Human',
-                'Orc',
-                'Elf',
-                'Dwarf',
-                'Gnome'
-            ];
 
-            $allowedClasses = [
-                'fighter',
-                'villain',
-                'mage',
-                'paladin',
-                'bard',
-                'priest',
-                'ranger'
-            ];
+    /*
+     * =========================================
+     * LOGIN CHECK
+     * =========================================
+     */
 
-            if (!in_array($race, $allowedRaces, true)) {
-                echo '<h1 class="centered">Invalid race.</h1>';
-                return;
-            }
+    if (!isLoggedIn()) {
 
-            if (!in_array($class, $allowedClasses, true)) {
-                echo '<h1 class="centered">Invalid class.</h1>';
-                return;
-            }
+        header("Location: /login");
+        exit;
+    }
 
-            $level = 1;
 
-            $requiredStats = [
-                'health',
-                'mana',
-                'strength',
-                'constitution',
-                'agility',
-                'intelligence',
-                'charisma'
-            ];
-            
-            foreach ($requiredStats as $stat) {
-            
-                if (!isset($_POST[$stat])) {
-                    echo '<h1 class="centered">Missing ability value.</h1>';
-                    return;
-                }
-            }            
+    /*
+     * =========================================
+     * REQUIRED FIELDS
+     * =========================================
+     */
 
-            $hp = (int)$_POST['health'];
-            $hpmax = $hp;
+    $requiredFields = [
+        'name',
+        'race',
+        'class',
+        'notes',
+        'health',
+        'mana',
+        'strength',
+        'constitution',
+        'agility',
+        'intelligence',
+        'charisma',
+        'avatar_type'
+    ];
 
-            $mp = (int)$_POST['mana'];
-            $mpmax = $mp;
 
-            $str = (int)$_POST['strength'];
-            $con = (int)$_POST['constitution'];
-            $dex = (int)$_POST['agility'];
-            $int = (int)$_POST['intelligence'];
-            $chr = (int)$_POST['charisma'];
+    foreach ($requiredFields as $field) {
 
-            $creator = $_SESSION["username"];
+        if (!isset($_POST[$field])) {
 
-            $stats = [
-                $hp,
-                $mp,
-                $str,
-                $con,
-                $dex,
-                $int,
-                $chr
-            ];
-            
-            foreach ($stats as $stat) {
-            
-                if ($stat < 10 || $stat > 40) {
-            
-                    echo '<h1 class="centered">
-                            Invalid ability value.
-                          </h1>';
-            
-                    return;
-                }
-            }
-            
-            
-            $totalAbilityPoints =
-                ($hp - 10) +
-                ($mp - 10) +
-                ($str - 10) +
-                ($con - 10) +
-                ($dex - 10) +
-                ($int - 10) +
-                ($chr - 10);
-            
-            
-            if ($totalAbilityPoints !== 30) {
-            
+            echo '<h1 class="centered">
+                    Missing required character data.
+                  </h1>';
+
+            return;
+        }
+    }
+
+
+    /*
+     * =========================================
+     * CLEAN BASIC INPUT
+     * =========================================
+     */
+
+    $name = cleanUpInput($_POST['name']);
+    $race = cleanUpInput($_POST['race']);
+    $class = cleanUpInput($_POST['class']);
+    $notes = cleanUpInput($_POST['notes']);
+
+
+    /*
+     * =========================================
+     * NAME VALIDATION
+     * =========================================
+     */
+
+    if ($name === '') {
+
+        echo '<h1 class="centered">
+                Please enter a character name.
+              </h1>';
+
+        return;
+    }
+
+
+    if (strlen($name) < 2) {
+
+        echo '<h1 class="centered">
+                Character name must be at least 2 characters.
+              </h1>';
+
+        return;
+    }
+
+
+    if (strlen($name) > 30) {
+
+        echo '<h1 class="centered">
+                Character name cannot be longer than 30 characters.
+              </h1>';
+
+        return;
+    }
+
+
+    /*
+     * =========================================
+     * ALLOWED RACES
+     * =========================================
+     */
+
+    $allowedRaces = [
+        'Human',
+        'Orc',
+        'Elf',
+        'Dwarf',
+        'Gnome'
+    ];
+
+
+    if (!in_array($race, $allowedRaces, true)) {
+
+        echo '<h1 class="centered">
+                Invalid race.
+              </h1>';
+
+        return;
+    }
+
+
+    /*
+     * =========================================
+     * ALLOWED CLASSES
+     * =========================================
+     */
+
+    $allowedClasses = [
+        'fighter',
+        'villain',
+        'mage',
+        'paladin',
+        'bard',
+        'priest',
+        'ranger'
+    ];
+
+
+    if (!in_array($class, $allowedClasses, true)) {
+
+        echo '<h1 class="centered">
+                Invalid class.
+              </h1>';
+
+        return;
+    }
+
+
+    /*
+     * =========================================
+     * ABILITY STATS
+     * =========================================
+     */
+
+    $statFields = [
+        'health',
+        'mana',
+        'strength',
+        'constitution',
+        'agility',
+        'intelligence',
+        'charisma'
+    ];
+
+
+    $stats = [];
+
+
+    foreach ($statFields as $field) {
+
+        /*
+         * Must exist
+         */
+
+        if (!isset($_POST[$field])) {
+
+            echo '<h1 class="centered">
+                    Missing ability value.
+                  </h1>';
+
+            return;
+        }
+
+
+        /*
+         * Must be an integer
+         */
+
+        $value = filter_var(
+            $_POST[$field],
+            FILTER_VALIDATE_INT
+        );
+
+
+        if ($value === false) {
+
+            echo '<h1 class="centered">
+                    Invalid ability value.
+                  </h1>';
+
+            return;
+        }
+
+
+        /*
+         * Allowed range
+         */
+
+        if ($value < 10 || $value > 40) {
+
+            echo '<h1 class="centered">
+                    Ability values must be between 10 and 40.
+                  </h1>';
+
+            return;
+        }
+
+
+        $stats[$field] = $value;
+    }
+
+
+    /*
+     * =========================================
+     * EXACTLY 30 ABILITY POINTS
+     * =========================================
+     */
+
+    $totalAbilityPoints = 0;
+
+
+    foreach ($stats as $value) {
+
+        $totalAbilityPoints +=
+            ($value - 10);
+    }
+
+
+    if ($totalAbilityPoints !== 30) {
+
+        echo '<h1 class="centered">
+                You must spend exactly 30 ability points.
+              </h1>';
+
+        return;
+    }
+
+
+    /*
+     * =========================================
+     * CHARACTER STATS
+     * =========================================
+     */
+
+    $hp = $stats['health'];
+    $hpmax = $hp;
+
+    $mp = $stats['mana'];
+    $mpmax = $mp;
+
+    $str = $stats['strength'];
+    $con = $stats['constitution'];
+    $dex = $stats['agility'];
+    $int = $stats['intelligence'];
+    $chr = $stats['charisma'];
+
+
+    /*
+     * =========================================
+     * CREATOR
+     * =========================================
+     */
+
+    $creator =
+        $_SESSION['username'];
+
+
+    /*
+     * =========================================
+     * AVATAR
+     * =========================================
+     */
+
+    $avatar = "";
+
+
+    $avatarType =
+        cleanUpInput($_POST['avatar_type']);
+
+
+    /*
+     * =========================================
+     * ALLOWED LIBRARY AVATARS
+     * =========================================
+     */
+
+    $allowedLibraryAvatars = [
+
+        "images/fighter.jpg",
+        "images/villain.jpg",
+        "images/mage.jpg",
+        "images/paladin.jpg",
+        "images/bard.jpg",
+        "images/priest.jpg",
+        "images/ranger.jpg",
+        "images/orc.jpg",
+        "images/dwarf.jpg",
+        "images/gnome.jpg"
+
+    ];
+
+
+    /*
+     * =========================================
+     * LIBRARY AVATAR
+     * =========================================
+     */
+
+    if ($avatarType === 'library') {
+
+        if (
+            !isset($_POST['avatar']) ||
+            $_POST['avatar'] === ''
+        ) {
+
+            echo '<h1 class="centered">
+                    Please select an avatar.
+                  </h1>';
+
+            return;
+        }
+
+
+        $selectedAvatar =
+            str_replace(
+                "\\",
+                "/",
+                $_POST['avatar']
+            );
+
+
+        $selectedAvatar =
+            ltrim(
+                $selectedAvatar,
+                "/"
+            );
+
+
+        /*
+         * Only allow avatars from whitelist
+         */
+
+        if (
+            !in_array(
+                $selectedAvatar,
+                $allowedLibraryAvatars,
+                true
+            )
+        ) {
+
+            echo '<h1 class="centered">
+                    Invalid avatar selection.
+                  </h1>';
+
+            return;
+        }
+
+
+        /*
+         * Check that the file really exists
+         */
+
+        $fullPath =
+            realpath(
+                $_SERVER['DOCUMENT_ROOT']
+                    . "/"
+                    . $selectedAvatar
+            );
+
+
+        if (
+            $fullPath === false ||
+            !is_file($fullPath)
+        ) {
+
+            echo '<h1 class="centered">
+                    Selected avatar does not exist.
+                  </h1>';
+
+            return;
+        }
+
+
+        $avatar =
+            $selectedAvatar;
+    }
+
+
+    /*
+     * =========================================
+     * CUSTOM UPLOAD
+     * =========================================
+     */ elseif ($avatarType === 'upload') {
+
+        /*
+         * File must exist
+         */
+
+        if (
+            !isset($_FILES['custom_avatar'])
+        ) {
+
+            echo '<h1 class="centered">
+                    Please upload an avatar.
+                  </h1>';
+
+            return;
+        }
+
+
+        $file =
+            $_FILES['custom_avatar'];
+
+
+        /*
+         * Upload must be successful
+         */
+
+        if (
+            $file['error'] !== UPLOAD_ERR_OK
+        ) {
+
+            echo '<h1 class="centered">
+                    Avatar upload failed.
+                  </h1>';
+
+            return;
+        }
+
+
+        /*
+         * Maximum 5 MB
+         */
+
+        if (
+            $file['size'] <= 0 ||
+            $file['size'] > 5 * 1024 * 1024
+        ) {
+
+            echo '<h1 class="centered">
+                    Avatar must be smaller than 5 MB.
+                  </h1>';
+
+            return;
+        }
+
+
+        /*
+         * Allowed MIME types
+         */
+
+        $allowedTypes = [
+
+            'image/jpeg' => 'jpg',
+            'image/png' => 'png',
+            'image/webp' => 'webp'
+
+        ];
+
+
+        /*
+         * Detect real MIME type
+         */
+
+        $finfo =
+            finfo_open(
+                FILEINFO_MIME_TYPE
+            );
+
+
+        if ($finfo === false) {
+
+            echo '<h1 class="centered">
+                    Could not validate uploaded image.
+                  </h1>';
+
+            return;
+        }
+
+
+        $mimeType =
+            finfo_file(
+                $finfo,
+                $file['tmp_name']
+            );
+
+
+        finfo_close($finfo);
+
+
+        /*
+         * MIME must be allowed
+         */
+
+        if (
+            !isset(
+                $allowedTypes[$mimeType]
+            )
+        ) {
+
+            echo '<h1 class="centered">
+                    Only JPG, PNG or WEBP images are allowed.
+                  </h1>';
+
+            return;
+        }
+
+
+        /*
+         * Make sure it is actually an image
+         */
+
+        if (
+            getimagesize(
+                $file['tmp_name']
+            ) === false
+        ) {
+
+            echo '<h1 class="centered">
+                    Uploaded file is not a valid image.
+                  </h1>';
+
+            return;
+        }
+
+
+        /*
+         * Generate random filename
+         */
+
+        try {
+
+            $filename =
+                bin2hex(
+                    random_bytes(16)
+                )
+                . "."
+                . $allowedTypes[$mimeType];
+        } catch (Exception $e) {
+
+            echo '<h1 class="centered">
+                    Could not generate avatar filename.
+                  </h1>';
+
+            return;
+        }
+
+
+        /*
+         * Upload directory
+         */
+
+        $uploadDirectory =
+            $_SERVER['DOCUMENT_ROOT']
+            . "/uploads/avatars/";
+
+
+        /*
+         * Create directory if needed
+         */
+
+        if (
+            !is_dir(
+                $uploadDirectory
+            )
+        ) {
+
+            if (
+                !mkdir(
+                    $uploadDirectory,
+                    0755,
+                    true
+                )
+            ) {
+
                 echo '<h1 class="centered">
-                        You must spend exactly 30 ability points.
+                        Could not create upload directory.
                       </h1>';
-            
+
                 return;
-            }
-            
-
-            $avatar = "";
-
-            $allowedLibraryAvatars = [
-
-                "images/fighter.jpg",
-                "images/villain.jpg",
-                "images/mage.jpg",
-                "images/paladin.jpg",
-                "images/bard.jpg",
-                "images/priest.jpg",
-                "images/ranger.jpg",
-                "images/orc.jpg",
-                "images/dwarf.jpg",
-                "images/gnome.jpg"
-            
-            ];
-
-
-            /*
-             * =========================================
-             * PORTRAIT LIBRARY
-             * =========================================
-             */
-            
-            if (
-                isset($_POST['avatar_type']) &&
-                $_POST['avatar_type'] === 'library' &&
-                !empty($_POST['avatar'])
-            ) {
-
-                $selectedAvatar =
-                    str_replace(
-                        "\\",
-                        "/",
-                        $_POST['avatar']
-                    );
-
-                $selectedAvatar =
-                    ltrim(
-                        $selectedAvatar,
-                        "/"
-                    );
-
-
-                if (
-                    in_array(
-                        $selectedAvatar,
-                        $allowedLibraryAvatars,
-                        true
-                    )
-                ) {
-
-                    $fullPath =
-                        realpath(
-                            $_SERVER['DOCUMENT_ROOT']
-                                . "/"
-                                . $selectedAvatar
-                        );
-
-
-                    if (
-                        $fullPath !== false &&
-                        is_file($fullPath)
-                    ) {
-
-                        $avatar =
-                            $selectedAvatar;
-                    }
-                }
-            }
-
-
-
-            /*
-             * =========================================
-             * CUSTOM UPLOAD
-             * =========================================
-             */
-
-            if (
-                isset($_POST['avatar_type']) &&
-                $_POST['avatar_type'] === 'upload' &&
-                isset($_FILES['custom_avatar']) &&
-                $_FILES['custom_avatar']['error']
-                === UPLOAD_ERR_OK
-            ) {
-
-                $file =
-                    $_FILES['custom_avatar'];
-
-
-                /*
-                 * Allowed image types
-                 */
-
-                $allowedTypes = [
-
-                    'image/jpeg' => 'jpg',
-
-                    'image/png' => 'png',
-
-                    'image/webp' => 'webp'
-
-                ];
-
-
-                /*
-                 * Detect real MIME type
-                 */
-
-                $finfo =
-                    finfo_open(
-                        FILEINFO_MIME_TYPE
-                    );
-
-                $mimeType =
-                    finfo_file(
-                        $finfo,
-                        $file['tmp_name']
-                    );
-
-                finfo_close($finfo);
-
-
-                if (
-                    isset(
-                        $allowedTypes[$mimeType]
-                    )
-                ) {
-
-
-                    /*
-                     * Maximum 5 MB
-                     */
-
-                    if (
-                        $file['size']
-                        <= 5 * 1024 * 1024
-                    ) {
-
-                        $extension =
-                            $allowedTypes[$mimeType];
-
-
-                        /*
-                         * Random filename
-                         */
-
-                        $filename =
-                            bin2hex(
-                                random_bytes(16)
-                            )
-                            . "."
-                            . $extension;
-
-
-                        $uploadDirectory =
-                            $_SERVER['DOCUMENT_ROOT']
-                            . "/uploads/avatars/";
-
-
-                        if (
-                            !is_dir(
-                                $uploadDirectory
-                            )
-                        ) {
-
-                            mkdir(
-                                $uploadDirectory,
-                                0755,
-                                true
-                            );
-                        }
-
-
-                        $destination =
-                            $uploadDirectory
-                            . $filename;
-
-
-                        if (
-                            move_uploaded_file(
-                                $file['tmp_name'],
-                                $destination
-                            )
-                        ) {
-
-                            $avatar =
-                                "uploads/avatars/"
-                                . $filename;
-                        }
-                    }
-                }
-            }
-
-
-
-            /*
-             * =========================================
-             * OLD AVATAR FALLBACK
-             * =========================================
-             *
-             * If nothing selected:
-             * use the old class image.
-             */
-
-            if (empty($avatar)) {
-
-                $avatar =
-                    "images/"
-                    . $class
-                    . ".jpg";
-            }
-
-            if (strlen($name) > 1) {
-                addCharacter($name, $race, $class, $notes, $level, $hp, $hpmax, $mp, $mpmax, $str, $con, $dex, $int, $chr, $creator, $avatar);
-                $_SESSION["message"] = "Character has been created!";
-                header("Location: /my-characters");
-                exit;
-            } else {
-                echo '<h1 class="centered">Please enter a character name.</h1>';
-                require "../views/new_character.php";
             }
         }
-    } else {
-        require "../views/new_character.php";
+
+
+        /*
+         * Destination
+         */
+
+        $destination =
+            $uploadDirectory
+            . $filename;
+
+
+        /*
+         * Move uploaded file
+         */
+
+        if (
+            !move_uploaded_file(
+                $file['tmp_name'],
+                $destination
+            )
+        ) {
+
+            echo '<h1 class="centered">
+                    Could not save uploaded avatar.
+                  </h1>';
+
+            return;
+        }
+
+
+        $avatar =
+            "uploads/avatars/"
+            . $filename;
+    }
+
+
+    /*
+     * =========================================
+     * INVALID AVATAR TYPE
+     * =========================================
+     */ else {
+
+        echo '<h1 class="centered">
+                Please select an avatar.
+              </h1>';
+
+        return;
+    }
+
+
+    /*
+     * =========================================
+     * FINAL AVATAR CHECK
+     * =========================================
+     */
+
+    if ($avatar === '') {
+
+        echo '<h1 class="centered">
+                Please select an avatar.
+              </h1>';
+
+        return;
+    }
+
+
+    /*
+     * =========================================
+     * CREATE CHARACTER
+     * =========================================
+     */
+
+    try {
+
+        addCharacter(
+            $name,
+            $race,
+            $class,
+            $notes,
+            1,
+            $hp,
+            $hpmax,
+            $mp,
+            $mpmax,
+            $str,
+            $con,
+            $dex,
+            $int,
+            $chr,
+            $creator,
+            $avatar
+        );
+
+
+        $_SESSION["message"] =
+            "Character has been created!";
+
+
+        header(
+            "Location: /my-characters"
+        );
+
+        exit;
+    } catch (PDOException $e) {
+
+        /*
+         * Do not show database errors
+         * to the user.
+         */
+
+        error_log(
+            "Character creation error: "
+                . $e->getMessage()
+        );
+
+
+        echo '<h1 class="centered">
+                Character could not be created.
+              </h1>';
+
+        return;
     }
 }
+
 
 function updateCharacterController()
 {
