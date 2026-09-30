@@ -177,10 +177,10 @@ function setAlive($id) {
     $stm = $pdo->prepare($sql);
     return $stm->execute($data);
 }
-function manageCharacter($hp,$mp,$id) {
+function manageCharacter($hp,$mp,$status,$id) {
     $pdo = connectDB();
-    $data = [$hp,$mp,$id];
-    $sql = "UPDATE Hahmo SET Elamapisteet = ?, Magiapisteet = ? WHERE ID = ?";
+    $data = [$hp,$mp,$status,$id];
+    $sql = "UPDATE Hahmo SET Elamapisteet = ?, Magiapisteet = ?, Status = ? WHERE ID = ?";
     $stm = $pdo->prepare($sql);
     return $stm->execute($data);
 }

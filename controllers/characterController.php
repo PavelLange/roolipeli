@@ -1373,17 +1373,17 @@ function manageCharacterController()
     $id = $_GET["id"];
     $cid = $_GET["cid"];
     $character = getAllCharacterInfo($id);
-    if (isset($_POST["hpamount"], $_POST["mpamount"])) {
+    if (isset($_POST["hpamount"], $_POST["mpamount"], $_POST["charstatus"])) {
         $hp = cleanUpInput($_POST["hpamount"]);
         $mp = cleanUpInput($_POST["mpamount"]);
-
+        $status = cleanUpInput($_POST["charstatus"]);
 
         try {
-            manageCharacter($hp, $mp, $id);
+            manageCharacter($hp, $mp, $status ,$id);
             $_SESSION["message"] = "Character has been updated!";
             header("Location: /view-campaign?id=$cid");
         } catch (PDOException $e) {
-            echo "Error updating item: " . $e->getMessage();
+            echo "Error updating character: " . $e->getMessage();
             exit;
         }
     }
