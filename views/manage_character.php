@@ -47,6 +47,18 @@
                 ><p>Max MP: <?= $character["Magiamax"]?></p>
             </div>
 
+            <div class="form-group">
+                <label for="mpamount">Current status:</label>
+
+                <select name="charstatus">
+                <option <?php echo ($character["Status"] === "Alive") ? 'selected' : '';?> value="Alive">Alive</option>
+                <option <?php echo ($character["Status"] === "Dead") ? 'selected' : '';?> value="Dead">Dead</option>
+                <option <?php echo ($character["Status"] === "Undead") ? 'selected' : '';?> value="Undead">Undead</option>
+                <option <?php echo ($character["Status"] === "Banished") ? 'selected' : '';?> value="Banished">Banished</option>
+                </select>
+                <p>Current Status: <?= $character["Status"]?></p>
+            </div>
+
 
             <div class="campaign-form-actions">
 
