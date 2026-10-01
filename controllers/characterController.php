@@ -1,143 +1,780 @@
 <?php
 require_once "../models/character.php";
+require_once "../models/campaigns.php";
 require_once "../libraries/cleaners.php";
 require_once "../libraries/cleaners.php";
 require_once "../libraries/auth.php";
+
 $characterTypes = [
 
     'fighter' => [
         'name' => 'Fighter',
-        'race' => 'Orc',
-        'health' => 90,
-        'mana' => 10,
-        'strength' => 45,
-        'constitution' => 35,
-        'agility' => 10,
-        'intelligence' => 5,
-        'charisma' => 5
+        'race' => 'Orc'
     ],
 
     'villain' => [
         'name' => 'Villain',
-        'race' => 'Gnome',
-        'health' => 50,
-        'mana' => 50,
-        'strength' => 15,
-        'constitution' => 5,
-        'agility' => 20,
-        'intelligence' => 30,
-        'charisma' => 30
+        'race' => 'Gnome'
     ],
 
     'mage' => [
         'name' => 'Mage',
-        'race' => 'Human',
-        'health' => 35,
-        'mana' => 65,
-        'strength' => 5,
-        'constitution' => 10,
-        'agility' => 10,
-        'intelligence' => 40,
-        'charisma' => 35
+        'race' => 'Human'
     ],
 
     'paladin' => [
         'name' => 'Paladin',
-        'race' => 'Human',
-        'health' => 60,
-        'mana' => 40,
-        'strength' => 30,
-        'constitution' => 30,
-        'agility' => 10,
-        'intelligence' => 10,
-        'charisma' => 20
+        'race' => 'Human'
     ],
 
     'bard' => [
         'name' => 'Bard',
-        'race' => 'Dwarf',
-        'health' => 50,
-        'mana' => 50,
-
-        'strength' => 15,
-        'constitution' => 15,
-        'agility' => 20,
-        'intelligence' => 20,
-        'charisma' => 30
+        'race' => 'Dwarf'
     ],
 
     'priest' => [
         'name' => 'Priest',
-        'race' => 'Human',
-        'health' => 30,
-        'mana' => 70,
-        'strength' => 10,
-        'constitution' => 10,
-        'agility' => 10,
-        'intelligence' => 40,
-        'charisma' => 30
+        'race' => 'Human'
     ],
 
     'ranger' => [
         'name' => 'Ranger',
-        'race' => 'Elf',
-        'health' => 60,
-        'mana' => 40,
-        'strength' => 20,
-        'constitution' => 15,
-        'agility' => 43,
-        'intelligence' => 15,
-        'charisma' => 7
+        'race' => 'Elf'
     ]
 
 ];
 
 function addCharacterController()
 {
-    global $characterTypes;
+    /*
+     * =========================================
+     * ONLY POST REQUESTS
+     * =========================================
+     */
 
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
-        if (isset($_POST['name'], $_POST['class'], $_POST['notes'])) {
-            $name = cleanUpInput($_POST['name']);
-            $class = cleanUpInput($_POST['class']);
-            $notes = cleanUpInput($_POST['notes']);
+        require "../views/new_character.php";
+        return;
+    }
 
-            if (!isset($characterTypes[$class])) {
-                echo '<h1 class="centered">Invalid character class.</h1>';
+
+    /*
+     * =========================================
+     * LOGIN CHECK
+     * =========================================
+     */
+
+    if (!isLoggedIn()) {
+
+        header("Location: /login");
+        exit;
+    }
+
+
+    /*
+     * =========================================
+     * REQUIRED FIELDS
+     * =========================================
+     */
+
+    $requiredFields = [
+        'name',
+        'race',
+        'class',
+        'notes',
+        'health',
+        'mana',
+        'strength',
+        'constitution',
+        'agility',
+        'intelligence',
+        'charisma',
+        'avatar_type'
+    ];
+
+
+    foreach ($requiredFields as $field) {
+
+        if (!isset($_POST[$field])) {
+
+            echo '<h1 class="centered">
+                    Missing required character data.
+                  </h1>';
+
+            return;
+        }
+    }
+
+
+    /*
+     * =========================================
+     * CLEAN BASIC INPUT
+     * =========================================
+     */
+
+    $name = cleanUpInput($_POST['name']);
+    $race = cleanUpInput($_POST['race']);
+    $class = cleanUpInput($_POST['class']);
+    $notes = cleanUpInput($_POST['notes']);
+
+
+    /*
+     * =========================================
+     * NAME VALIDATION
+     * =========================================
+     */
+
+    if ($name === '') {
+
+        echo '<h1 class="centered">
+                Please enter a character name.
+              </h1>';
+
+        return;
+    }
+
+
+    if (strlen($name) < 2) {
+
+        echo '<h1 class="centered">
+                Character name must be at least 2 characters.
+              </h1>';
+
+        return;
+    }
+
+
+    if (strlen($name) > 30) {
+
+        echo '<h1 class="centered">
+                Character name cannot be longer than 30 characters.
+              </h1>';
+
+        return;
+    }
+
+
+    /*
+     * =========================================
+     * ALLOWED RACES
+     * =========================================
+     */
+
+    $allowedRaces = [
+        'Human',
+        'Orc',
+        'Elf',
+        'Dwarf',
+        'Gnome'
+    ];
+
+
+    if (!in_array($race, $allowedRaces, true)) {
+
+        echo '<h1 class="centered">
+                Invalid race.
+              </h1>';
+
+        return;
+    }
+
+
+    /*
+     * =========================================
+     * ALLOWED CLASSES
+     * =========================================
+     */
+
+    $allowedClasses = [
+        'fighter',
+        'villain',
+        'mage',
+        'paladin',
+        'bard',
+        'priest',
+        'ranger'
+    ];
+
+
+    if (!in_array($class, $allowedClasses, true)) {
+
+        echo '<h1 class="centered">
+                Invalid class.
+              </h1>';
+
+        return;
+    }
+
+
+    /*
+     * =========================================
+     * ABILITY STATS
+     * =========================================
+     */
+
+    $statFields = [
+        'health',
+        'mana',
+        'strength',
+        'constitution',
+        'agility',
+        'intelligence',
+        'charisma'
+    ];
+
+
+    $stats = [];
+
+
+    foreach ($statFields as $field) {
+
+        /*
+         * Must exist
+         */
+
+        if (!isset($_POST[$field])) {
+
+            echo '<h1 class="centered">
+                    Missing ability value.
+                  </h1>';
+
+            return;
+        }
+
+
+        /*
+         * Must be an integer
+         */
+
+        $value = filter_var(
+            $_POST[$field],
+            FILTER_VALIDATE_INT
+        );
+
+
+        if ($value === false) {
+
+            echo '<h1 class="centered">
+                    Invalid ability value.
+                  </h1>';
+
+            return;
+        }
+
+
+        /*
+         * Allowed range
+         */
+
+        if ($value < 10 || $value > 40) {
+
+            echo '<h1 class="centered">
+                    Ability values must be between 10 and 40.
+                  </h1>';
+
+            return;
+        }
+
+
+        $stats[$field] = $value;
+    }
+
+
+    /*
+     * =========================================
+     * EXACTLY 30 ABILITY POINTS
+     * =========================================
+     */
+
+    $totalAbilityPoints = 0;
+
+
+    foreach ($stats as $value) {
+
+        $totalAbilityPoints +=
+            ($value - 10);
+    }
+
+
+    if ($totalAbilityPoints !== 30) {
+
+        echo '<h1 class="centered">
+                You must spend exactly 30 ability points.
+              </h1>';
+
+        return;
+    }
+
+
+    /*
+     * =========================================
+     * CHARACTER STATS
+     * =========================================
+     */
+
+    $hp = $stats['health'];
+    $hpmax = $hp;
+
+    $mp = $stats['mana'];
+    $mpmax = $mp;
+
+    $str = $stats['strength'];
+    $con = $stats['constitution'];
+    $dex = $stats['agility'];
+    $int = $stats['intelligence'];
+    $chr = $stats['charisma'];
+
+
+    /*
+     * =========================================
+     * CREATOR
+     * =========================================
+     */
+
+    $creator =
+        $_SESSION['username'];
+
+
+    /*
+     * =========================================
+     * AVATAR
+     * =========================================
+     */
+
+    $avatar = "";
+
+
+    $avatarType =
+        cleanUpInput($_POST['avatar_type']);
+
+
+    /*
+     * =========================================
+     * ALLOWED LIBRARY AVATARS
+     * =========================================
+     */
+
+    $allowedLibraryAvatars = [
+
+        "images/fighter.jpg",
+        "images/villain.jpg",
+        "images/mage.jpg",
+        "images/paladin.jpg",
+        "images/bard.jpg",
+        "images/priest.jpg",
+        "images/ranger.jpg",
+        "images/orc.jpg",
+        "images/dwarf.jpg",
+        "images/gnome.jpg"
+
+    ];
+
+
+    /*
+     * =========================================
+     * LIBRARY AVATAR
+     * =========================================
+     */
+
+    if ($avatarType === 'library') {
+
+        if (
+            !isset($_POST['avatar']) ||
+            $_POST['avatar'] === ''
+        ) {
+
+            echo '<h1 class="centered">
+                    Please select an avatar.
+                  </h1>';
+
+            return;
+        }
+
+
+        $selectedAvatar =
+            str_replace(
+                "\\",
+                "/",
+                $_POST['avatar']
+            );
+
+
+        $selectedAvatar =
+            ltrim(
+                $selectedAvatar,
+                "/"
+            );
+
+
+        /*
+         * Only allow avatars from whitelist
+         */
+
+        if (
+            !in_array(
+                $selectedAvatar,
+                $allowedLibraryAvatars,
+                true
+            )
+        ) {
+
+            echo '<h1 class="centered">
+                    Invalid avatar selection.
+                  </h1>';
+
+            return;
+        }
+
+
+        /*
+         * Check that the file really exists
+         */
+
+        $fullPath =
+            realpath(
+                $_SERVER['DOCUMENT_ROOT']
+                    . "/"
+                    . $selectedAvatar
+            );
+
+
+        if (
+            $fullPath === false ||
+            !is_file($fullPath)
+        ) {
+
+            echo '<h1 class="centered">
+                    Selected avatar does not exist.
+                  </h1>';
+
+            return;
+        }
+
+
+        $avatar =
+            $selectedAvatar;
+    }
+
+
+    /*
+     * =========================================
+     * CUSTOM UPLOAD
+     * =========================================
+     */ elseif ($avatarType === 'upload') {
+
+        /*
+         * File must exist
+         */
+
+        if (
+            !isset($_FILES['custom_avatar'])
+        ) {
+
+            echo '<h1 class="centered">
+                    Please upload an avatar.
+                  </h1>';
+
+            return;
+        }
+
+
+        $file =
+            $_FILES['custom_avatar'];
+
+
+        /*
+         * Upload must be successful
+         */
+
+        if (
+            $file['error'] !== UPLOAD_ERR_OK
+        ) {
+
+            echo '<h1 class="centered">
+                    Avatar upload failed.
+                  </h1>';
+
+            return;
+        }
+
+
+        /*
+         * Maximum 5 MB
+         */
+
+        if (
+            $file['size'] <= 0 ||
+            $file['size'] > 5 * 1024 * 1024
+        ) {
+
+            echo '<h1 class="centered">
+                    Avatar must be smaller than 5 MB.
+                  </h1>';
+
+            return;
+        }
+
+
+        /*
+         * Allowed MIME types
+         */
+
+        $allowedTypes = [
+
+            'image/jpeg' => 'jpg',
+            'image/png' => 'png',
+            'image/webp' => 'webp'
+
+        ];
+
+
+        /*
+         * Detect real MIME type
+         */
+
+        $finfo =
+            finfo_open(
+                FILEINFO_MIME_TYPE
+            );
+
+
+        if ($finfo === false) {
+
+            echo '<h1 class="centered">
+                    Could not validate uploaded image.
+                  </h1>';
+
+            return;
+        }
+
+
+        $mimeType =
+            finfo_file(
+                $finfo,
+                $file['tmp_name']
+            );
+
+
+        finfo_close($finfo);
+
+
+        /*
+         * MIME must be allowed
+         */
+
+        if (
+            !isset(
+                $allowedTypes[$mimeType]
+            )
+        ) {
+
+            echo '<h1 class="centered">
+                    Only JPG, PNG or WEBP images are allowed.
+                  </h1>';
+
+            return;
+        }
+
+
+        /*
+         * Make sure it is actually an image
+         */
+
+        if (
+            getimagesize(
+                $file['tmp_name']
+            ) === false
+        ) {
+
+            echo '<h1 class="centered">
+                    Uploaded file is not a valid image.
+                  </h1>';
+
+            return;
+        }
+
+
+        /*
+         * Generate random filename
+         */
+
+        try {
+
+            $filename =
+                bin2hex(
+                    random_bytes(16)
+                )
+                . "."
+                . $allowedTypes[$mimeType];
+        } catch (Exception $e) {
+
+            echo '<h1 class="centered">
+                    Could not generate avatar filename.
+                  </h1>';
+
+            return;
+        }
+
+
+        /*
+         * Upload directory
+         */
+
+        $uploadDirectory =
+            $_SERVER['DOCUMENT_ROOT']
+            . "/uploads/avatars/";
+
+
+        /*
+         * Create directory if needed
+         */
+
+        if (
+            !is_dir(
+                $uploadDirectory
+            )
+        ) {
+
+            if (
+                !mkdir(
+                    $uploadDirectory,
+                    0755,
+                    true
+                )
+            ) {
+
+                echo '<h1 class="centered">
+                        Could not create upload directory.
+                      </h1>';
+
                 return;
             }
-
-            $character = $characterTypes[$class];
-
-            $race = $character['race'];
-            $level = 1;
-
-            $hp = $character['health'];
-            $hpmax = $hp;
-            $mp = $character['mana'];
-            $mpmax = $mp;
-            $str = $character['strength'];
-            $con = $character['constitution'];
-            $dex = $character['agility'];
-            $int = $character['intelligence'];
-            $chr = $character['charisma'];
-            $creator = $_SESSION["username"];
-
-            if (strlen($name) > 1) {
-                addCharacter($name, $race, $class, $notes, $level, $hp, $hpmax , $mp, $mpmax ,$str, $con, $dex, $int, $chr, $creator);
-                $_SESSION["message"] = "Character has been created!";
-                header("Location: /my-characters");
-                exit;
-            } else {
-                echo '<h1 class="centered">Please enter a character name.</h1>';
-                require "../views/new_character.php";
-            }
         }
-    } else {
-        require "../views/new_character.php";
+
+
+        /*
+         * Destination
+         */
+
+        $destination =
+            $uploadDirectory
+            . $filename;
+
+
+        /*
+         * Move uploaded file
+         */
+
+        if (
+            !move_uploaded_file(
+                $file['tmp_name'],
+                $destination
+            )
+        ) {
+
+            echo '<h1 class="centered">
+                    Could not save uploaded avatar.
+                  </h1>';
+
+            return;
+        }
+
+
+        $avatar =
+            "uploads/avatars/"
+            . $filename;
+    }
+
+
+    /*
+     * =========================================
+     * INVALID AVATAR TYPE
+     * =========================================
+     */ else {
+
+        echo '<h1 class="centered">
+                Please select an avatar.
+              </h1>';
+
+        return;
+    }
+
+
+    /*
+     * =========================================
+     * FINAL AVATAR CHECK
+     * =========================================
+     */
+
+    if ($avatar === '') {
+
+        echo '<h1 class="centered">
+                Please select an avatar.
+              </h1>';
+
+        return;
+    }
+
+
+    /*
+     * =========================================
+     * CREATE CHARACTER
+     * =========================================
+     */
+
+    try {
+
+        addCharacter(
+            $name,
+            $race,
+            $class,
+            $notes,
+            1,
+            $hp,
+            $hpmax,
+            $mp,
+            $mpmax,
+            $str,
+            $con,
+            $dex,
+            $int,
+            $chr,
+            $creator,
+            $avatar
+        );
+
+
+        $_SESSION["message"] =
+            "Character has been created!";
+
+
+        header(
+            "Location: /my-characters"
+        );
+
+        exit;
+    } catch (PDOException $e) {
+
+        /*
+         * Do not show database errors
+         * to the user.
+         */
+
+        error_log(
+            "Character creation error: "
+                . $e->getMessage()
+        );
+
+
+        echo '<h1 class="centered">
+                Character could not be created.
+              </h1>';
+
+        return;
     }
 }
+
 
 function updateCharacterController()
 {
@@ -200,11 +837,11 @@ function updateCharacterController()
 
         $newHp = isset($_POST['health'])
             ? (int)$_POST['health']
-            : (int)$character['Elamamax'];   
+            : (int)$character['Elamamax'];
 
         $newMp = isset($_POST['mana'])
             ? (int)$_POST['mana']
-            : (int)$character['Magiamax'];  
+            : (int)$character['Magiamax'];
 
         $newStr = isset($_POST['strength'])
             ? (int)$_POST['strength']
@@ -269,27 +906,204 @@ function updateCharacterController()
 
         ];
 
+        /*
+ * =========================================
+ * AVATAR
+ * =========================================
+ */
+
+        $avatar =
+            $character["Avatar"] ?? "";
+
+
+        /*
+* Portrait library
+*/
+
+        if (
+            isset($_POST["avatar_type"]) &&
+            $_POST["avatar_type"] === "library" &&
+            !empty($_POST["avatar"])
+        ) {
+
+            $selectedAvatar =
+                str_replace(
+                    "\\",
+                    "/",
+                    $_POST["avatar"]
+                );
+
+            $selectedAvatar =
+                ltrim(
+                    $selectedAvatar,
+                    "/"
+                );
+
+
+            $allowedLibraryAvatars = [
+
+                "images/fighter.jpg",
+                "images/villain.jpg",
+                "images/mage.jpg",
+                "images/paladin.jpg",
+                "images/bard.jpg",
+                "images/priest.jpg",
+                "images/ranger.jpg",
+                "images/orc.jpg",
+                "images/dwarf.jpg",
+                "images/gnome.jpg"
+
+            ];
+
+
+            if (
+                in_array(
+                    $selectedAvatar,
+                    $allowedLibraryAvatars,
+                    true
+                )
+            ) {
+
+                $fullPath =
+                    realpath(
+                        $_SERVER["DOCUMENT_ROOT"]
+                            . "/"
+                            . $selectedAvatar
+                    );
+
+
+                if (
+                    $fullPath !== false &&
+                    is_file($fullPath)
+                ) {
+
+                    $avatar =
+                        $selectedAvatar;
+                }
+            }
+        }
+
+
+        /*
+* Custom upload
+*/
+
+        if (
+            isset($_POST["avatar_type"]) &&
+            $_POST["avatar_type"] === "upload" &&
+            isset($_FILES["custom_avatar"]) &&
+            $_FILES["custom_avatar"]["error"]
+            === UPLOAD_ERR_OK
+        ) {
+
+            $file =
+                $_FILES["custom_avatar"];
+
+
+            $allowedTypes = [
+
+                "image/jpeg" => "jpg",
+                "image/png" => "png",
+                "image/webp" => "webp"
+
+            ];
+
+
+            $finfo =
+                finfo_open(
+                    FILEINFO_MIME_TYPE
+                );
+
+
+            $mimeType =
+                finfo_file(
+                    $finfo,
+                    $file["tmp_name"]
+                );
+
+
+            finfo_close($finfo);
+
+
+            if (
+                isset(
+                    $allowedTypes[$mimeType]
+                ) &&
+                $file["size"] <= 5 * 1024 * 1024
+            ) {
+
+                $extension =
+                    $allowedTypes[$mimeType];
+
+
+                $filename =
+                    bin2hex(
+                        random_bytes(16)
+                    )
+                    . "."
+                    . $extension;
+
+
+                $uploadDirectory =
+                    $_SERVER["DOCUMENT_ROOT"]
+                    . "/uploads/avatars/";
+
+
+                if (
+                    !is_dir(
+                        $uploadDirectory
+                    )
+                ) {
+
+                    mkdir(
+                        $uploadDirectory,
+                        0755,
+                        true
+                    );
+                }
+
+
+                $destination =
+                    $uploadDirectory
+                    . $filename;
+
+
+                if (
+                    move_uploaded_file(
+                        $file["tmp_name"],
+                        $destination
+                    )
+                ) {
+
+                    $avatar =
+                        "uploads/avatars/"
+                        . $filename;
+                }
+            }
+        }
+
+
         foreach ($stats as $statName => $stat) {
 
             $maxValue = ($statName === 'health' || $statName === 'mana')
                 ? 1000
                 : 100;
-        
+
             if ($stat['new'] < 0 || $stat['new'] > $maxValue) {
-        
+
                 echo '<h1 class="centered">
                         Invalid stat value.
                       </h1>';
-        
+
                 return;
             }
-        }        
+        }
 
         $totalDecrease = 0;
         $totalIncrease = 0;
 
 
-        foreach ($stats as $stat) {
+        foreach ($stats as $statName => $stat) {
 
             $difference =
                 $stat['new'] - $stat['old'];
@@ -297,21 +1111,36 @@ function updateCharacterController()
 
             if ($difference < 0) {
 
-                $totalDecrease += abs($difference);
+                $decrease =
+                    abs($difference);
+
+
+                // Health and Magic can be decreased by 50 points.
+                // Other stats can be decreased by 5 points.
+                $maxDecrease =
+                    ($statName === 'health' || $statName === 'mana')
+                    ? 50
+                    : 5;
+
+
+                if ($decrease > $maxDecrease) {
+
+                    echo '<h1 class="centered">
+                    Invalid stat change.
+                  </h1>';
+
+                    return;
+                }
+
+
+                $totalDecrease += $decrease;
             } elseif ($difference > 0) {
 
                 $totalIncrease += $difference;
             }
         }
 
-        if ($totalDecrease > 5) {
 
-            echo '<h1 class="centered">
-                    You can transfer a maximum of 5 stat points.
-                  </h1>';
-
-            return;
-        }
         $hp = $newHp;
         $mp = $newMp;
         updateCharacter(
@@ -327,6 +1156,7 @@ function updateCharacterController()
             $newDex,
             $newInt,
             $newChr,
+            $avatar,
             $id
         );
 
@@ -445,33 +1275,34 @@ function viewCharacterController()
         }
 
         require "../views/view_character.php";
-
     } catch (PDOException $e) {
 
         echo "Error loading character: " . $e->getMessage();
         exit;
     }
-} 
-
-function addItemController() {
-if(isset($_POST["name"], $_POST["desc"], $_POST["amount"])) {
-    $campaignid = cleanUpInput($_GET["id"]);
-    $name = cleanUpInput($_POST["name"]);
-    $desc = cleanUpInput($_POST["desc"]);
-    $amount = cleanUpInput($_POST["amount"]);
-    try {
-        addItem($campaignid,$name,$amount,$desc);
-        $_SESSION["message"] = "Item has been added!";
-        header("Location:view-campaign?id=$campaignid");
-    }
-    catch (PDOException $e){
-        echo "Error adding item: " . $e->getMessage();
-        exit;
-    }
-    }
-require "../views/new_item.php";
 }
-function viewItemController() {
+
+function addItemController()
+{
+    if (isset($_POST["name"], $_POST["desc"], $_POST["amount"])) {
+        $campaignid = cleanUpInput($_GET["id"]);
+        $name = cleanUpInput($_POST["name"]);
+        $desc = cleanUpInput($_POST["desc"]);
+        $amount = cleanUpInput($_POST["amount"]);
+        $ownerid = cleanUpInput($_POST["owner"]);
+        try {
+            addItem($ownerid, $campaignid, $name, $amount, $desc);
+            $_SESSION["message"] = "Item has been added!";
+            header("Location:view-campaign?id=$campaignid");
+        } catch (PDOException $e) {
+            echo "Error adding item: " . $e->getMessage();
+            exit;
+        }
+    }
+    require "../views/new_item.php";
+}
+function viewItemController()
+{
     $campaignid = cleanUpInput($_GET["id"]);
     $allItems = listAllCharactersItems($campaignid);
     require "../views/view_items.php";
@@ -479,12 +1310,13 @@ function viewItemController() {
 
 function editItemController()
 {
-    if(isset($_SESSION["username"])) {
+    if (isset($_SESSION["username"])) {
         $cid = $_GET["cid"];
         $id = $_GET["id"];
         $user = $_SESSION["username"];
-        if(isInCampaign($cid,$user) == true) {
+        if (isInCampaign($cid, $user) == true) {
             $iteminfo = getItemByIdEdit($id);
+            $campaignchars = getCampaignCharacters($cid);
             require "../views/edit_item.php";
         } else {
             header("Location:/");
@@ -492,71 +1324,182 @@ function editItemController()
     } else {
         header("Location:/login");
     }
-    
-    
-
 }
-function updateItemController() {
-if(isset($_POST["name"], $_POST["desc"], $_POST["amount"])) {
-    $name = cleanUpInput($_POST["name"]);
-    $desc = cleanUpInput($_POST["desc"]);
-    $amount = cleanUpInput($_POST["amount"]);
-    $id = $_GET["id"];
-    $cid = $_GET["cid"];
+function updateItemController()
+{
+    if (isset($_POST["name"], $_POST["desc"], $_POST["amount"])) {
+        $name = cleanUpInput($_POST["name"]);
+        $desc = cleanUpInput($_POST["desc"]);
+        $amount = cleanUpInput($_POST["amount"]);
+        $ownerid = cleanUpInput($_POST["owner"]);
+        $id = $_GET["id"];
+        $cid = $_GET["cid"];
         try {
-            updateItem($name, $amount, $desc,$id);
+            updateItem($ownerid, $name, $amount, $desc, $id);
             $_SESSION["message"] = "Item has been updated!";
             header("Location: /view-items?id=$cid");
-            }
-        catch (PDOException $e){
+        } catch (PDOException $e) {
             echo "Error updating item: " . $e->getMessage();
             exit;
         }
-        }    
+    }
 }
 
 
-function deleteItemController(){
+function deleteItemController()
+{
     if (!isset($_GET["id"], $_GET["cid"])) {
         exit;
     }
     try {
-            $id = cleanUpInput($_GET["id"]);
-            $cid = cleanUpInput($_GET["cid"]);
-            $user = $_SESSION["username"];
-            if(isInCampaign($cid,$user) == true) {
+        $id = cleanUpInput($_GET["id"]);
+        $cid = cleanUpInput($_GET["cid"]);
+        $user = $_SESSION["username"];
+        if (isInCampaign($cid, $user) == true) {
             deleteItem($id);
-            $_SESSION["message"] = "Item has been deleted!";  
+            $_SESSION["message"] = "Item has been deleted!";
             header("Location: /view-items?id=" . $cid);
             exit;
-            }
-            else {
-                header("Location: /");
-            }
-        
-    } catch (PDOException $e){
+        } else {
+            header("Location: /");
+        }
+    } catch (PDOException $e) {
         echo "Virhe esinetta poistettaessa: " . $e->getMessage();
     }
 }
 
-function manageCharacterController() {
+function manageCharacterController()
+{
     $id = $_GET["id"];
     $cid = $_GET["cid"];
     $character = getAllCharacterInfo($id);
-    if(isset($_POST["hpamount"], $_POST["mpamount"])) {
+    if (isset($_POST["hpamount"], $_POST["mpamount"], $_POST["charstatus"])) {
         $hp = cleanUpInput($_POST["hpamount"]);
         $mp = cleanUpInput($_POST["mpamount"]);
-        
-        
-            try {
-                manageCharacter($hp,$mp,$id);
-                $_SESSION["message"] = "Character has been updated!";
-                header("Location: /view-campaign?id=$cid");
-                }
-            catch (PDOException $e){
-                echo "Error updating item: " . $e->getMessage();
-                exit;
-            }
-            }
-            require "../views/manage_character.php";    
+        $status = cleanUpInput($_POST["charstatus"]);
+
+        try {
+            manageCharacter($hp, $mp, $status ,$id);
+            $_SESSION["message"] = "Character has been updated!";
+            header("Location: /view-campaign?id=$cid");
+        } catch (PDOException $e) {
+            echo "Error updating character: " . $e->getMessage();
+            exit;
+        }
     }
+    require "../views/manage_character.php";
+}
+
+function addNPCController()
+{
+    if (isset($_POST["name"], $_POST["desc"], $_POST["level"], $_POST["health"], $_POST["mana"], $_POST["str"], $_POST["const"], $_POST["agility"], $_POST["int"], $_POST["char"], $_POST["type"])) {
+        $id = cleanUpInput($_GET["id"]);
+        $name = cleanUpInput($_POST["name"]);
+        $desc = cleanUpInput($_POST["desc"]);
+        $lvl = (cleanUpInput($_POST["level"]) === '' ? 0 : (int)$_POST["level"]);
+        $hp = (cleanUpInput($_POST["health"]) === '' ? 0 : (int)$_POST["health"]);
+        $hpmax = $hp;
+        $mp = (cleanUpInput($_POST["mana"]) === '' ? 0 : (int)$_POST["mana"]);
+        $mpmax = $mp;
+        $str = (cleanUpInput($_POST["str"]) === '' ? 0 : (int)$_POST["str"]);
+        $const = (cleanUpInput($_POST["const"]) === '' ? 0 : (int)$_POST["const"]);
+        $agility = (cleanUpInput($_POST["agility"]) === '' ? 0 : (int)$_POST["agility"]);
+        $int = (cleanUpInput($_POST["int"]) === '' ? 0 : (int)$_POST["int"]);
+        $char = (cleanUpInput($_POST["char"]) === '' ? 0 : (int)$_POST["char"]);
+        $type = cleanUpInput($_POST["type"]);
+
+        try {
+            addNPC($id, $name, $desc, $lvl, $hp, $hpmax, $mp, $mpmax, $str, $const, $agility, $int, $char, $type);
+            $_SESSION["message"] = "NPC has been created!";
+            header("Location: /view-campaign?id=$id");
+        } catch (PDOException $e) {
+            echo "Error adding NPC: " . $e->getMessage();
+            exit;
+        }
+    }
+    require "../views/new_NPC.php";
+}
+
+function viewNPCController()
+{
+    $campaignid = cleanUpInput($_GET["id"]);
+    $allNPCs = listAllNPCs($campaignid);
+    require "../views/view_NPCs.php";
+}
+function editNPCController()
+{
+    $id = $_GET["id"];
+    $npcinfo = listAllNPCsID($id);
+    require "../views/edit_NPC.php";
+}
+
+function updateNPCController()
+{
+    if (isset($_POST["name"], $_POST["desc"], $_POST["level"], $_POST["health"], $_POST["mana"], $_POST["str"], $_POST["const"], $_POST["agility"], $_POST["int"], $_POST["char"], $_POST["type"])) {
+        $id = cleanUpInput($_GET["id"]);
+        $cid = cleanUPInput($_GET["cid"]);
+        $name = cleanUpInput($_POST["name"]);
+        $desc = cleanUpInput($_POST["desc"]);
+        $lvl = (cleanUpInput($_POST["level"]) === '' ? 0 : (int)$_POST["level"]);
+        $hp = (cleanUpInput($_POST["health"]) === '' ? 0 : (int)$_POST["health"]);
+        $hpmax = $hp;
+        $mp = (cleanUpInput($_POST["mana"]) === '' ? 0 : (int)$_POST["mana"]);
+        $mpmax = $mp;
+        $str = (cleanUpInput($_POST["str"]) === '' ? 0 : (int)$_POST["str"]);
+        $const = (cleanUpInput($_POST["const"]) === '' ? 0 : (int)$_POST["const"]);
+        $agility = (cleanUpInput($_POST["agility"]) === '' ? 0 : (int)$_POST["agility"]);
+        $int = (cleanUpInput($_POST["int"]) === '' ? 0 : (int)$_POST["int"]);
+        $char = (cleanUpInput($_POST["char"]) === '' ? 0 : (int)$_POST["char"]);
+        $type = cleanUpInput($_POST["type"]);
+        try {
+            updateNPC($name, $desc, $lvl, $hp, $hpmax, $mp, $mpmax, $str, $const, $agility, $int, $char, $type, $id);
+            $_SESSION["message"] = "NPC has been updated!";
+            header("Location: /view-NPCs?id=$cid");
+        } catch (PDOException $e) {
+            echo "Error updating NPC: " . $e->getMessage();
+            exit;
+        }
+    }
+}
+
+function manageNPCController()
+{
+    $id = $_GET["id"];
+    $cid = $_GET["cid"];
+    $npc = listAllNPCsID($id);
+    if (isset($_POST["hpamount"], $_POST["mpamount"])) {
+        $hp = cleanUpInput($_POST["hpamount"]);
+        $mp = cleanUpInput($_POST["mpamount"]);
+        try {
+            manageNPC($hp, $mp, $id);
+            $_SESSION["message"] = "NPC has been updated!";
+            header("Location: /view-NPCs?id=$cid");
+        } catch (PDOException $e) {
+            echo "Error updating NPC: " . $e->getMessage();
+            exit;
+        }
+    }
+    require "../views/manage_NPC.php";
+}
+
+function deleteNPCController()
+{
+    if (!isset($_GET["id"], $_GET["cid"])) {
+        exit;
+    }
+    try {
+        $id = cleanUpInput($_GET["id"]);
+        $cid = cleanUpInput($_GET["cid"]);
+        $user = $_SESSION["username"];
+        if (isInCampaign($cid, $user) == true) {
+            deleteNPC($id);
+            $_SESSION["message"] = "Item has been deleted!";
+            header("Location: /view-NPCs?id=$cid");
+            exit;
+        } else {
+            header("Location: /");
+        }
+    } catch (PDOException $e) {
+        echo "Virhe esinetta poistettaessa: " . $e->getMessage();
+    }
+}

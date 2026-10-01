@@ -1,3 +1,4 @@
+<?php require_once "../models/campaigns.php";?>
 <main class="campaign-form-page">
 
     <section class="campaign-form-card">
@@ -53,6 +54,16 @@
                     required
                 >
             </div>
+            <div class="form-group">
+                <label for="owner">Item owner </label>
+                <select id="owner" name="owner">
+                    <option value="-1">-</option>
+                    <?php $campaignchars = getCampaignCharacters($_GET["id"])?>
+                    <?php foreach ($campaignchars as $char): ?>
+                    <option value="<?=$char["ID"]?>"><?= $char["Nimi"]?> </option>
+                    <?php endforeach;?>
+                </select>
+            </div> 
 
 
             <div class="campaign-form-actions">

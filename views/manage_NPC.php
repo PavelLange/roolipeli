@@ -24,12 +24,12 @@
                     type="number"
                     id="hpamount"
                     name="hpamount"
-                    value="<?=$character["Elamapisteet"] ?>"
+                    value="<?=$npc["HP"] ?>"
                     placeholder="Enter item amount..."
                     min=0
-                    max=<?= $character["Elamamax"] ?>
+                    max=<?= $npc["HPMAX"] ?>
                     required
-                ><p>Max HP: <?= $character["Elamamax"]?></p>
+                ><p>Max HP: <?= $npc["HPMAX"]?></p>
             </div>
 
             <div class="form-group">
@@ -39,31 +39,19 @@
                     type="number"
                     id="mpamount"
                     name="mpamount"
-                    value="<?=$character["Magiapisteet"] ?>"
+                    value="<?=$npc["MP"] ?>"
                     placeholder="Enter item amount..."
                     min=0
-                    max=<?= $character["Magiamax"] ?>
+                    max=<?= $npc["MPMAX"] ?>
                     required
-                ><p>Max MP: <?= $character["Magiamax"]?></p>
-            </div>
-
-            <div class="form-group">
-                <label for="mpamount">Current status:</label>
-
-                <select name="charstatus">
-                <option <?php echo ($character["Status"] === "Alive") ? 'selected' : '';?> value="Alive">Alive</option>
-                <option <?php echo ($character["Status"] === "Dead") ? 'selected' : '';?> value="Dead">Dead</option>
-                <option <?php echo ($character["Status"] === "Undead") ? 'selected' : '';?> value="Undead">Undead</option>
-                <option <?php echo ($character["Status"] === "Banished") ? 'selected' : '';?> value="Banished">Banished</option>
-                </select>
-                <p>Current Status: <?= $character["Status"]?></p>
+                ><p>Max MP: <?= $npc["MPMAX"]?></p>
             </div>
 
 
             <div class="campaign-form-actions">
 
                 <a
-                    href="/view-campaign?id=<?=$cid?>"
+                    href="/view-NPCs?id=<?=$cid?>"
                     class="button button-secondary"
                 >
                     Cancel
@@ -73,7 +61,7 @@
                     type="submit"
                     class="button button-primary"
                 >
-                    Update character
+                    Update NPC
                 </button>
 
             </div>

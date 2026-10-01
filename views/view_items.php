@@ -1,3 +1,4 @@
+<?php require_once "../models/character.php" ?>
 <?php $campaignId = (string) $campaignid; ?>
 
 <main class="items-page">
@@ -26,6 +27,15 @@
 						<div>
 							<p class="item-label">Item</p>
 							<h2><?= htmlspecialchars($item["Esine"] ?? "Unnamed item") ?></h2>
+						</div>
+						<div class="item-owner">
+							<p class="item-label">Owner</p>
+							<?php $charactername = getAllCharacterInfo($item["Hahmoid"])?>
+							<?php if(empty($charactername["Nimi"])):?>
+							<h2>none</h2>
+							<?php else:?>
+							<h2><?=$charactername["Nimi"]?></h2>
+							<?php endif;?>
 						</div>
 						<div class="item-amount">
 							<span>Amount</span>

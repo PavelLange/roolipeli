@@ -21,6 +21,14 @@
             Players: 
             <?= htmlspecialchars($campaign["Pelaajat"] ?? "Players")?>
             </p>
+            <h3>NPCs</h3>
+            <?php $id = $campaign["ID"] ?>
+            <a class="item-a" href="/view-NPCs?id=<?=$id?>">
+            <button class="button button-secondary">View NPCs</button>
+            </a>
+            <a href="/new-NPC?id=<?=$id?>">
+            <button class="button button-secondary" >Add NPC</button>
+            </a>
         </div>
 
         <div class="campaign-notes">
@@ -42,6 +50,7 @@
             <a href="/new-item?id=<?=$id?>">
             <button class="button button-secondary" >Add item</button>
             </a>
+            <br>
             
         </div>
 

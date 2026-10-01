@@ -26,18 +26,18 @@ function listAllRaces() {
     return $stm->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function AddCharacter($name, $race, $class, $notes, $level, $hp, $hpmax ,$mp, $mpmax ,$str, $con, $dex, $int, $chr, $creator) {
+function AddCharacter($name, $race, $class, $notes, $level, $hp, $hpmax ,$mp, $mpmax ,$str, $con, $dex, $int, $chr, $creator, $avatar) {
 
     $pdo = connectDB();
-    $data = [$name, $race, $class, $notes, $level, $hp, $hpmax,$mp,$mpmax ,$str, $con, $dex, $int, $chr, $creator];
-    $sql = "INSERT INTO Hahmo (Nimi, Rotu, Hahmoluokka, Muistiinpanot, Taso, Elamapisteet, Elamamax , Magiapisteet, Magiamax ,Voima, Kestavyys, Ketteryys, Alykkyys, Karisma, Tekija) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
+    $data = [$name, $race, $class, $notes, $level, $hp, $hpmax,$mp,$mpmax ,$str, $con, $dex, $int, $chr, $creator, $avatar];
+    $sql = "INSERT INTO Hahmo (Nimi, Rotu, Hahmoluokka, Muistiinpanot, Taso, Elamapisteet, Elamamax , Magiapisteet, Magiamax ,Voima, Kestavyys, Ketteryys, Alykkyys, Karisma, Tekija, Avatar) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stm = $pdo->prepare($sql);
     $stm=$pdo->prepare($sql);
     return $stm->execute($data);
 }
 
 
-function updateCharacter($name, $notes, $level,$hp ,$hpmax, $mp, $mpmax ,$str, $con, $dex, $int, $chr, $id
+function updateCharacter($name, $notes, $level,$hp ,$hpmax, $mp, $mpmax ,$str, $con, $dex, $int, $chr, $avatar, $id
 ) {
     $pdo = connectDB();
 
@@ -54,7 +54,8 @@ function updateCharacter($name, $notes, $level,$hp ,$hpmax, $mp, $mpmax ,$str, $
                 Kestavyys = ?,
                 Ketteryys = ?,
                 Alykkyys = ?,
-                Karisma = ?
+                Karisma = ?,
+                Avatar = ?
             WHERE ID = ?";
 
     $stm = $pdo->prepare($sql);
@@ -72,6 +73,7 @@ function updateCharacter($name, $notes, $level,$hp ,$hpmax, $mp, $mpmax ,$str, $
         $dex,
         $int,
         $chr,
+        $avatar,
         $id
     ]);
 }
@@ -84,19 +86,19 @@ function deleteCharacter($id){
     return $stm->execute([$id]);
 }
 
-function AddItem($campaignid,$item, $amount,$desc) {
+function AddItem($ownerid,$campaignid,$item, $amount,$desc) {
     $pdo = connectDB();
-    $data = [$campaignid, $item, $amount, $desc];
-    $sql = "INSERT INTO Esineet (Kampanjaid, Esine, Maara,Kuvaus) VALUES (?,?,?,?)";
+    $data = [$ownerid,$campaignid, $item, $amount, $desc];
+    $sql = "INSERT INTO Esineet (Hahmoid,Kampanjaid, Esine, Maara,Kuvaus) VALUES (?,?,?,?,?)";
     $stm = $pdo->prepare($sql);
     $stm=$pdo->prepare($sql);
     return $stm->execute($data);
 }
 
-function updateItem($item, $amount,$desc, $id){
+function updateItem($ownerid,$item, $amount,$desc, $id){
     $pdo = connectDB();
-    $data = [$item, $amount, $desc, $id];
-    $sql = "UPDATE Esineet SET Esine = ?, Maara = ?, Kuvaus = ? WHERE ID = ?";
+    $data = [$ownerid,$item, $amount, $desc, $id];
+    $sql = "UPDATE Esineet SET Hahmoid = ?, Esine = ?, Maara = ?, Kuvaus = ? WHERE ID = ?";
     $stm = $pdo->prepare($sql);
     return $stm->execute($data);
 }
@@ -175,10 +177,58 @@ function setAlive($id) {
     $stm = $pdo->prepare($sql);
     return $stm->execute($data);
 }
-function manageCharacter($hp,$mp,$id) {
+function manageCharacter($hp,$mp,$status,$id) {
     $pdo = connectDB();
-    $data = [$hp,$mp,$id];
-    $sql = "UPDATE Hahmo SET Elamapisteet = ?, Magiapisteet = ? WHERE ID = ?";
+    $data = [$hp,$mp,$status,$id];
+    $sql = "UPDATE Hahmo SET Elamapisteet = ?, Magiapisteet = ?, Status = ? WHERE ID = ?";
     $stm = $pdo->prepare($sql);
     return $stm->execute($data);
+}
+
+function addNPC($id, $name,$desc,$lvl,$hp,$hpmax,$mp,$mpmax,$str,$cons,$agi,$int,$cha,$type){
+    $pdo = connectDB();
+    $data = [$id, $name,$desc,$lvl,$hp,$hpmax,$mp,$mpmax,$str,$cons,$agi,$int,$cha,$type];
+    $sql = "INSERT INTO NPCS (CampaignID,Nimi, Muistiinpanot,LVL,HP,HPMAX,MP,MPMAX,STR,CONS,AGI,INTEL,CHA,Type) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    $stm = $pdo->prepare($sql);
+    $stm=$pdo->prepare($sql);
+    return $stm->execute($data);
+}
+
+function listAllNPCs($id) {
+    $pdo = connectDB();
+    $sql = "SELECT * FROM NPCS WHERE CampaignID = ?";
+    $stm = $pdo->prepare($sql);
+    $stm->execute([$id]);
+    $user = $stm->fetchAll(PDO::FETCH_ASSOC);
+    return $user;
+}
+function listAllNPCsID($id) {
+    $pdo = connectDB();
+    $sql = "SELECT * FROM NPCS WHERE ID = ?";
+    $stm = $pdo->prepare($sql);
+    $stm->execute([$id]);
+    $user = $stm->fetch(PDO::FETCH_ASSOC);
+    return $user;
+}
+function updateNPC($nimi,$desc, $lvl,$hp,$hpmax,$mp,$mpmax,$str,$cons,$agi,$intel,$cha,$type, $id){
+    $pdo = connectDB();
+    $data = [$nimi,$desc, $lvl,$hp,$hpmax,$mp,$mpmax,$str,$cons,$agi,$intel,$cha,$type, $id];
+    $sql = "UPDATE NPCS SET Nimi = ?, Muistiinpanot = ?, LVL = ?, HP = ?, HPMAX = ?, MP = ?, MPMAX = ?, STR = ?, CONS = ?, AGI = ?, INTEL = ?, CHA = ?, Type = ? WHERE ID = ?";
+    $stm = $pdo->prepare($sql);
+    return $stm->execute($data);
+}
+
+function manageNPC($hp,$mp,$id) {
+    $pdo = connectDB();
+    $data = [$hp,$mp,$id];
+    $sql = "UPDATE NPCS SET HP = ?, MP = ? WHERE ID = ?";
+    $stm = $pdo->prepare($sql);
+    return $stm->execute($data);
+}
+
+function deleteNPC($id){
+    $pdo = connectDB();
+    $sql = "DELETE FROM NPCS WHERE ID=?";
+    $stm=$pdo->prepare($sql);
+    return $stm->execute([$id]);
 }
