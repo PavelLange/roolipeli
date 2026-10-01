@@ -3442,6 +3442,69 @@ a {
     text-decoration: none;
 }
 
+
+/* CAMPAIGN IMAGE PICKER */
+
+.image-choices {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.image-choice {
+    cursor: pointer;
+    position: relative;
+}
+
+.image-choice-tag {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    padding: 2px 8px;
+    color: var(--dark);
+    background: var(--gold);
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+}
+
+.image-choice input {
+    display: none;
+}
+
+.image-choice img {
+    display: block;
+    width: 200px;
+    height: 100px;
+    object-fit: cover;
+    border: 2px solid var(--border);
+    border-radius: 3px;
+    transition: border-color 0.2s ease;
+}
+
+.image-choice:hover img {
+    border-color: var(--text-muted);
+}
+
+.image-choice input:checked + img {
+    border-color: var(--gold);
+}
+
+.image-upload-button {
+    align-self: flex-start;
+}
+
+.image-preview {
+    width: 220px;
+    height: 140px;
+    object-fit: cover;
+    border: 2px solid var(--gold);
+    border-radius: 3px;
+}
+
+
 /* =========================================
    AVATAR SELECTION
    ========================================= */

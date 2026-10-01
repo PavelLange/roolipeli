@@ -14,7 +14,7 @@
         </div>
 
 
-        <form class="campaign-form" method="POST" action="">
+        <form class="campaign-form" method="POST" action="" enctype="multipart/form-data">
 
             <div class="form-group">
                 <label for="campaign-name">Campaign name</label>
@@ -40,6 +40,37 @@
                 ></textarea>
             </div>
 
+            <div class="form-group">
+                <label>Campaign picture</label>
+
+                <div class="image-choices">
+                    <?php foreach (campaignDefaultImages() as $index => $image): ?>
+                        <label class="image-choice">
+                            <input
+                                type="radio"
+                                name="default_image"
+                                value="<?= htmlspecialchars($image) ?>"
+                                <?= $index === 0 ? "checked" : "" ?>
+                            >
+                            <img src="<?= htmlspecialchars($image) ?>" alt="">
+                        </label>
+                    <?php endforeach ?>
+                </div>
+
+                <input
+                    type="file"
+                    id="campaign-image"
+                    name="image"
+                    accept="image/jpeg,image/png,image/webp"
+                    hidden
+                >
+
+                <label for="campaign-image" class="button button-secondary image-upload-button">
+                    Or upload your own
+                </label>
+
+                <img id="image-preview" class="image-preview" alt="" hidden>
+            </div>
 
             <div class="campaign-form-actions">
 
@@ -64,3 +95,5 @@
     </section>
 
 </main>
+
+<script src="/js/campaign-image.js"></script>
