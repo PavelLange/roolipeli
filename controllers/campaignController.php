@@ -3,19 +3,31 @@ require_once "../models/campaigns.php";
 require_once "../models/character.php";
 require_once "../models/users.php";
 require_once "../libraries/cleaners.php";
+require_once "../libraries/uploads.php";
+
 function addCampaignController(){
-    if(isset($_POST['name'], $_POST['notes'],)){
+    if(isset($_POST['name'], $_POST['notes'])){
         $name = cleanUpInput($_POST['name']);
-        $notes = cleanUpInput($_POST['notes']);               
-        $gmaster = $_SESSION["user"];
-        $_SESSION["message"] = "Campaign has been created!";
-        if(strlen($name) > 1 || strlen($notes) > 1)  {
-        addCampaign($name, $creator, $notes); 
-        header("Location: /my-campaigns"); 
-    }
-    else {
-        require "../views/add_campaign.php";
-    }
+        $notes = cleanUpInput($_POST['notes']);
+
+        $chosen = $_POST["default_image"] ?? "";
+        $imagePath = in_array($chosen, campaignDefaultImages(), true)
+            ? $chosen
+            : "/images/camp1.jpg";
+
+        $uploaded = saveCampaignImage($_FILES["image"] ?? null);
+        if ($uploaded !== null) {
+            $imagePath = $uploaded;
+        }
+
+        if(strlen($name) > 1) {
+            addCampaign($name, $_SESSION["username"], $notes, $imagePath);
+            $_SESSION["message"] = "Campaign has been created!";
+            header("Location: /my-campaigns");
+            exit;
+        } else {
+            require "../views/add_campaign.php";
+        }
     } else {
         require "../views/add_campaign.php";
     }
@@ -27,8 +39,22 @@ function updateCampaignController(){
         $name = cleanUpInput($_POST['name']);
         $notes = cleanUpInput($_POST['notes']);   
         $id = cleanUpInput($_POST['id']);
+
+        // null means "keep the picture this campaign already has"
+        $imagePath = null;
+
+        $chosen = $_POST["default_image"] ?? "";
+        if (in_array($chosen, campaignDefaultImages(), true)) {
+            $imagePath = $chosen;
+        }
+
+        $uploaded = saveCampaignImage($_FILES["image"] ?? null);
+        if ($uploaded !== null) {
+            $imagePath = $uploaded;
+        }
+
         try{
-            updateCampaign($name, $notes, $id);
+            updateCampaign($name, $notes, $id, $imagePath);
             $_SESSION["message"] = "Campaign has been updated!";
             header("Location: /my-campaigns");    
         } catch (PDOException $e){
@@ -410,4 +436,13 @@ function InvitationController() {
         header("Location: /");
         exit;
     }
+}
+
+function campaignDefaultImages() {
+    return [
+        "/images/jap.jpg",
+        "/images/ice.jpg",
+        "/images/forest.jpg",
+        "/images/sky.jpg",
+    ];
 }

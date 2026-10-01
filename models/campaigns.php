@@ -10,13 +10,12 @@ function getAllCampaigns ($id) {
     return $user;
 }
 
-function AddCampaign($name, $master,$notes) {
-    $master = $_SESSION["username"];
+function AddCampaign($name, $master, $notes, $imagePath = null) {
     $pdo = connectDB();
-    $data = [$name, $master, $notes];
-    $sql = "INSERT INTO Kampanjat (Nimi, Pelinjohtaja, Muistiinpanot) VALUES (?,?,?)";
+    $data = [$name, $master, $notes, $imagePath];
+    $sql = "INSERT INTO Kampanjat (Nimi, Pelinjohtaja, Muistiinpanot, ReittiKuvaan)
+            VALUES (?,?,?,?)";
     $stm = $pdo->prepare($sql);
-    $stm=$pdo->prepare($sql);
     return $stm->execute($data);
 }
 
@@ -42,10 +41,18 @@ function deleteCampaign($id){
     return $stm->execute([$id]);
 }
 
-function updateCampaign($name, $notes, $id){
+function updateCampaign($name, $notes, $id, $imagePath = null){
     $pdo = connectDB();
-    $data = [$name, $notes, $id];
-    $sql = "UPDATE Kampanjat SET Nimi = ? , Muistiinpanot = ?  WHERE ID = ?";
+
+    if ($imagePath === null) {
+        // No new picture chosen - leave the existing one alone
+        $sql = "UPDATE Kampanjat SET Nimi = ? , Muistiinpanot = ?  WHERE ID = ?";
+        $data = [$name, $notes, $id];
+    } else {
+        $sql = "UPDATE Kampanjat SET Nimi = ? , Muistiinpanot = ? , ReittiKuvaan = ?  WHERE ID = ?";
+        $data = [$name, $notes, $imagePath, $id];
+    }
+
     $stm = $pdo->prepare($sql);
     return $stm->execute($data);
 }

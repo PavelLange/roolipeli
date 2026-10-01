@@ -43,7 +43,7 @@
 
             <div class="my-campaign-image">
                 <img
-                    src="/images/camp1.jpg"
+                    src="<?= htmlspecialchars($owned["ReittiKuvaan"] ?: "/images/camp1.jpg") ?>"
                     alt="Campaign"
                 >
             </div>
@@ -105,7 +105,7 @@
 
             <div class="my-campaign-image">
                 <img
-                    src="/images/camp1.jpg"
+                    src="<?= htmlspecialchars($joined["ReittiKuvaan"] ?: "/images/camp1.jpg") ?>"
                     alt="Campaign"
                 >
             </div>

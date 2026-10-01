@@ -62,7 +62,7 @@
 			<p>Add the party's supplies, treasures, and other useful gear here.</p>
 			<a href="/new-item?id=<?= urlencode($campaignId) ?>" class="button button-primary">
 				Create first item
-			</a> 
+			</a>
 		</section>
 	<?php endif; ?>
 </main>
