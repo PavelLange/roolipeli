@@ -1753,11 +1753,22 @@ a {
     }
 
     .character-form-actions {
-        flex-direction: column-reverse;
+        width: 100%;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
     }
 
-    .character-form-actions .button {
+    .character-form-actions a.button,
+    .character-form-actions button.button {
         width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+        margin-left: 0;
+        margin-right: 0;
     }
 }
 
@@ -3252,6 +3263,57 @@ a {
     border-top: 1px solid var(--border);
 }
 
+@media (min-width: 481px) and (max-width: 768px) {
+
+    .view-character-image {
+        overflow: hidden;
+    }
+
+    .view-character-image img {
+        display: block;
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+        object-position: top center;
+    }
+
+}
+
+
+@media (max-width: 480px) {
+
+    .view-character-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+        padding-left: 0;
+        padding-right: 0;
+        box-sizing: border-box;
+    }
+
+    .view-character-actions .button {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        margin-left: 0;
+        margin-right: 0;
+        box-sizing: border-box;
+        white-space: normal;
+    }
+
+    .character-form-actions .button-primary {
+        order: 1;
+    }
+
+    .character-form-actions .button-secondary {
+        order: 2;
+    }
+
+}
 
 /* MOBILE */
 
@@ -4836,4 +4898,132 @@ a {
 
 .character-form-errors li:last-child {
     margin-bottom: 0;
+}
+
+/* =========================================
+   My Characters - Responsive Fixes
+   ========================================= */
+
+   .my-campaign-card {
+    min-width: 0;
+}
+
+.my-campaign-content {
+    min-width: 0;
+}
+
+.my-campaign-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 100%;
+    min-width: 0;
+}
+
+.my-campaign-actions .button {
+    box-sizing: border-box;
+    min-width: 0;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-align: center;
+}
+
+
+/* Tablet */
+@media (max-width: 900px) {
+
+    .my-campaign-card {
+        overflow: hidden;
+    }
+
+    .my-campaign-content {
+        width: 100%;
+    }
+
+    .my-campaign-actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        width: 100%;
+    }
+
+    .my-campaign-actions .button {
+        width: 100%;
+        min-width: 0;
+    }
+
+}
+
+
+/* Mobile */
+@media (max-width: 600px) {
+
+    .my-campaign-card {
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
+    }
+
+    .my-character-image {
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
+    }
+
+    .my-character-image img {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        object-fit: cover;
+    }
+
+    .my-campaign-content {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .my-campaign-actions {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 10px;
+        margin-top: 20px;
+        box-sizing: border-box;
+    }
+
+    .my-campaign-actions .button {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        margin: 0;
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+    .bottom-action {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+}
+
+
+/* Very small phones */
+@media (max-width: 380px) {
+
+    .my-campaign-actions {
+        gap: 8px;
+    }
+
+    .my-campaign-actions .button {
+        font-size: 0.9rem;
+        padding: 11px 10px;
+    }
+
 }
