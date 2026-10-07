@@ -430,6 +430,7 @@
 /*GENERAL PAGE ELEMENTS*/
 
 body {
+    margin: 0;
     background:
         radial-gradient(
             circle at 50% 0%,
@@ -450,6 +451,7 @@ a {
 /*BUTTONS*/
 
 .button {
+    box-sizing: border-box;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -696,6 +698,7 @@ a {
 /*CTA*/
 
 .cta-section {
+    box-sizing: border-box;
     width: min(1100px, calc(100% - 40px));
     margin: 0 auto 80px;
     padding: 45px;
@@ -1621,6 +1624,7 @@ a {
 
 
 .character-form-card {
+    box-sizing: border-box;
     width: min(1100px, 100%);
 
     padding: 45px;
@@ -4982,8 +4986,7 @@ a {
         width: 100%;
         max-width: 100%;
         box-sizing: border-box;
-        padding-left: 0;
-        padding-right: 0;
+        padding: 22px;
     }
 
     .my-campaign-actions {
@@ -4996,13 +4999,9 @@ a {
     }
 
     .my-campaign-actions .button {
-        display: block;
         width: 100%;
         max-width: 100%;
-        box-sizing: border-box;
         margin: 0;
-        padding-left: 14px;
-        padding-right: 14px;
     }
 
     .bottom-action {
@@ -5019,11 +5018,6 @@ a {
 
     .my-campaign-actions {
         gap: 8px;
-    }
-
-    .my-campaign-actions .button {
-        font-size: 0.9rem;
-        padding: 11px 10px;
     }
 
 }
@@ -5303,5 +5297,152 @@ a {
 
     .npc-card-heading {
         gap: 12px;
+    }
+}
+
+
+/* =========================================
+   RESPONSIVE HEADER
+   ========================================= */
+
+@media (max-width: 900px) {
+    .header-inner {
+        width: min(1200px, calc(100% - 24px));
+        min-height: 0;
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 14px 0 0;
+    }
+
+    .logo-mark {
+        width: 32px;
+        height: 32px;
+        font-size: 15px;
+    }
+
+    .logo-text {
+        font-size: 22px;
+    }
+
+    .header-actions {
+        gap: 10px;
+    }
+
+    .nav-button,
+    .invite-anim {
+        padding: 10px 14px;
+        font-size: 11px;
+    }
+
+    #invite {
+        width: 42px;
+        height: 40px;
+    }
+
+    .main-nav {
+        display: flex;
+        order: 3;
+        width: 100%;
+        gap: 0;
+        border-top: 1px solid var(--border);
+    }
+
+    .nav-link {
+        flex: 1;
+        min-height: 52px;
+        justify-content: center;
+        padding: 0 10px;
+        font-size: 12px;
+    }
+
+    .nav-link::after {
+        left: 10px;
+        right: 10px;
+    }
+}
+
+@media (max-width: 430px) {
+    .header-inner {
+        width: min(1200px, calc(100% - 16px));
+        gap: 10px;
+    }
+
+    .logo {
+        gap: 8px;
+    }
+
+    .logo-mark {
+        width: 28px;
+        height: 28px;
+        font-size: 13px;
+    }
+
+    .logo-text {
+        font-size: 17px;
+        letter-spacing: 0.5px;
+    }
+
+    .header-actions {
+        gap: 7px;
+    }
+
+    .nav-button,
+    .invite-anim {
+        padding: 9px 11px;
+        font-size: 10px;
+        letter-spacing: 0.5px;
+    }
+
+    .login-link {
+        font-size: 12px;
+    }
+
+    #invite {
+        width: 38px;
+        height: 36px;
+    }
+
+    .invite-img {
+        width: 22px;
+        height: 22px;
+    }
+
+    .nav-link {
+        padding: 0 4px;
+        font-size: 11px;
+        letter-spacing: 0.4px;
+    }
+}
+
+
+/* =========================================
+   SMALL PHONES (iPhone SE and similar)
+   ========================================= */
+
+@media (max-width: 380px) {
+    .button {
+        padding: 0 14px;
+        font-size: 12px;
+        letter-spacing: 0.5px;
+    }
+
+    .character-info-box {
+        flex-wrap: wrap;
+        gap: 14px;
+        padding: 1rem 1.1rem;
+    }
+
+    .character-info-item {
+        flex: 1 1 45%;
+    }
+
+    .character-info-divider {
+        display: none;
+    }
+}
+
+@media (max-width: 700px) {
+    .player-columns-wrapper {
+        grid-template-columns: 1fr;
     }
 }
