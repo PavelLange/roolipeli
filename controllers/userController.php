@@ -8,9 +8,9 @@ $error2 = "";
 $error3 = "";
 function registerController(){
     if(isset($_POST['username'], $_POST['email'], $_POST['password'])){
-        $username = cleanUpInput($_POST['username']);
-        $email = cleanUpInput($_POST['email']);
-        $password = cleanUpInput($_POST['password']);
+        $username = cleanUpInput($_POST['username'], LIMIT_USERNAME);
+        $email = cleanUpInput($_POST['email'], LIMIT_EMAIL);
+        $password = cleanUpInput($_POST['password'], LIMIT_PASSWORD);
         if(dupeUser($username)){
             $error = "Username already in use!";
         }elseif(dupeMail($email)) {
@@ -39,8 +39,8 @@ function registerController(){
 
 function loginController(){
     if(isset($_POST['username'], $_POST['password'],)){
-        $username = cleanUpInput($_POST['username']);
-        $password = cleanUpInput($_POST['password']);
+        $username = cleanUpInput($_POST['username'], LIMIT_USERNAME);
+        $password = cleanUpInput($_POST['password'], LIMIT_PASSWORD);
         
         $result = login($username, $password);
         $_SESSION["message"] = "Username or password is incorrect!";

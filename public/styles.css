@@ -5446,3 +5446,35 @@ a {
         grid-template-columns: 1fr;
     }
 }
+
+
+/* =========================================
+   LONG TEXT GUARDS
+
+   A name or note typed with no spaces is one huge "word".
+   overflow-wrap is inherited, so setting it on the page
+   containers makes every heading and paragraph inside break
+   instead of stretching the layout. min-width:0 lets flex and
+   grid children shrink below their content width, which they
+   refuse to do by default.
+   ========================================= */
+
+main,
+.invite-panel,
+.message-div {
+    overflow-wrap: anywhere;
+}
+
+.my-campaign-content,
+.my-campaign-card,
+.campaign-info,
+.campaign-notes,
+.player-card,
+.player-column,
+.character-info-item,
+.character-info-box,
+.item-card,
+.npc-card,
+.npc-identity {
+    min-width: 0;
+}

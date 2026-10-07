@@ -23,6 +23,7 @@
                     type="text"
                     id="campaign-name"
                     name="name"
+                    maxlength="60"
                     placeholder="Enter campaign name"
                     required
                 >
@@ -35,6 +36,7 @@
                 <textarea
                     id="campaign-notes"
                     name="notes"
+                    maxlength="1000"
                     rows="8"
                     placeholder="Write a description or notes about your campaign..."
                 ></textarea>

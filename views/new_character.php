@@ -335,7 +335,7 @@
 
                 <label for="notes">Character notes</label>
 
-                <textarea id="notes" name="notes" rows="6" placeholder="Write something about your character..."></textarea>
+                <textarea id="notes" name="notes" rows="6" maxlength="1000" placeholder="Write something about your character..."></textarea>
 
             </div>
 

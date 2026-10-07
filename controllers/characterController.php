@@ -113,10 +113,10 @@ function addCharacterController()
      * =========================================
      */
 
-    $name = cleanUpInput($_POST['name']);
-    $race = cleanUpInput($_POST['race']);
-    $class = cleanUpInput($_POST['class']);
-    $notes = cleanUpInput($_POST['notes']);
+    $name = cleanUpInput($_POST['name'], LIMIT_NAME);
+    $race = cleanUpInput($_POST['race'], LIMIT_SHORT);
+    $class = cleanUpInput($_POST['class'], LIMIT_SHORT);
+    $notes = cleanUpInput($_POST['notes'], LIMIT_NOTES);
 
 
     /*
@@ -789,9 +789,9 @@ function updateCharacterController()
 
 
     $id = cleanUpInput($_POST['id']);
-    $notes = cleanUpInput($_POST['notes']);
+    $notes = cleanUpInput($_POST['notes'], LIMIT_NOTES);
 
-    $newLevel = (int)$_POST['level'];
+    $newLevel = cleanUpNumber($_POST['level'], LIMIT_LEVEL);
 
     if ($newLevel < 1) {
 
@@ -819,7 +819,7 @@ function updateCharacterController()
         $currentLevel = (int)$character["Taso"];
 
         $newLevel = isset($_POST["level"])
-            ? (int)$_POST["level"]
+            ? cleanUpNumber($_POST["level"], LIMIT_LEVEL)
             : $currentLevel;
 
 
@@ -836,35 +836,35 @@ function updateCharacterController()
         $name = $character["Nimi"];
 
         $newHp = isset($_POST['health'])
-            ? (int)$_POST['health']
+            ? cleanUpNumber($_POST['health'], LIMIT_POINTS)
             : (int)$character['Elamamax'];
 
         $newMp = isset($_POST['mana'])
-            ? (int)$_POST['mana']
+            ? cleanUpNumber($_POST['mana'], LIMIT_POINTS)
             : (int)$character['Magiamax'];
 
         $newStr = isset($_POST['strength'])
-            ? (int)$_POST['strength']
+            ? cleanUpNumber($_POST['strength'], LIMIT_STAT)
             : (int)$character['Voima'];
 
 
         $newCon = isset($_POST['constitution'])
-            ? (int)$_POST['constitution']
+            ? cleanUpNumber($_POST['constitution'], LIMIT_STAT)
             : (int)$character['Kestavyys'];
 
 
         $newDex = isset($_POST['agility'])
-            ? (int)$_POST['agility']
+            ? cleanUpNumber($_POST['agility'], LIMIT_STAT)
             : (int)$character['Ketteryys'];
 
 
         $newInt = isset($_POST['intelligence'])
-            ? (int)$_POST['intelligence']
+            ? cleanUpNumber($_POST['intelligence'], LIMIT_STAT)
             : (int)$character['Alykkyys'];
 
 
         $newChr = isset($_POST['charisma'])
-            ? (int)$_POST['charisma']
+            ? cleanUpNumber($_POST['charisma'], LIMIT_STAT)
             : (int)$character['Karisma'];
 
         $stats = [
@@ -1286,9 +1286,9 @@ function addItemController()
 {
     if (isset($_POST["name"], $_POST["desc"], $_POST["amount"])) {
         $campaignid = cleanUpInput($_GET["id"]);
-        $name = cleanUpInput($_POST["name"]);
-        $desc = cleanUpInput($_POST["desc"]);
-        $amount = cleanUpInput($_POST["amount"]);
+        $name = cleanUpInput($_POST["name"], LIMIT_NAME);
+        $desc = cleanUpInput($_POST["desc"], LIMIT_NOTES);
+        $amount = cleanUpNumber($_POST["amount"], LIMIT_AMOUNT);
         $ownerid = cleanUpInput($_POST["owner"]);
         try {
             addItem($ownerid, $campaignid, $name, $amount, $desc);
@@ -1328,9 +1328,9 @@ function editItemController()
 function updateItemController()
 {
     if (isset($_POST["name"], $_POST["desc"], $_POST["amount"])) {
-        $name = cleanUpInput($_POST["name"]);
-        $desc = cleanUpInput($_POST["desc"]);
-        $amount = cleanUpInput($_POST["amount"]);
+        $name = cleanUpInput($_POST["name"], LIMIT_NAME);
+        $desc = cleanUpInput($_POST["desc"], LIMIT_NOTES);
+        $amount = cleanUpNumber($_POST["amount"], LIMIT_AMOUNT);
         $ownerid = cleanUpInput($_POST["owner"]);
         $id = $_GET["id"];
         $cid = $_GET["cid"];
@@ -1374,9 +1374,9 @@ function manageCharacterController()
     $cid = $_GET["cid"];
     $character = getAllCharacterInfo($id);
     if (isset($_POST["hpamount"], $_POST["mpamount"], $_POST["charstatus"])) {
-        $hp = cleanUpInput($_POST["hpamount"]);
-        $mp = cleanUpInput($_POST["mpamount"]);
-        $status = cleanUpInput($_POST["charstatus"]);
+        $hp = cleanUpNumber($_POST["hpamount"], LIMIT_POINTS);
+        $mp = cleanUpNumber($_POST["mpamount"], LIMIT_POINTS);
+        $status = cleanUpInput($_POST["charstatus"], LIMIT_SHORT);
 
         try {
             manageCharacter($hp, $mp, $status ,$id);
@@ -1394,19 +1394,19 @@ function addNPCController()
 {
     if (isset($_POST["name"], $_POST["desc"], $_POST["level"], $_POST["health"], $_POST["mana"], $_POST["str"], $_POST["const"], $_POST["agility"], $_POST["int"], $_POST["char"], $_POST["type"])) {
         $id = cleanUpInput($_GET["id"]);
-        $name = cleanUpInput($_POST["name"]);
-        $desc = cleanUpInput($_POST["desc"]);
-        $lvl = (cleanUpInput($_POST["level"]) === '' ? 0 : (int)$_POST["level"]);
-        $hp = (cleanUpInput($_POST["health"]) === '' ? 0 : (int)$_POST["health"]);
+        $name = cleanUpInput($_POST["name"], LIMIT_NAME);
+        $desc = cleanUpInput($_POST["desc"], LIMIT_NOTES);
+        $lvl = cleanUpNumber($_POST["level"], LIMIT_LEVEL);
+        $hp = cleanUpNumber($_POST["health"], LIMIT_POINTS);
         $hpmax = $hp;
-        $mp = (cleanUpInput($_POST["mana"]) === '' ? 0 : (int)$_POST["mana"]);
+        $mp = cleanUpNumber($_POST["mana"], LIMIT_POINTS);
         $mpmax = $mp;
-        $str = (cleanUpInput($_POST["str"]) === '' ? 0 : (int)$_POST["str"]);
-        $const = (cleanUpInput($_POST["const"]) === '' ? 0 : (int)$_POST["const"]);
-        $agility = (cleanUpInput($_POST["agility"]) === '' ? 0 : (int)$_POST["agility"]);
-        $int = (cleanUpInput($_POST["int"]) === '' ? 0 : (int)$_POST["int"]);
-        $char = (cleanUpInput($_POST["char"]) === '' ? 0 : (int)$_POST["char"]);
-        $type = cleanUpInput($_POST["type"]);
+        $str = cleanUpNumber($_POST["str"], LIMIT_STAT);
+        $const = cleanUpNumber($_POST["const"], LIMIT_STAT);
+        $agility = cleanUpNumber($_POST["agility"], LIMIT_STAT);
+        $int = cleanUpNumber($_POST["int"], LIMIT_STAT);
+        $char = cleanUpNumber($_POST["char"], LIMIT_STAT);
+        $type = cleanUpInput($_POST["type"], LIMIT_SHORT);
 
         try {
             addNPC($id, $name, $desc, $lvl, $hp, $hpmax, $mp, $mpmax, $str, $const, $agility, $int, $char, $type);
@@ -1438,19 +1438,19 @@ function updateNPCController()
     if (isset($_POST["name"], $_POST["desc"], $_POST["level"], $_POST["health"], $_POST["mana"], $_POST["str"], $_POST["const"], $_POST["agility"], $_POST["int"], $_POST["char"], $_POST["type"])) {
         $id = cleanUpInput($_GET["id"]);
         $cid = cleanUPInput($_GET["cid"]);
-        $name = cleanUpInput($_POST["name"]);
-        $desc = cleanUpInput($_POST["desc"]);
-        $lvl = (cleanUpInput($_POST["level"]) === '' ? 0 : (int)$_POST["level"]);
-        $hp = (cleanUpInput($_POST["health"]) === '' ? 0 : (int)$_POST["health"]);
+        $name = cleanUpInput($_POST["name"], LIMIT_NAME);
+        $desc = cleanUpInput($_POST["desc"], LIMIT_NOTES);
+        $lvl = cleanUpNumber($_POST["level"], LIMIT_LEVEL);
+        $hp = cleanUpNumber($_POST["health"], LIMIT_POINTS);
         $hpmax = $hp;
-        $mp = (cleanUpInput($_POST["mana"]) === '' ? 0 : (int)$_POST["mana"]);
+        $mp = cleanUpNumber($_POST["mana"], LIMIT_POINTS);
         $mpmax = $mp;
-        $str = (cleanUpInput($_POST["str"]) === '' ? 0 : (int)$_POST["str"]);
-        $const = (cleanUpInput($_POST["const"]) === '' ? 0 : (int)$_POST["const"]);
-        $agility = (cleanUpInput($_POST["agility"]) === '' ? 0 : (int)$_POST["agility"]);
-        $int = (cleanUpInput($_POST["int"]) === '' ? 0 : (int)$_POST["int"]);
-        $char = (cleanUpInput($_POST["char"]) === '' ? 0 : (int)$_POST["char"]);
-        $type = cleanUpInput($_POST["type"]);
+        $str = cleanUpNumber($_POST["str"], LIMIT_STAT);
+        $const = cleanUpNumber($_POST["const"], LIMIT_STAT);
+        $agility = cleanUpNumber($_POST["agility"], LIMIT_STAT);
+        $int = cleanUpNumber($_POST["int"], LIMIT_STAT);
+        $char = cleanUpNumber($_POST["char"], LIMIT_STAT);
+        $type = cleanUpInput($_POST["type"], LIMIT_SHORT);
         try {
             updateNPC($name, $desc, $lvl, $hp, $hpmax, $mp, $mpmax, $str, $const, $agility, $int, $char, $type, $id);
             $_SESSION["message"] = "NPC has been updated!";
@@ -1468,8 +1468,8 @@ function manageNPCController()
     $cid = $_GET["cid"];
     $npc = listAllNPCsID($id);
     if (isset($_POST["hpamount"], $_POST["mpamount"])) {
-        $hp = cleanUpInput($_POST["hpamount"]);
-        $mp = cleanUpInput($_POST["mpamount"]);
+        $hp = cleanUpNumber($_POST["hpamount"], LIMIT_POINTS);
+        $mp = cleanUpNumber($_POST["mpamount"], LIMIT_POINTS);
         try {
             manageNPC($hp, $mp, $id);
             $_SESSION["message"] = "NPC has been updated!";

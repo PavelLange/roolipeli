@@ -25,6 +25,7 @@
                     type="text"
                     id="NPC-name"
                     name="name"
+                    maxlength="60"
                     placeholder="Enter NPC name..."
                     required
                     value=<?=$npcinfo["Nimi"]?>
@@ -38,6 +39,7 @@
                 <textarea
                     id="NPC-desc"
                     name="desc"
+                    maxlength="1000"
                     rows="8"
                     placeholder="Write a description or notes about your NPC..."
                 ><?=$npcinfo["Muistiinpanot"]?></textarea>
@@ -64,6 +66,7 @@
                     type="number"
                     id="NPC-health"
                     name="health"
+                    max="999999"
                     placeholder="Enter health amount..."
                     min=0
                     value=<?=$npcinfo["HPMAX"]?>
@@ -77,6 +80,7 @@
                     type="number"
                     id="NPC-mana"
                     name="mana"
+                    max="999999"
                     placeholder="Enter mana amount..."
                     min=0
                     value=<?=$npcinfo["MPMAX"]?>

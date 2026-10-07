@@ -31,6 +31,7 @@
                 <input
                     id="email"
                     type="email"
+                    maxlength="100"
                     name="email"
                     value="<?=htmlspecialchars($_POST['email'] ?? '') ?>"
                     required

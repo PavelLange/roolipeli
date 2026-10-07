@@ -23,6 +23,7 @@
                     type="text"
                     id="item-name"
                     name="name"
+                    maxlength="60"
                     value="<?=$iteminfo["Esine"]?>"
                     placeholder="Enter item name..."
                     required
@@ -36,6 +37,7 @@
                 <textarea
                     id="item-desc"
                     name="desc"
+                    maxlength="1000"
                     rows="8"
                     placeholder="Write a description or notes about your item..."
                 ><?= $iteminfo["Kuvaus"] ?></textarea>
@@ -48,6 +50,7 @@
                     type="number"
                     id="item-amount"
                     name="amount"
+                    max="999999"
                     value="<?=$iteminfo["Maara"]?>"
                     placeholder="Enter item amount..."
                     min=1
