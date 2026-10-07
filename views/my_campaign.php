@@ -83,7 +83,6 @@
                     >
                         Edit
                     </a>
-                    <br>
                     <a
                         href="/delete-campaign?id=<?= $id ?>"
                         class="button button-primary"
