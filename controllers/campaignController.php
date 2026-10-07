@@ -7,8 +7,8 @@ require_once "../libraries/uploads.php";
 
 function addCampaignController(){
     if(isset($_POST['name'], $_POST['notes'])){
-        $name = cleanUpInput($_POST['name']);
-        $notes = cleanUpInput($_POST['notes']);
+        $name = cleanUpInput($_POST['name'], LIMIT_NAME);
+        $notes = cleanUpInput($_POST['notes'], LIMIT_NOTES);
 
         $chosen = $_POST["default_image"] ?? "";
         $imagePath = in_array($chosen, campaignDefaultImages(), true)
@@ -21,10 +21,15 @@ function addCampaignController(){
         }
 
         if(strlen($name) > 1) {
-            addCampaign($name, $_SESSION["username"], $notes, $imagePath);
-            $_SESSION["message"] = "Campaign has been created!";
-            header("Location: /my-campaigns");
-            exit;
+            try {
+                addCampaign($name, $_SESSION["username"], $notes, $imagePath);
+                $_SESSION["message"] = "Campaign has been created!";
+                header("Location: /my-campaigns");
+                exit;
+            } catch (PDOException $e) {
+                $_SESSION["message"] = "The campaign could not be saved. Please try again.";
+                require "../views/add_campaign.php";
+            }
         } else {
             require "../views/add_campaign.php";
         }
@@ -36,8 +41,8 @@ function addCampaignController(){
 
 function updateCampaignController(){
     if(isset($_POST['name'], $_POST['notes'])){
-        $name = cleanUpInput($_POST['name']);
-        $notes = cleanUpInput($_POST['notes']);   
+        $name = cleanUpInput($_POST['name'], LIMIT_NAME);
+        $notes = cleanUpInput($_POST['notes'], LIMIT_NOTES);   
         $id = cleanUpInput($_POST['id']);
 
         // null means "keep the picture this campaign already has"

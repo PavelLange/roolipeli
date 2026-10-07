@@ -25,6 +25,7 @@
                     type="text"
                     id="NPC-name"
                     name="name"
+                    maxlength="60"
                     placeholder="Enter NPC name..."
                     required
                 >
@@ -37,6 +38,7 @@
                 <textarea
                     id="NPC-desc"
                     name="desc"
+                    maxlength="1000"
                     rows="8"
                     placeholder="Write a description or notes about your NPC..."
                 ></textarea>
@@ -62,8 +64,10 @@
                     type="number"
                     id="NPC-health"
                     name="health"
+                    max="999999"
                     placeholder="Enter health amount..."
                     min=0
+                    maxlength="200"
                 ><p>Optional!</p>
             </div>
 
@@ -74,8 +78,10 @@
                     type="number"
                     id="NPC-mana"
                     name="mana"
+                    max="999999"
                     placeholder="Enter mana amount..."
                     min=0
+                    maxlength="200"
                 ><p>Optional!</p>
             </div>
 
