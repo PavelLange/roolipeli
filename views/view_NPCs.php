@@ -1,99 +1,149 @@
-<?php if(empty($allNPCs)):?>
-<h1>Looks like you dont have any NPCs.</h1>
-<?php $id = $_GET["id"]?>
-<a href="new-NPC?id=<?=$id?>">
-<button>CREATE NPC</button>
-</a>
-<?php else:?>
-<?php 
-foreach($allNPCs as $NPC): ?>
-<div>
-<h1><?=$NPC["Nimi"]?></h1>
-<h2><?=$NPC["Muistiinpanot"]?></h2>
-<p>
-  <?php if ($NPC["LVL"] === 0): ?>
-      <?php echo ""; ?>
-  <?php else: ?>
-      <?php echo "Level: " . $NPC["LVL"]; ?>
-  <?php endif; ?>
-</p>
+<?php $campaignId = (string) $campaignid; ?>
+<?php
+$statLabels = [
+	"STR"   => "Strength",
+	"CONS"  => "Constitution",
+	"AGI"   => "Agility",
+	"INTEL" => "Intelligence",
+	"CHA"   => "Charisma",
+];
+?>
 
-<p>
-  <?php if ($NPC["HPMAX"] === 0): ?>
-      <?php echo ""; ?>
-  <?php else: ?>
-      <?php echo "HP: " . $NPC["HP"] . "/" . $NPC["HPMAX"]; ?>
-  <?php endif; ?>
-</p>
+<main class="npcs-page">
+	<section class="npcs-heading">
+		<div>
+			<p class="eyebrow">Campaign cast</p>
+			<h1>NPCs</h1>
+			<p>Keep track of the characters your party meets along the way.</p>
+		</div>
 
-<p>
-  <?php if ($NPC["MPMAX"] === 0): ?>
-      <?php echo ""; ?>
-  <?php else: ?>
-      <?php echo "MP: " . $NPC["MP"] . "/" . $NPC["MPMAX"]; ?>
-  <?php endif; ?>
-</p>
+		<div class="npcs-heading-actions">
+			<a href="/view-campaign?id=<?= urlencode($campaignId) ?>" class="button button-secondary">
+				Back to campaign
+			</a>
+			<a href="/new-NPC?id=<?= urlencode($campaignId) ?>" class="button button-primary">
+				Add NPC
+			</a>
+		</div>
+	</section>
 
-<p>
-  <?php if ($NPC["STR"] === 0): ?>
-      <?php echo ""; ?>
-  <?php else: ?>
-      <?php echo "Strength: " . $NPC["STR"]; ?>
-  <?php endif; ?>
-</p>
+	<?php if (!empty($allNPCs)): ?>
+		<section class="npcs-grid" aria-label="Campaign NPCs">
+			<?php foreach ($allNPCs as $NPC): ?>
+				<?php
+				$level = (int) ($NPC["LVL"] ?? 0);
+				$hpMax = (int) ($NPC["HPMAX"] ?? 0);
+				$mpMax = (int) ($NPC["MPMAX"] ?? 0);
 
-<p>
-  <?php if ($NPC["CONS"] === 0): ?>
-      <?php echo ""; ?>
-  <?php else: ?>
-      <?php echo "Constitution: " . $NPC["CONS"]; ?>
-  <?php endif; ?>
-</p>
+				$stats = [];
+				foreach ($statLabels as $statKey => $statLabel) {
+					if ((int) ($NPC[$statKey] ?? 0) !== 0) {
+						$stats[$statLabel] = (int) $NPC[$statKey];
+					}
+				}
+				?>
+				<article class="npc-card">
+					<div class="npc-card-heading">
+						<div class="npc-identity">
+							<p class="npc-label">NPC</p>
+							<h2><?= htmlspecialchars($NPC["Nimi"] ?? "Unnamed NPC") ?></h2>
 
-<p>
-  <?php if ($NPC["AGI"] === 0): ?>
-      <?php echo ""; ?>
-  <?php else: ?>
-      <?php echo "Agility: " . $NPC["AGI"]; ?>
-  <?php endif; ?>
-</p>
+							<?php if (!empty($NPC["Type"])): ?>
+								<p class="npc-type"><?= htmlspecialchars($NPC["Type"]) ?></p>
+							<?php endif; ?>
+						</div>
 
-<p>
-  <?php if ($NPC["INTEL"] === 0): ?>
-      <?php echo ""; ?>
-  <?php else: ?>
-      <?php echo "Intelligence: " . $NPC["INTEL"]; ?>
-  <?php endif; ?>
-</p>
+						<?php if ($level !== 0): ?>
+							<div class="npc-level">
+								<span>Level</span>
+								<strong><?= $level ?></strong>
+							</div>
+						<?php endif; ?>
+					</div>
 
-<p>
-  <?php if ($NPC["CHA"] === 0): ?>
-      <?php echo ""; ?>
-  <?php else: ?>
-      <?php echo "Charisma: " . $NPC["CHA"]; ?>
-  <?php endif; ?>
-</p>
+					<p class="npc-notes">
+						<?= htmlspecialchars($NPC["Muistiinpanot"] ?? "") ?: "No notes recorded." ?>
+					</p>
 
-<p>Type: <?=$NPC["Type"]?></p>
-<?php $id = $_GET["id"]?>
-<a href="edit-NPC?id=<?=$NPC["ID"]?>&cid=<?=$id?>">
-<button>EDIT</button>
-</a>
-<a href="manage-NPC?id=<?=$NPC["ID"]?>&cid=<?=$id?>">
-<button>MANAGE</button>
-</a>
-<a
-<?php $cid = $_GET["id"]?>
-href="/delete-NPC?id=<?= urlencode((string) $NPC["ID"]) ?>&cid=<?= urlencode($cid) ?>"
-class="button button-danger"
-onClick="return confirm('Are you sure you want to delete this NPC?');"
->
-Delete
-</a>
-</div>
-<?php endforeach;?>
-<?php $id = $_GET["id"]?>
-<a href="view-campaign?id=<?=$id?>">
-<button>BACK</button>  
-</a>
-<?php endif;?>
+					<?php if ($hpMax > 0 || $mpMax > 0): ?>
+						<div class="npc-bars">
+							<?php if ($hpMax > 0): ?>
+								<?php $hp = max(0, min((int) ($NPC["HP"] ?? 0), $hpMax)); ?>
+								<div class="npc-bar">
+									<div class="npc-bar-head">
+										<span>HP</span>
+										<strong><?= $hp ?> / <?= $hpMax ?></strong>
+									</div>
+									<div class="npc-bar-track">
+										<div
+											class="npc-bar-fill npc-bar-hp"
+											style="width: <?= round($hp / $hpMax * 100) ?>%"
+										></div>
+									</div>
+								</div>
+							<?php endif; ?>
+
+							<?php if ($mpMax > 0): ?>
+								<?php $mp = max(0, min((int) ($NPC["MP"] ?? 0), $mpMax)); ?>
+								<div class="npc-bar">
+									<div class="npc-bar-head">
+										<span>MP</span>
+										<strong><?= $mp ?> / <?= $mpMax ?></strong>
+									</div>
+									<div class="npc-bar-track">
+										<div
+											class="npc-bar-fill npc-bar-mp"
+											style="width: <?= round($mp / $mpMax * 100) ?>%"
+										></div>
+									</div>
+								</div>
+							<?php endif; ?>
+						</div>
+					<?php endif; ?>
+
+					<?php if (!empty($stats)): ?>
+						<div class="npc-stats">
+							<?php foreach ($stats as $statLabel => $statValue): ?>
+								<div class="npc-stat">
+									<span><?= htmlspecialchars($statLabel) ?></span>
+									<strong><?= $statValue ?></strong>
+								</div>
+							<?php endforeach; ?>
+						</div>
+					<?php endif; ?>
+
+					<div class="npc-card-actions">
+						<a
+							href="/edit-NPC?id=<?= urlencode((string) $NPC["ID"]) ?>&cid=<?= urlencode($campaignId) ?>"
+							class="button button-secondary"
+						>
+							Edit
+						</a>
+						<a
+							href="/manage-NPC?id=<?= urlencode((string) $NPC["ID"]) ?>&cid=<?= urlencode($campaignId) ?>"
+							class="button button-secondary"
+						>
+							Manage
+						</a>
+						<a
+							href="/delete-NPC?id=<?= urlencode((string) $NPC["ID"]) ?>&cid=<?= urlencode($campaignId) ?>"
+							class="button button-danger"
+							onClick="return confirm('Are you sure you want to delete this NPC?');"
+						>
+							Delete
+						</a>
+					</div>
+				</article>
+			<?php endforeach; ?>
+		</section>
+	<?php else: ?>
+		<section class="npcs-empty-state">
+			<p class="eyebrow">Nothing recorded</p>
+			<h2>This campaign has no NPCs yet.</h2>
+			<p>Add the allies, villains, and strangers your party will run into.</p>
+			<a href="/new-NPC?id=<?= urlencode($campaignId) ?>" class="button button-primary">
+				Create first NPC
+			</a>
+		</section>
+	<?php endif; ?>
+</main>
