@@ -54,7 +54,7 @@ Mitä ohjelmistoja tarvitaan projektin suorittamiseen?
 - MariaDB / MySQL
 - Apache
 
-## Asennus - ??? 
+## Asennus - 
 
 Ohjeet projektin asentamiseen.
 
