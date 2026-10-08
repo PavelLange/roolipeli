@@ -6,6 +6,7 @@ require_once "../models/campaigns.php";
 $error = "";
 $error2 = "";
 $error3 = "";
+$error4 = "";
 function registerController(){
     if(isset($_POST['username'], $_POST['email'], $_POST['password'])){
         $username = cleanUpInput($_POST['username'], LIMIT_USERNAME);
@@ -41,15 +42,15 @@ function loginController(){
     if(isset($_POST['username'], $_POST['password'],)){
         $username = cleanUpInput($_POST['username'], LIMIT_USERNAME);
         $password = cleanUpInput($_POST['password'], LIMIT_PASSWORD);
-        
         $result = login($username, $password);
-        $_SESSION["message"] = "Username or password is incorrect!";
         if($result){
             $_SESSION['username'] = $result['Kayttajanimi'];
             $_SESSION['user_id'] = $result['ID'];
             $_SESSION['session_id'] = session_id();
             $_SESSION["message"] = "Welcome back, " . $_SESSION["username"] . "!";
             header("Location: /"); 
+        } else {
+            $error4 = "Username or password is incorrect.";
         }
     }
     require "../views/login.php";

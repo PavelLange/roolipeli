@@ -1,3 +1,4 @@
+<?php require_once "../controllers/userController.php" ?>
 <main class="auth-page">
 
     <section class="auth-card">
@@ -6,7 +7,9 @@
             <h1>Login</h1>
             <p>Log in to continue your adventure.</p>
         </div>
-
+        <?php if(!empty($error4)):?>
+                <p class="error-message-login"><?= htmlspecialchars($error4) ?></p>
+            <?php endif?>
         <form class="auth-form" action="/login" method="post">
 
             <div class="form-group">

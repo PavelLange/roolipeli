@@ -28,7 +28,9 @@
                     required
                 >
             </div>
-
+            <?php if(!empty($error)):?>
+                <p class="error-message-campaign" ><?= htmlspecialchars($error) ?></p>
+            <?php endif?>
 
             <div class="form-group">
                 <label for="campaign-notes">Campaign notes</label>
