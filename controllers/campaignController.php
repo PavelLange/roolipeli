@@ -4,7 +4,7 @@ require_once "../models/character.php";
 require_once "../models/users.php";
 require_once "../libraries/cleaners.php";
 require_once "../libraries/uploads.php";
-
+$error = "";
 function addCampaignController(){
     if(isset($_POST['name'], $_POST['notes'])){
         // A second, repeated submit carries a token that has already
@@ -38,6 +38,7 @@ function addCampaignController(){
                 require "../views/add_campaign.php";
             }
         } else {
+            $error = "Campaign name is too short!";
             require "../views/add_campaign.php";
         }
     } else {

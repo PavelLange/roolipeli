@@ -186,6 +186,11 @@
     color: var(--text);
 }
 
+.error-message-login {
+    color: #e74c3c;
+    font-size: 20px;
+    margin-left: 70px;
+}
 /* Get Started button */
 
 .nav-button {
@@ -1275,6 +1280,11 @@ a {
             rgba(169, 54, 54, 0.08),
             transparent 45%
         );
+}
+
+.error-message-campaign {
+    color: #e74c3c;
+    font-size: 20px;
 }
 
 /* FORM CARD */
