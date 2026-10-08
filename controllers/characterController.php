@@ -58,13 +58,6 @@ function addCharacterController()
         return;
     }
 
-    // A repeated submit carries an already-used token; drop it.
-    if (!useFormToken("new_character")) {
-        header("Location: /my-characters");
-        exit;
-    }
-
-
     /*
      * =========================================
      * LOGIN CHECK
@@ -728,6 +721,14 @@ function addCharacterController()
      * CREATE CHARACTER
      * =========================================
      */
+
+    // Consumed here rather than at the top of the function, so that a
+    // validation failure above does not use up the token and leave the
+    // user unable to resubmit after going back.
+    if (!useFormToken("new_character")) {
+        header("Location: /my-characters");
+        exit;
+    }
 
     try {
 

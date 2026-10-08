@@ -15,7 +15,6 @@ function formTokenField($formName){
         . '">';
 }
 
-
 function useFormToken($formName){
     $sent     = $_POST["form_token"] ?? "";
     $expected = $_SESSION["form_tokens"][$formName] ?? "";
