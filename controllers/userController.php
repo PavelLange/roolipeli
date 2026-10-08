@@ -70,6 +70,7 @@ function deleteUserController() {
             if($user["ID"] === $_SESSION["user_id"]) {
             deleteUser($id);
             deleteAllOwnedCampaigns($_SESSION["username"]);
+            deleteAllOwnCharacters($_SESSION["username"]);
             logoutController();
             }
             
