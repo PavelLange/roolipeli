@@ -45,7 +45,6 @@ function updateCampaign($name, $notes, $id, $imagePath = null){
     $pdo = connectDB();
 
     if ($imagePath === null) {
-        // No new picture chosen - leave the existing one alone
         $sql = "UPDATE Kampanjat SET Nimi = ? , Muistiinpanot = ?  WHERE ID = ?";
         $data = [$name, $notes, $id];
     } else {
@@ -76,17 +75,6 @@ function addUserToCampaign($uname, $id){
     return $success;
 }
 
-/**
- * Delete every campaign this user runs, plus everything that belongs to
- * those campaigns.
- *
- * Only Kampanjahahmot has a foreign key onto Kampanjat (ON DELETE
- * CASCADE). NPCS, Esineet and Kutsut do not, so without clearing them
- * here they would be left pointing at campaigns that no longer exist.
- *
- * Returns the number deleted, plus the uploaded picture files that are
- * now unused so the caller can remove them from disk.
- */
 function deleteAllOwnedCampaigns($name) {
     $pdo = connectDB();
 
@@ -101,7 +89,7 @@ function deleteAllOwnedCampaigns($name) {
     $ids = array_column($campaigns, "ID");
     $marks = implode(",", array_fill(0, count($ids), "?"));
 
-    // All or nothing: a failure half way through would leave orphans.
+
     $pdo->beginTransaction();
 
     try {
@@ -116,8 +104,7 @@ function deleteAllOwnedCampaigns($name) {
         throw $e;
     }
 
-    // Only uploaded pictures are ours to delete - the shared defaults
-    // in /images/ are used by other campaigns.
+
     $images = [];
     foreach ($campaigns as $campaign) {
         $path = $campaign["ReittiKuvaan"] ?? "";

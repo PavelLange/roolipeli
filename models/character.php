@@ -79,13 +79,7 @@ function updateCharacter($name, $notes, $level,$hp ,$hpmax, $mp, $mpmax ,$str, $
 }
 
 
-/**
- * Delete every character this user created.
- *
- * Kampanjahahmot rows disappear by themselves (ON DELETE CASCADE).
- * Items are kept - they belong to the campaign, not the character - so
- * they simply lose their owner and show as unowned.
- */
+
 function deleteAllOwnCharacters($username){
     $pdo = connectDB();
 

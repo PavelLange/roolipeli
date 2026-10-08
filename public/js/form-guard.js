@@ -15,6 +15,11 @@ document.addEventListener("submit", function (event) {
     }
 
     setTimeout(function () {
+
+        if (event.defaultPrevented) {
+            return;
+        }
+
         button.disabled = true;
 
         if (button.tagName === "BUTTON") {
