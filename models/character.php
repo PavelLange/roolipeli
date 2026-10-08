@@ -180,11 +180,11 @@ function getAllOwnCharacters($username) {
  
     $pdo = connectDB();
  
-    $sql = "SELECT * FROM Hahmo WHERE Tekija LIKE ?";
+    $sql = "SELECT * FROM Hahmo WHERE Tekija = ?";
  
     $stm = $pdo->prepare($sql);
  
-    $stm->execute(["%$username%"]);
+    $stm->execute([$username]);
  
     $user = $stm->fetchAll(PDO::FETCH_ASSOC);
  
