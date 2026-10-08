@@ -15,10 +15,7 @@ document.addEventListener("submit", function (event) {
     }
 
     setTimeout(function () {
-        // By now every other submit handler has run. If one of them
-        // cancelled the submit - a validation error, or answering No to
-        // a confirm() - the form was never sent and the page is not
-        // going anywhere, so the button must stay usable.
+
         if (event.defaultPrevented) {
             return;
         }
