@@ -8,6 +8,12 @@ $error2 = "";
 $error3 = "";
 function registerController(){
     if(isset($_POST['username'], $_POST['email'], $_POST['password'])){
+        // A repeated submit carries an already-used token; drop it.
+        if (!useFormToken("register")) {
+            header("Location: /");
+            exit;
+        }
+
         $username = cleanUpInput($_POST['username'], LIMIT_USERNAME);
         $email = cleanUpInput($_POST['email'], LIMIT_EMAIL);
         $password = cleanUpInput($_POST['password'], LIMIT_PASSWORD);

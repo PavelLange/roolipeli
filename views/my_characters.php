@@ -139,5 +139,28 @@
         ← Back to Home
     </a>
 
+    <?php if (!empty($characters)): ?>
+        <section class="danger-zone">
+            <div class="danger-zone-copy">
+                <p class="eyebrow">Danger zone</p>
+                <h2>Delete all characters</h2>
+                <p>
+                    Removes the <?= count($characters) ?> character<?= count($characters) === 1 ? "" : "s" ?>
+                    you created, and takes them out of every campaign.
+                    Items stay with the campaign. This cannot be undone.
+                </p>
+            </div>
 
+            <form
+                method="POST"
+                action="/delete-all-characters"
+                onsubmit="return confirm('Delete all <?= count($characters) ?> of your characters?\n\nThis cannot be undone.');"
+            >
+                <?= formTokenField("delete_all_characters") ?>
+                <button type="submit" class="button button-danger">
+                    Delete all characters
+                </button>
+            </form>
+        </section>
+    <?php endif ?>
 </main>

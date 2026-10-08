@@ -148,4 +148,29 @@
 
     </section>
 <?php endif ?>
+
+    <?php if (!empty($allowned)): ?>
+        <section class="danger-zone">
+            <div class="danger-zone-copy">
+                <p class="eyebrow">Danger zone</p>
+                <h2>Delete all campaigns</h2>
+                <p>
+                    Removes the <?= count($allowned) ?> campaign<?= count($allowned) === 1 ? "" : "s" ?>
+                    you run, including all NPCs, items and pending
+                    invitations. This cannot be undone.
+                </p>
+            </div>
+
+            <form
+                method="POST"
+                action="/delete-all-campaigns"
+                onsubmit="return confirm('Delete all <?= count($allowned) ?> of your campaigns?\n\nTheir NPCs and items go too. This cannot be undone.');"
+            >
+                <?= formTokenField("delete_all_campaigns") ?>
+                <button type="submit" class="button button-danger">
+                    Delete all campaigns
+                </button>
+            </form>
+        </section>
+    <?php endif ?>
 </main>

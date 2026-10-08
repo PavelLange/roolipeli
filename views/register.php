@@ -10,6 +10,8 @@
 
         <form class="auth-form" action="/register" method="post">
 
+            <?= formTokenField("register") ?>
+
             <div class="form-group">
                 <label for="username">Username</label>
                 <input

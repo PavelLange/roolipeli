@@ -7,6 +7,13 @@ require_once "../libraries/uploads.php";
 
 function addCampaignController(){
     if(isset($_POST['name'], $_POST['notes'])){
+        // A second, repeated submit carries a token that has already
+        // been used up, so it is dropped instead of saving again.
+        if (!useFormToken("add_campaign")) {
+            header("Location: /my-campaigns");
+            exit;
+        }
+
         $name = cleanUpInput($_POST['name'], LIMIT_NAME);
         $notes = cleanUpInput($_POST['notes'], LIMIT_NOTES);
 
@@ -450,4 +457,36 @@ function campaignDefaultImages() {
         "/images/forest.jpg",
         "/images/sky.jpg",
     ];
+}
+
+function deleteAllCampaignsController(){
+    // POST-only route, and the token means a repeated submit does
+    // nothing rather than running the delete a second time.
+    if (!useFormToken("delete_all_campaigns")) {
+        header("Location: /my-campaigns");
+        exit;
+    }
+
+    try {
+        $result = deleteAllOwnedCampaigns($_SESSION["username"]);
+
+        // Nothing points at these pictures any more, so remove the
+        // files too. basename() keeps a tampered path from reaching
+        // outside the uploads folder.
+        foreach ($result["images"] as $image) {
+            $file = __DIR__ . "/../public/user-images/" . basename($image);
+            if (is_file($file)) {
+                unlink($file);
+            }
+        }
+
+        $_SESSION["message"] = $result["count"] === 0
+            ? "You had no campaigns to delete."
+            : $result["count"] . " campaign(s) deleted.";
+    } catch (PDOException $e) {
+        $_SESSION["message"] = "The campaigns could not be deleted. Please try again.";
+    }
+
+    header("Location: /my-campaigns");
+    exit;
 }

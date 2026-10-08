@@ -18,6 +18,8 @@
 
         <form class="campaign-form" method="POST" action="">
 
+            <?= formTokenField("new_NPC") ?>
+
             <div class="form-group">
                 <label for="NPC-name">NPC name</label>
 
