@@ -18,6 +18,8 @@
 
         <form class="campaign-form" method="POST" action="">
 
+            <?= formTokenField("new_item") ?>
+
             <div class="form-group">
                 <label for="item-name">Item name</label>
 

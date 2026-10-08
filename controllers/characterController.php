@@ -58,6 +58,12 @@ function addCharacterController()
         return;
     }
 
+    // A repeated submit carries an already-used token; drop it.
+    if (!useFormToken("new_character")) {
+        header("Location: /my-characters");
+        exit;
+    }
+
 
     /*
      * =========================================
@@ -1286,6 +1292,13 @@ function addItemController()
 {
     if (isset($_POST["name"], $_POST["desc"], $_POST["amount"])) {
         $campaignid = cleanUpInput($_GET["id"]);
+
+        // A repeated submit carries an already-used token; drop it.
+        if (!useFormToken("new_item")) {
+            header("Location: /view-items?id=$campaignid");
+            exit;
+        }
+
         $name = cleanUpInput($_POST["name"], LIMIT_NAME);
         $desc = cleanUpInput($_POST["desc"], LIMIT_NOTES);
         $amount = cleanUpNumber($_POST["amount"], LIMIT_AMOUNT);
@@ -1394,6 +1407,13 @@ function addNPCController()
 {
     if (isset($_POST["name"], $_POST["desc"], $_POST["level"], $_POST["health"], $_POST["mana"], $_POST["str"], $_POST["const"], $_POST["agility"], $_POST["int"], $_POST["char"], $_POST["type"])) {
         $id = cleanUpInput($_GET["id"]);
+
+        // A repeated submit carries an already-used token; drop it.
+        if (!useFormToken("new_NPC")) {
+            header("Location: /view-NPCs?id=$id");
+            exit;
+        }
+
         $name = cleanUpInput($_POST["name"], LIMIT_NAME);
         $desc = cleanUpInput($_POST["desc"], LIMIT_NOTES);
         $lvl = cleanUpNumber($_POST["level"], LIMIT_LEVEL);
@@ -1502,4 +1522,24 @@ function deleteNPCController()
     } catch (PDOException $e) {
         echo "Virhe esinetta poistettaessa: " . $e->getMessage();
     }
+}
+
+function deleteAllCharactersController(){
+    if (!useFormToken("delete_all_characters")) {
+        header("Location: /my-characters");
+        exit;
+    }
+
+    try {
+        $count = deleteAllOwnCharacters($_SESSION["username"]);
+
+        $_SESSION["message"] = $count === 0
+            ? "You had no characters to delete."
+            : $count . " character(s) deleted.";
+    } catch (PDOException $e) {
+        $_SESSION["message"] = "The characters could not be deleted. Please try again.";
+    }
+
+    header("Location: /my-characters");
+    exit;
 }

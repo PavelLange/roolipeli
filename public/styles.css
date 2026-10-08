@@ -5478,3 +5478,67 @@ main,
 .npc-identity {
     min-width: 0;
 }
+
+
+/* =========================================
+   DANGER ZONE
+
+   The "delete everything" panel at the bottom of My Campaigns and
+   My Characters. Deliberately set apart from the rest of the page
+   and quiet until hovered, so it is never the thing you click by
+   accident.
+   ========================================= */
+
+.danger-zone {
+    box-sizing: border-box;
+    width: min(1100px, calc(100% - 40px));
+    margin: 60px auto 0;
+    padding: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    background: linear-gradient(145deg, #1a1317, #121016);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--red);
+    border-radius: 5px;
+}
+
+.danger-zone-copy {
+    min-width: 0;
+}
+
+.danger-zone h2 {
+    margin: 0 0 8px;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 24px;
+}
+
+.danger-zone p:not(.eyebrow) {
+    margin: 0;
+    max-width: 60ch;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+.danger-zone form {
+    flex-shrink: 0;
+}
+
+.danger-zone .button-danger {
+    border-color: rgba(169, 54, 54, 0.55);
+}
+
+@media (max-width: 700px) {
+    .danger-zone {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-top: 40px;
+        padding: 22px;
+    }
+
+    .danger-zone form,
+    .danger-zone .button {
+        width: 100%;
+    }
+}

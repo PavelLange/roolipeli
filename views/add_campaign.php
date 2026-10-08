@@ -16,6 +16,8 @@
 
         <form class="campaign-form" method="POST" action="" enctype="multipart/form-data">
 
+            <?= formTokenField("add_campaign") ?>
+
             <div class="form-group">
                 <label for="campaign-name">Campaign name</label>
 

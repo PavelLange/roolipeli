@@ -65,5 +65,7 @@
     </div>
 </footer>
 
+<script src="/js/form-guard.js"></script>
+
 </body>
 </html>

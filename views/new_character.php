@@ -14,6 +14,8 @@
 
         <form class="character-form" action="/new-character" method="post" enctype="multipart/form-data">
 
+        <?= formTokenField("new_character") ?>
+
             <div id="character-form-errors" class="character-form-errors" role="alert" aria-live="polite" style="display:none;">
             </div>
 
