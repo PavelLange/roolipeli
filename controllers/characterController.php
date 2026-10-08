@@ -58,13 +58,6 @@ function addCharacterController()
         return;
     }
 
-    // A repeated submit carries an already-used token; drop it.
-    if (!useFormToken("new_character")) {
-        header("Location: /my-characters");
-        exit;
-    }
-
-
     /*
      * =========================================
      * LOGIN CHECK
@@ -729,6 +722,11 @@ function addCharacterController()
      * =========================================
      */
 
+    if (!useFormToken("new_character")) {
+        header("Location: /my-characters");
+        exit;
+    }
+
     try {
 
         addCharacter(
@@ -762,10 +760,6 @@ function addCharacterController()
         exit;
     } catch (PDOException $e) {
 
-        /*
-         * Do not show database errors
-         * to the user.
-         */
 
         error_log(
             "Character creation error: "
