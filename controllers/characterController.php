@@ -722,9 +722,6 @@ function addCharacterController()
      * =========================================
      */
 
-    // Consumed here rather than at the top of the function, so that a
-    // validation failure above does not use up the token and leave the
-    // user unable to resubmit after going back.
     if (!useFormToken("new_character")) {
         header("Location: /my-characters");
         exit;
@@ -763,10 +760,6 @@ function addCharacterController()
         exit;
     } catch (PDOException $e) {
 
-        /*
-         * Do not show database errors
-         * to the user.
-         */
 
         error_log(
             "Character creation error: "
