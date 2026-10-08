@@ -488,6 +488,7 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
 
+        const MIN_STAT_VALUE = 10;
         const MAX_TRANSFER = 5;
         const MAX_HEALTH_MAGIC_TRANSFER = 50;
         const POINTS_PER_LEVEL = 5;
@@ -960,7 +961,7 @@
                     const current =
                         parseInt(stat.input.value);
 
-                    if (current <= 0) {
+                    if (current <= MIN_STAT_VALUE ) {
 
                         button.disabled = true;
 
@@ -1079,7 +1080,7 @@
                     const current =
                         parseInt(stat.input.value);
 
-                    if (current <= 0) {
+                    if (current <= MIN_STAT_VALUE ) {
                         return;
                     }
 
